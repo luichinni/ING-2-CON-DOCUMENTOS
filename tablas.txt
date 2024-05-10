@@ -1,0 +1,17 @@
+==================== MAURI ====================
+Publicacion = (id,nombre,desc,user(FK),categoria,estado)
+Centros = (id,nombre,direccion,horario)
+Categoria = (id,nombre)
+PubliCentro = ((publicacion(FK),centro(FK))(PK))
+
+==================== LUCHO ====================
+Usuarios = (user(PK),clave,nombre,apellido,dni,mail,tel?,rol,centro?(FK))
+Imagen = (archivo,publicacion(FK))
+CentroVolun = ((centro(FK),voluntario(FK))(PK))
+SesionActiva = (user,token,ultimaAccion,fechaInicio)
+SesionesHistoricas = (id,user,fechaInicio,ultimaAccion) (sera mucho?)
+
+============================ Después ================================
+Comentario = (id,publicacion(FK),user(FK),respondeA?(FK))
+Intercambio = (id,voluntario?(FK),publicacion1(FK),publicacion2(FK),centro(FK),horario,estado,desc,donacion)
+PubliInter = ((publicacion(FK),Intercambio(FK))(PK))
