@@ -4,6 +4,7 @@
         "slim/psr7": "^1.1",
         "doctrine/orm": "^3",
         "doctrine/dbal": "^4",
-        "symfony/cache": "^7"
+        "symfony/cache": "^7",
+        "php-di/php-di": "^7.0"
     }
 }
