@@ -1,0 +1,9 @@
+{
+    "require": {
+        "slim/slim": "4.*",
+        "slim/psr7": "^1.1",
+        "doctrine/orm": "^3",
+        "doctrine/dbal": "^4",
+        "symfony/cache": "^7"
+    }
+}
