@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-05-2024 a las 22:14:50
+-- Tiempo de generación: 12-05-2024 a las 22:44:00
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -60,12 +60,42 @@ CREATE TABLE `centro_volun` (
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `comentario`
+--
+
+CREATE TABLE `comentario` (
+  `id` int(11) NOT NULL,
+  `publicacion` int(11) DEFAULT NULL,
+  `user` varchar(50) DEFAULT NULL,
+  `respondeA` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `imagen`
 --
 
 CREATE TABLE `imagen` (
   `archivo` varchar(255) NOT NULL,
   `publicacion` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `intercambio`
+--
+
+CREATE TABLE `intercambio` (
+  `id` int(11) NOT NULL,
+  `voluntario` varchar(50) DEFAULT NULL,
+  `publicacion1` int(11) DEFAULT NULL,
+  `publicacion2` int(11) DEFAULT NULL,
+  `horario` time DEFAULT NULL,
+  `estado` enum('pendiente','cancelado','rechazado','aceptado','concretado') DEFAULT NULL,
+  `descripcion` text DEFAULT NULL,
+  `donacion` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -92,6 +122,17 @@ CREATE TABLE `publicacion` (
 CREATE TABLE `publi_centro` (
   `publicacion` int(11) NOT NULL,
   `centro` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `publi_inter`
+--
+
+CREATE TABLE `publi_inter` (
+  `publicacion` int(11) NOT NULL,
+  `intercambio` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -148,11 +189,28 @@ ALTER TABLE `centro_volun`
   ADD KEY `voluntario` (`voluntario`);
 
 --
+-- Indices de la tabla `comentario`
+--
+ALTER TABLE `comentario`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user` (`user`),
+  ADD KEY `respondeA` (`respondeA`);
+
+--
 -- Indices de la tabla `imagen`
 --
 ALTER TABLE `imagen`
   ADD PRIMARY KEY (`archivo`,`publicacion`),
   ADD KEY `publicacion` (`publicacion`);
+
+--
+-- Indices de la tabla `intercambio`
+--
+ALTER TABLE `intercambio`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `voluntario` (`voluntario`),
+  ADD KEY `publicacion1` (`publicacion1`),
+  ADD KEY `publicacion2` (`publicacion2`);
 
 --
 -- Indices de la tabla `publicacion`
@@ -168,6 +226,13 @@ ALTER TABLE `publicacion`
 ALTER TABLE `publi_centro`
   ADD PRIMARY KEY (`publicacion`,`centro`),
   ADD KEY `centro` (`centro`);
+
+--
+-- Indices de la tabla `publi_inter`
+--
+ALTER TABLE `publi_inter`
+  ADD PRIMARY KEY (`publicacion`,`intercambio`),
+  ADD KEY `intercambio` (`intercambio`);
 
 --
 -- Indices de la tabla `sesionactiva`
@@ -198,6 +263,18 @@ ALTER TABLE `centros`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `comentario`
+--
+ALTER TABLE `comentario`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `intercambio`
+--
+ALTER TABLE `intercambio`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `publicacion`
 --
 ALTER TABLE `publicacion`
@@ -215,10 +292,25 @@ ALTER TABLE `centro_volun`
   ADD CONSTRAINT `centro_volun_ibfk_2` FOREIGN KEY (`voluntario`) REFERENCES `usuarios` (`username`);
 
 --
+-- Filtros para la tabla `comentario`
+--
+ALTER TABLE `comentario`
+  ADD CONSTRAINT `comentario_ibfk_1` FOREIGN KEY (`user`) REFERENCES `usuarios` (`username`),
+  ADD CONSTRAINT `comentario_ibfk_2` FOREIGN KEY (`respondeA`) REFERENCES `comentario` (`id`);
+
+--
 -- Filtros para la tabla `imagen`
 --
 ALTER TABLE `imagen`
   ADD CONSTRAINT `imagen_ibfk_1` FOREIGN KEY (`publicacion`) REFERENCES `publicacion` (`id`);
+
+--
+-- Filtros para la tabla `intercambio`
+--
+ALTER TABLE `intercambio`
+  ADD CONSTRAINT `intercambio_ibfk_1` FOREIGN KEY (`voluntario`) REFERENCES `usuarios` (`username`),
+  ADD CONSTRAINT `intercambio_ibfk_2` FOREIGN KEY (`publicacion1`) REFERENCES `publicacion` (`id`),
+  ADD CONSTRAINT `intercambio_ibfk_3` FOREIGN KEY (`publicacion2`) REFERENCES `publicacion` (`id`);
 
 --
 -- Filtros para la tabla `publicacion`
@@ -233,6 +325,13 @@ ALTER TABLE `publicacion`
 ALTER TABLE `publi_centro`
   ADD CONSTRAINT `publi_centro_ibfk_1` FOREIGN KEY (`publicacion`) REFERENCES `publicacion` (`id`),
   ADD CONSTRAINT `publi_centro_ibfk_2` FOREIGN KEY (`centro`) REFERENCES `centros` (`id`);
+
+--
+-- Filtros para la tabla `publi_inter`
+--
+ALTER TABLE `publi_inter`
+  ADD CONSTRAINT `publi_inter_ibfk_1` FOREIGN KEY (`publicacion`) REFERENCES `publicacion` (`id`),
+  ADD CONSTRAINT `publi_inter_ibfk_2` FOREIGN KEY (`intercambio`) REFERENCES `intercambio` (`id`);
 
 --
 -- Filtros para la tabla `sesionactiva`

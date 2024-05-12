@@ -1,12 +1,3 @@
-==================== MAURI ====================
-
-==================== LUCHO ====================
-
-============================ Después ================================
-Comentario = (id,publicacion(FK),user(FK),respondeA?(FK))
-Intercambio = (id,voluntario?(FK),publicacion1(FK),publicacion2(FK),centro(FK),horario,estado,desc,donacion)
-PubliInter = ((publicacion(FK),Intercambio(FK))(PK))
-
 CREATE TABLE Usuarios (
     username varchar (50) PRIMARY KEY,
     clave varchar (50),
@@ -73,4 +64,33 @@ CREATE TABLE SesionActiva (
     FOREIGN KEY (user) REFERENCES Usuarios(username)
 )
 
+CREATE TABLE Comentario (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    publicacion int,
+    user varchar (50),
+    respondeA int NULL,
+    FOREIGN KEY (user) REFERENCES Usuarios(username),
+    FOREIGN KEY (respondeA) REFERENCES Comentario(id)
+)
 
+CREATE TABLE Intercambio (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    voluntario varchar (50),
+    publicacion1 int,
+    publicacion2 int,
+    horario TIME,
+    estado ENUM('pendiente','cancelado','rechazado','aceptado','concretado'),
+    descripcion TEXT,
+    donacion BOOLEAN,
+    FOREIGN KEY (voluntario) REFERENCES Usuarios(username),
+    FOREIGN KEY (publicacion1) REFERENCES Publicacion(id),
+    FOREIGN KEY (publicacion2) REFERENCES Publicacion(id)
+)
+
+CREATE TABLE Publi_Inter (
+    publicacion int,
+    intercambio int,
+    FOREIGN KEY (publicacion) REFERENCES Publicacion(id),
+    FOREIGN KEY (intercambio) REFERENCES Intercambio(id),
+    PRIMARY KEY (publicacion, intercambio)
+)
