@@ -1,0 +1,76 @@
+==================== MAURI ====================
+
+==================== LUCHO ====================
+
+============================ Después ================================
+Comentario = (id,publicacion(FK),user(FK),respondeA?(FK))
+Intercambio = (id,voluntario?(FK),publicacion1(FK),publicacion2(FK),centro(FK),horario,estado,desc,donacion)
+PubliInter = ((publicacion(FK),Intercambio(FK))(PK))
+
+CREATE TABLE Usuarios (
+    username varchar (50) PRIMARY KEY,
+    clave varchar (50),
+    nombre varchar (255),
+    apellido varchar (255),
+    dni int(8),
+    mail varchar (255),
+    telefono int NULL,
+    rol ENUM('user', 'volunt', 'admin')
+)
+
+CREATE TABLE Categoria (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255)
+);
+
+CREATE TABLE Publicacion (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255),
+    descripcion TEXT,
+    user varchar (50),
+    categoria_id INT,
+    estado VARCHAR(50),
+    FOREIGN KEY (user) REFERENCES Usuarios(username),
+    FOREIGN KEY (categoria_id) REFERENCES Categoria(id)
+);
+
+CREATE TABLE Centros (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    Nombre varchar(255),
+    direccion varchar (255),
+    hora_abre TIME,
+    hora_cierra TIME
+ )
+
+CREATE TABLE publi_centro (
+    publicacion int,
+    centro int,
+    PRIMARY KEY (publicacion, centro),
+    FOREIGN KEY (publicacion) REFERENCES Publicacion (id),
+    FOREIGN KEY (centro) REFERENCES Centros (id)
+)
+
+CREATE TABLE imagen (
+    archivo varchar(255),
+    publicacion int,
+    PRIMARY KEY (archivo, publicacion),
+    FOREIGN KEY (publicacion) REFERENCES publicacion (id)
+)
+
+CREATE TABLE centro_volun (
+    centro int,
+    voluntario varchar(50),
+    PRIMARY KEY (centro, voluntario),
+    FOREIGN KEY (centro) REFERENCES centros(id),
+    FOREIGN KEY (voluntario) REFERENCES usuarios (username)
+)
+
+CREATE TABLE SesionActiva (
+    user varchar(50) PRIMARY KEY,
+    token varchar(255),
+    ultimaAccion timestamp,
+    fechaInicio timestamp DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user) REFERENCES Usuarios(username)
+)
+
+
