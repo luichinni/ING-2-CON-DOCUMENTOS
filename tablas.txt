@@ -5,11 +5,10 @@ Categoria = (id,nombre)
 PubliCentro = ((publicacion(FK),centro(FK))(PK))
 
 ==================== LUCHO ====================
-Usuarios = (user(PK),clave,nombre,apellido,dni,mail,tel?,rol,centro?(FK))
+Usuarios = (user(PK),clave,nombre,apellido,dni,mail,tel?,rol)
 Imagen = (archivo,publicacion(FK))
 CentroVolun = ((centro(FK),voluntario(FK))(PK))
 SesionActiva = (user,token,ultimaAccion,fechaInicio)
-SesionesHistoricas = (id,user,fechaInicio,ultimaAccion) (sera mucho?)
 
 ============================ Después ================================
 Comentario = (id,publicacion(FK),user(FK),respondeA?(FK))
