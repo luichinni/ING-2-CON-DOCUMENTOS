@@ -11,7 +11,7 @@ function validaDatos($data, $response){
         if (!isset($data[$colum])||$data[$colum]===0){
             $errorResponse = ['error'=> 'el campo: ' . $colum . ' es requerido'];
             $response->getBody()->write(json_encode($errorResponse));
-            return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
+            return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
     }
     //revisamos la cantidad de carcteres
@@ -19,7 +19,7 @@ function validaDatos($data, $response){
     foreach ($revisarCar as $revi){
         if (isset($data[$revi]) && strlen($data[$revi]) > 255) {
             $errorResponse=['error'=>'el campo' . $revi . 'excede los 255 caracteres permitidos'];
-            $response->getBody()->write($errorResponse);
+            $response->getBody()->write(json_encode($errorResponse));
             return $response->withStatus(400);
         }
     }
@@ -29,20 +29,20 @@ function validaDatos($data, $response){
     // vemos si esta en el formato correcto HH:MM y entre 00:00 y 23:59
     if (!preg_match('/^(?:2[0-3]|[0-1][0-9]):[0-5][0-9]$/', $hora_abre) || !preg_match('/^(?:2[0-3]|[0-1][0-9]):[0-5][0-9]$/', $hora_cierra)) {
         $errorResponse=['error'=>'los campos de apertura y cierre deben estar en formato HH:MM, y estar entre los valores 00:00hs y 23:59hs'];
-        $response->getBody()->write($errorResponse);
+        $response->getBody()->write(json_encode($errorResponse));
         return $response->withStatus(400);
     }
     // vemos si la hora de apertura es menor a la de cierre
     if ($hora_abre >= $hora_cierra){
         $errorResponse=['error'=>'El horario de apertura debe ser menor a el horario de cierre'];
-        $response->getBody()->write($errorResponse);
-        return $response->withStatus(400);
+        $response->getBody()->write(json_encode($errorResponse));
+            return $response->withStatus(400);
     }
 }
 
 $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
     // hacemos el POST-Create
-    $group->post('/centros', function ($request, $response, $args) use ($pdo){
+    $group->POST('/centros', function ($request, $response, $args) use ($pdo){
         //traemos los valores en parametros y los asignamos a variables
         $body = $request-> getBody() -> getContents();
         $data = json_decode($body, true);
@@ -74,13 +74,13 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
             'nombre' => $data ['nombre'],
             'direccion' => $data ['direccion'],
             'hora_abre' => $data ['hora_abre'],
-            'hora_cierra' => $data ['hora_cierra'],
+            'hora_cierra' => $data ['hora_cierra']
         ];
         // enviamos mensaje
         $response->getBody()->write(json_encode($centro));
         return $response->withStatus(200)->withHeader('Content-Type','application/json');
     });
-    $group->put('/centros/{id}', function($request, Response $response, $args) use ($pdo){
+    $group->PUT('/centros/{id}', function($request, Response $response, $args) use ($pdo){
         $id = $args['id'];
         //preparamos para ver si existe un centro con ese id
         $stmt = $pdo->prepare('SELECT COUNT(*) FROM centros WHERE id = :id ');
@@ -91,7 +91,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         if ($existe == 0) {
             $errorResponse = ['El codigo seleccionado no corresponde a un ningun centro'];
             $response->getBody()->write (json_encode($errorResponse));
-            return $response->withStatus(404)->withHeader('Content-Type','application/json');
+            return $response->withStatus(400)->withHeader('Content-Type','application/json');
         } else {
             $body = $request->getBody()->getContents();
             $data = json_decode($body,true);
@@ -137,7 +137,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         return $response->withStatus(200)->withHeader('Content-Type','application/json');
     });
 
-    $group->delete('/centros/{id}', function (Request $request, Response $response, $args) use ($pdo){
+    $group->DELETE('/centros/{id}', function (Request $request, Response $response, $args) use ($pdo){
         //tomamos id de los parametros, ejecutamos la consulta y contamos las columnas que coinciden con la busqueda
         $id = $args['id'];
         $stmt = $pdo->prepare('SELECT COUNT(*) FROM centros where id = :id');
@@ -154,15 +154,21 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
             //preparamos la eliminacion con ese id
             $stmt = $pdo->prepare('DELETE FROM centros WHERE id = :id');
             $stmt->bindParam(':id',$id);
-            //ejecutamos
-            $stmt->execute();
-            //enviamos mensaje de error
+            //ejecutamos o tratamos el error
+            try{
+                $stmt->execute();
+            } catch (Exception $e) {
+                $errorResponse = ['error' => 'error al ejecutar la consulta: ' . $e->getMessage()];
+                $response->getBody()->write(json_encode($errorResponse));
+                return $response->withStatus(500)->withheader('Content-Type','application/json');
+            }
+            //enviamos mensaje de exito
             $response->getBody()->write(json_encode(['messaje' => 'centro eliminado con exito']));
             return $response->withStatus(200)->withHeader('Content-type','application/json');
         }
     });
 
-    $group->get('/centros', function($request, Response $response, $args) use ($pdo){
+    $group->GET('/centros', function($request, Response $response, $args) use ($pdo){
         //preparamos los where de la consulta
         //si tiene parametros en la columna nombre, le asigna lo que viene, sino null
         $nombre = $request->getQueryParams()['nombre']?? null;
@@ -185,9 +191,15 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         if (!empty($condiciones)){
             $consulta .= ' WHERE ' . implode(' AND ', $condiciones); 
         }
-        //ejecutamos
         $stmt = $pdo->prepare($consulta);
-        $stmt->execute($parametros);
+        //ejecutamos o tratamos el error
+        try{
+            $stmt->execute($parametros);
+        } catch (Exception $e) {
+            $errorResponse = ['error' => 'error al ejecutar la consulta: ' . $e->getMessage()];
+            $response->getBody()->write(json_encode($errorResponse));
+            return $response->withStatus(500)->withheader('Content-Type','application/json');
+        }
         $centros = $stmt->fetchAll(PDO::FETCH_ASSOC);
         //enviamos respuesta
         $response->getBody()->write(json_encode($centros));
