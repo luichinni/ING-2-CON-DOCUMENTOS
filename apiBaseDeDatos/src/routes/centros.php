@@ -17,7 +17,7 @@ function validaDatos($data, $response){
     //revisamos la cantidad de carcteres
     $revisarCar = ['nombre', 'direccion'];
     foreach ($revisarCar as $revi){
-        if (isset($data[$revi]) && strlen($data[$revi] > 255)){
+        if (isset($data[$revi]) && strlen($data[$revi]) > 255) {
             $errorResponse=['error'=>'el campo' . $revi . 'excede los 255 caracteres permitidos'];
             $response->getBody()->write($errorResponse);
             return $response->withStatus(400);
@@ -27,7 +27,7 @@ function validaDatos($data, $response){
     $hora_abre = $data['hora_abre'];
     $hora_cierra = $data ['hora_cierra'];
     // vemos si esta en el formato correcto HH:MM y entre 00:00 y 23:59
-    if (!preg_match('/^(?:2[0-3]|[0-1][0-9]:[0-5][0-9]$/',$hora_abre)||!preg_match('/^(?:2[0-3]|[0-1][0-9]:[0-5][0-9]$/',$hora_abre)){
+    if (!preg_match('/^(?:2[0-3]|[0-1][0-9]):[0-5][0-9]$/', $hora_abre) || !preg_match('/^(?:2[0-3]|[0-1][0-9]):[0-5][0-9]$/', $hora_cierra)) {
         $errorResponse=['error'=>'los campos de apertura y cierre deben estar en formato HH:MM, y estar entre los valores 00:00hs y 23:59hs'];
         $response->getBody()->write($errorResponse);
         return $response->withStatus(400);
@@ -83,10 +83,10 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
     $group->put('/centros/{id}', function($request, Response $response, $args) use ($pdo){
         $id = $args['id'];
         //preparamos para ver si existe un centro con ese id
-        $stmt = $pdo->prepare('SELECT COUNT(*) FROM institucion WHERE id = :id ');
+        $stmt = $pdo->prepare('SELECT COUNT(*) FROM centros WHERE id = :id ');
         $stmt->bindParam(':id',$id);
         $stmt->execute();
-        $existe = $stmt->fechtColumn();
+        $existe = $stmt->fetchColumn();
         //si el fechtcolum da 0, enviamos mensaje de error que no hay centro con ese id
         if ($existe == 0) {
             $errorResponse = ['El codigo seleccionado no corresponde a un ningun centro'];
@@ -125,39 +125,73 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
             $response->getBody()->write(json_encode($errorResponse));
             return $response->withStatus(500)->withHeader('Content-Type','application/json');  
         }
-
+        //preparamos mensaje de retorno exitoso y lo enviamos
         $centros =[
-            'id' = $id,
-            'nombre' = $data['nombre'],
-            'direccion'= $data['direccion'],                                              
-            'hora_abre'= $data['hora_abre'],
-            'hora_cierra'= $data['hora_cierra']
+            'id' => $id,
+            'nombre' => $data['nombre'],
+            'direccion'=> $data['direccion'],                                              
+            'hora_abre'=> $data['hora_abre'],
+            'hora_cierra'=> $data['hora_cierra']
         ];
         $response->getBody()->write(json_encode($centros));
-        return $response->withStatus(200)->withHeader('Content-Type','application/json')
+        return $response->withStatus(200)->withHeader('Content-Type','application/json');
     });
 
     $group->delete('/centros/{id}', function (Request $request, Response $response, $args) use ($pdo){
         //tomamos id de los parametros, ejecutamos la consulta y contamos las columnas que coinciden con la busqueda
         $id = $args['id'];
         $stmt = $pdo->prepare('SELECT COUNT(*) FROM centros where id = :id');
-        $stmt->bindParam (:id,$id);
+        $stmt->bindParam(':id',$id);
         $stmt->execute();
         $existeCentro= $stmt->fechtcolum();
-
+        // si es 0 mandamos el error, de que no existe centro con ese id
         if ($existeCentro == 0){
             $errorResponse = ['error' => 'No existe un centro con ese id'];
             $response->getBody()->write(json_encode($errorResponse));
             return $response->withStatus(400)->withHeader('content-Type', 'application/json');
+        // si hay resultados con ese id
         } else {
-            $stmt->prepare ('DELETE FROM centros where id = :id');
-            $stmt->bindParam(:id,$id);
+            //preparamos la eliminacion con ese id
+            $stmt = $pdo->prepare('DELETE FROM centros WHERE id = :id');
+            $stmt->bindParam(':id',$id);
+            //ejecutamos
             $stmt->execute();
-            $response->getBody()->write(json_encode('messaje'=>'centro eliminado con exito'));
+            //enviamos mensaje de error
+            $response->getBody()->write(json_encode(['messaje' => 'centro eliminado con exito']));
             return $response->withStatus(200)->withHeader('Content-type','application/json');
         }
     });
 
-    
+    $group->get('/centros', function($request, Response $response, $args) use ($pdo){
+        //preparamos los where de la consulta
+        //si tiene parametros en la columna nombre, le asigna lo que viene, sino null
+        $nombre = $request->getQueryParams()['nombre']?? null;
+        $direccion = $request->getQueryParams()['direccion']??null;
+
+        //preparamos la consulta sin condiciones y creamos vectores para sumar las condiciones
+        $consulta = 'SELECT * FROM centros';
+        $condiciones = [];
+        $parametros =[];
+
+        // concatenamos resultados de los parametros
+        if ($nombre != null){
+            $condiciones[]= 'nombre LIKE :nombre';
+            $parametros['nombre']= "%{$nombre}%";     
+        }
+        if ($direccion != null){
+            $direccion[]= 'direccion LIKE :direccion';
+            $parametros['direccion']= "%{$direccion}%";
+        }
+        if (!empty($condiciones)){
+            $consulta .= ' WHERE ' . implode(' AND ', $condiciones); 
+        }
+        //ejecutamos
+        $stmt = $pdo->prepare($consulta);
+        $stmt->execute($parametros);
+        $centros = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        //enviamos respuesta
+        $response->getBody()->write(json_encode($centros));
+        return $response->withStatus(200)->withHeader('content-Type','application/json');
+    });
 });
 ?>
