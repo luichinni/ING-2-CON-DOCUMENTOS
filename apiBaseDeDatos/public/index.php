@@ -8,6 +8,7 @@ header("Access-Control-Allow-Origin: *");
 header('access-control-allow-Methods: GET, POST, PUT, DELETE');
 header('access-control-allow-Headers: Content-Type');
 
+$app->addBodyParsingMiddleware();
 $app->addErrorMiddleware(true, true, true);
 
 require __DIR__ . '/../src/routes/usuarios.php';
