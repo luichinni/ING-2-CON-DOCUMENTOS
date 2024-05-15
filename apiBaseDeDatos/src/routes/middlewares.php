@@ -10,9 +10,24 @@ function validarSesion($req){
     $queryParams = $queryParams == null ? [] : $queryParams;
     $ret = false;
     if (array_key_exists('token', $queryParams)) {
-        if ($queryParams['token'] == 'est035Un7ok3nDeV34dadCreeme') {
+        if ($queryParams['token'] == 'tokenUser' || $queryParams['token'] == 'tokenVolunt' || $queryParams['token'] == 'tokenAdmin') {
             $ret = true;
         }
+    }
+    return $ret;
+}
+
+function getUserRol($req){
+    $queryParams = $req->getQueryParams();
+    $queryParams = $queryParams == null ? [] : $queryParams;
+    $ret = '';
+    if (array_key_exists('token', $queryParams)) {
+        match ($queryParams['token']){
+            'tokenUser' => $ret = 'user',
+            'tokenVolunt' => $ret = 'volunt',
+            'tokenAdmin' => $ret = 'admin',
+            default => $ret = 'none'
+        };
     }
     return $ret;
 }
@@ -22,6 +37,7 @@ $app->add(function (Request $req, RequestHandler $handler) use ($app){
     //$res = $app->getResponseFactory()->createResponse();
     $body = (array) json_decode($res->getBody());
     $body['activa'] = validarSesion($req);
+    $body['rolActivo'] = getUserRol($req);
     $status = $res->getStatusCode();
     $res = $app->getResponseFactory()->createResponse();
     $res->getBody()->write(json_encode($body));
