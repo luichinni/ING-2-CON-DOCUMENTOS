@@ -107,13 +107,18 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         return $response->withStatus(200)->withHeader('content-type', 'application/json');
     });
 
-    $group->DELETE('/categoria/{id}', function(Request $request, Response $response,$args) use ($pdo){
+    $group->DELETE('/centros/{id}', function(Request $request, Response $response,$args) use ($pdo){
+        //
+        //
+        //---------FALTA VERIFICAR QUE NO HAYA PUBLICACIONES CON ESTA CATEGORIA!!!!
+        //
+        //
         $id = $args['id'];
         //nos fijamos si existe una categoria con el id enviado
         $stmt = $pdo->prepare('SELECT COUNT(+) FROM categorias where id = :id');
         $stmt->bindParam(':id',$id);
         $stmt->execute();
-        $existe = $stmt->fetchColum();
+        $existe = $stmt->fetchColumn();
         //si el conteo de columnas de 0 enviamos el error
         if ($existe == 0){
             $errorResponse = ['error'=>'No existe ninguna categoria con esa ID'];
@@ -137,28 +142,28 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         });
     
     $group->GET('/categoria', function($request, Response $response, $args) use ($pdo){
-        $nombre = $request->getQueryParams()['nombre']??null;
+        $nombre = $request->getQueryParams()['nombre'] ?? null;  
 
         //preparamos la consulta sin parametros y para agregar parametros
         $consulta = 'SELECT * FROM categorias';
-        $parametro = [];
-        //si busca pos nombre lo concatenamos
+        $parametros = [];
+        //si busca por nombre lo concatenamos
         if ($nombre != null){
-            $consulta .= 'where nombre LIKE :nombre';
-            $parametro ['nombre'] = "%{$nombre}%";
+             $consulta .= ' WHERE nombre LIKE :nombre';
+            $parametros['nombre'] = "%{$nombre}%";
         }
         $stmt = $pdo->prepare($consulta);
         //intentamos ejecutar o mandamos el error
         try{
-            $stmt->execute($parametro);
-        } catch (Exception $e) {
-            $errorResponse = ['error' => 'error al ejecutar la consulta: ' . $e->getMessage()];
+            $stmt->execute($parametros);
+        } catch (PDOException $e) {
+            $errorResponse = ['error' => 'Error al ejecutar la consulta: ' . $e->getMessage()];
             $response->getBody()->write(json_encode($errorResponse));
-            return $response->withStatus(500)->withheader('Content-Type','application/json');
+            return $response->withStatus(500)->withHeader('Content-Type','application/json');
         }
-        $centros = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
         //enviamos respuesta
-        $response->getBody()->write(json_encode($centros));
+        $response->getBody()->write(json_encode($categorias));
         return $response->withStatus(200)->withHeader('Content-Type','application/json');
     });
 
