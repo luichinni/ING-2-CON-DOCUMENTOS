@@ -47,7 +47,7 @@ function validaDatos($data, $response) {
     return true;
 }
 
-function validarExiste($id, $pdo){
+function ExisteCentro($id, $pdo){
     $stmt = $pdo->prepare('SELECT COUNT(*) FROM centros WHERE id = :id');
     $stmt->bindParam(':id', $id);
     $stmt->execute();
@@ -101,7 +101,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
     $group->PUT('/updateCentros/{id}', function ($request, Response $response, $args) use ($pdo) {
         $id = $args['id'];
 
-        if (!validarExiste($id, $pdo)) {
+        if (!ExisteCentro($id, $pdo)) {
             $errorResponse = ['error' => 'No existe un centro con ese id'];
             $response->getBody()->write(json_encode($errorResponse));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
@@ -150,7 +150,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
     $group->DELETE('/deleteCentro/{id}', function (Request $request, Response $response, $args) use ($pdo) {
         $id = $args['id'];
 
-        if (!validarExiste($id, $pdo)) {    
+        if (!ExisteCentro($id, $pdo)) {    
             $errorResponse = ['error' => 'No existe un centro con ese id'];
             $response->getBody()->write(json_encode($errorResponse));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
