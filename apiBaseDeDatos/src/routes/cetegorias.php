@@ -108,6 +108,11 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
     });
 
     $group->DELETE('/categoria/{id}', function(Request $request, Response $response,$args) use ($pdo){
+        //
+        //
+        //---------FALTA VERIFICAR QUE NO HAYA PUBLICACIONES CON ESTA CATEGORIA!!!!
+        //
+        //
         $id = $args['id'];
         //nos fijamos si existe una categoria con el id enviado
         $stmt = $pdo->prepare('SELECT COUNT(+) FROM categorias where id = :id');

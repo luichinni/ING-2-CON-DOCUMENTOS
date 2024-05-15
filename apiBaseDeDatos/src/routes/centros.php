@@ -138,6 +138,13 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
     });
 
     $group->DELETE('/centros/{id}', function (Request $request, Response $response, $args) use ($pdo){
+        //
+        //
+        //---------FALTA VERIFICAR QUE NO HAYA VOLUNTARIOS EN ESTE CENTRO!!!!
+        //---------QUE NO HAYA PUBLICACIONES CON ESTE CENTROO?????
+        //
+        //
+
         //tomamos id de los parametros, ejecutamos la consulta y contamos las columnas que coinciden con la busqueda
         $id = $args['id'];
         $stmt = $pdo->prepare('SELECT COUNT(*) FROM centros where id = :id');
