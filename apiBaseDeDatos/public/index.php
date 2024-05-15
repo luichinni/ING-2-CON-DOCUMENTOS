@@ -12,7 +12,9 @@ $app->addBodyParsingMiddleware();
 $app->addErrorMiddleware(true, true, true);
 
 require __DIR__ . '/../src/routes/usuarios.php';
+require __DIR__ . '/../src/routes/sesionActiva.php';
+
+require __DIR__ . '/../src/routes/middlewares.php';
 
 $app->run();
-
 ?>
