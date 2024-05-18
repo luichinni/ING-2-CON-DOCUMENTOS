@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-05-2024 a las 22:44:00
+-- Tiempo de generación: 18-05-2024 a las 22:08:10
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -96,6 +96,18 @@ CREATE TABLE `intercambio` (
   `estado` enum('pendiente','cancelado','rechazado','aceptado','concretado') DEFAULT NULL,
   `descripcion` text DEFAULT NULL,
   `donacion` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `notificacion`
+--
+
+CREATE TABLE `notificacion` (
+  `id` int(11) NOT NULL,
+  `user` varchar(50) DEFAULT NULL,
+  `texto` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -213,6 +225,13 @@ ALTER TABLE `intercambio`
   ADD KEY `publicacion2` (`publicacion2`);
 
 --
+-- Indices de la tabla `notificacion`
+--
+ALTER TABLE `notificacion`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user` (`user`);
+
+--
 -- Indices de la tabla `publicacion`
 --
 ALTER TABLE `publicacion`
@@ -275,6 +294,12 @@ ALTER TABLE `intercambio`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `notificacion`
+--
+ALTER TABLE `notificacion`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `publicacion`
 --
 ALTER TABLE `publicacion`
@@ -311,6 +336,12 @@ ALTER TABLE `intercambio`
   ADD CONSTRAINT `intercambio_ibfk_1` FOREIGN KEY (`voluntario`) REFERENCES `usuarios` (`username`),
   ADD CONSTRAINT `intercambio_ibfk_2` FOREIGN KEY (`publicacion1`) REFERENCES `publicacion` (`id`),
   ADD CONSTRAINT `intercambio_ibfk_3` FOREIGN KEY (`publicacion2`) REFERENCES `publicacion` (`id`);
+
+--
+-- Filtros para la tabla `notificacion`
+--
+ALTER TABLE `notificacion`
+  ADD CONSTRAINT `notificacion_ibfk_1` FOREIGN KEY (`user`) REFERENCES `usuarios` (`username`);
 
 --
 -- Filtros para la tabla `publicacion`

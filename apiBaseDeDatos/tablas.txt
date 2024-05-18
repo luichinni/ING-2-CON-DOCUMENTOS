@@ -9,6 +9,7 @@ Usuarios = (user(PK),clave,nombre,apellido,dni,mail,tel?,rol)
 Imagen = (archivo,publicacion(FK))
 CentroVolun = ((centro(FK),voluntario(FK))(PK))
 SesionActiva = (user,token,ultimaAccion,fechaInicio)
+Notificacion = (id(PK),user(FK),texto)
 
 ============================ Después ================================
 Comentario = (id,publicacion(FK),user(FK),respondeA?(FK))
