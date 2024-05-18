@@ -22,9 +22,11 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo, $camposS
             'Error' => 'user o clave invalido'
         ];
         $status = 404;
-        if (array_key_exists('username',$queryParams) && array_key_exists('clave', $queryParams)){
+        if (array_key_exists('username',$queryParams) && array_key_exists('clave', $queryParams) && existeUsuario(array('username' => $queryParams['username']), $pdo, array('username' => 'varchar'))){
+            $user = obtenerUsuario(array('username' => $queryParams['username']), $pdo, array('username' => 'varchar'))[0];
+            $tok = "token" . strtoupper($user['rol'][0]) . substr($user['rol'], 1);
             $return = [
-                'token' => 'est035Un7ok3nDeV34dadCreeme'
+                'token' => $tok
             ];
             $status = 200;
         }
