@@ -2,6 +2,7 @@
 use Slim\Routing\RouteCollectorProxy;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+require_once __DIR__ . '/../utilities/generadorQuerys.php';
 
 $camposUser = [
     "username" => "varchar",
@@ -39,59 +40,30 @@ function userValidator(array $data, PDO $pdo, array $camposUser){
     return $valid;
 }
 
-function armarWhere(array $queryParams, array $camposUser){
-    $queryWhere = "WHERE ";
-    $querySize = strlen($queryWhere);
-    foreach ($queryParams as $key => $value) { // para cada param
-        if (array_key_exists($key, $camposUser)) { // si existe en la lista de campos
-            if ($value == "null") { // si es null en la query
-                $queryWhere .= "`$key` IS NULL ";
-            } else {
-                switch ($camposUser[$key]) {
-                    case 'int': // si es numero
-                        $queryWhere .= "`$key`=$value ";
-                        break;
-                    default: // si es otra cosa
-                        $queryWhere .= "`$key` LIKE '$value' ";
-                        break;
-                }
-            }
-        }
-    }
 
-    if (strlen($queryWhere)<=$querySize){
-        $queryWhere = "";
-    }
-
-    return $queryWhere;
-}
 
 function existeUsuario(array $queryParams, PDO $pdo, array $camposUser){
     // armar query SELECT * FROM `usuarios` WHERE params LIMIT 1
-    $querySql = "SELECT * FROM `usuarios` ";
-    $querySql .= armarWhere($queryParams, $camposUser);
+    $querySql = generarSelect('usuarios',$camposUser,$queryParams);
     $querySql .= "LIMIT 1";
-    // ejecutar query y retornar json
+    // ejecutar query y retornar si se obtuvo o no algun user
     $return = $pdo->query($querySql)->rowCount();
     return $return > 0;
 }
 
 function obtenerUsuario(array $queryParams,PDO $pdo,array $camposUser){
     // armar query SELECT * FROM `usuarios` WHERE params LIMIT 1
-    $querySql = "SELECT * FROM `usuarios` ";
-    $querySize = strlen($querySql);
-    $querySql .= armarWhere($queryParams, $camposUser);
+    $querySql = generarSelect('usuarios',$camposUser,$queryParams);
     $querySql .= "LIMIT 1";
     // ejecutar query y retornar json
     $return = $pdo->query($querySql)->fetchAll();
     return $return;
 }
 
-function listarUsuarios(array $queryParams,PDO $pdo, array $camposUser){
+function listarUsuarios(array $queryParams,PDO $pdo, array $camposUser, int $limite = 20){
     // armar query SELECT * FROM `usuarios` WHERE params LIMIT 1
-    $querySql = "SELECT * FROM `usuarios` ";
-    $querySql .= armarWhere($queryParams, $camposUser);
-    $querySql .= "LIMIT 20";
+    $querySql = generarSelect('usuarios',$camposUser,$queryParams);
+    $querySql .= "LIMIT $limite";
     if (array_key_exists('pag', $queryParams) && $queryParams['pag'] >= 0) {
         $querySql .= " OFFSET " . ($queryParams['pag'] * 20);
     }
@@ -157,10 +129,10 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
             ];
             $status = 200;
             //comprobar existencia
-            $tryUser = obtenerUsuario(array('username' => $bodyParams['username']), $pdo, $camposUser);
-            if (count($tryUser) >= 1) {
+            $tryUser = existeUsuario(array('username' => $bodyParams['username']), $pdo, $camposUser);
+            if ($tryUser) {
                 $msgResponse = [
-                    'error' => 'Ya existe el usuario ' . $tryUser[0]['username'],
+                    'error' => 'Ya existe el usuario',
                 ];
                 $status = 409; // conflict
             } else {
@@ -171,21 +143,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
                     $status = 500;
                 } else {
                     // armar querysql
-                    $querySql = "INSERT INTO `usuarios` (";
-                    // por clave poner en insert
-                    foreach ($bodyParams as $key => $value) {
-                        if (array_key_exists($key, $camposUser)) {
-                            $querySql .= "`$key`,";
-                        }
-                    }
-                    $querySql = substr($querySql, 0, strlen($querySql) - 1) . ") VALUES (";
-                    // por valor poner en el insert
-                    foreach ($bodyParams as $key => $value) {
-                        if (array_key_exists($key, $camposUser)) {
-                            $querySql .= "'$value',";
-                        }
-                    }
-                    $querySql = substr($querySql, 0, strlen($querySql) - 1) . ")";
+                    $querySql = generarInsert('usuarios',$camposUser,$bodyParams);
                     // return response
                     try {
                         $pdo->prepare($querySql)->execute();
@@ -218,9 +176,8 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
             ];
             $status = 500;
         }else{
-            $querySql = "DELETE FROM `usuarios` ";
-            $queryWhere = armarWhere($queryParams, $camposUser);
-            $querySql .= $queryWhere;
+            $querySql = generarDelete('usuarios',$camposUser,$queryParams);
+            $queryWhere = armarWhere($queryParams,$camposUser);
             
             $hayParams = false;
             if ($queryWhere != "") {
@@ -258,22 +215,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
 
         if ($valid){
             // UPDATE `usuarios` SET `dni` = '1234' WHERE `username` = 'claudio'
-            $querySql = 'UPDATE `usuarios` SET ';
-
-            // ACA TIENEN QUE MANDAR setdni=1234 o setusername=nuevo_user
-            $setParams = [];
-            foreach ($bodyParams as $key => $value){
-                if (str_starts_with($key,'set') && array_key_exists(substr($key, 3), $camposUser)){
-                    $setParams[substr($key, 3)] = $value;
-                }
-            }
-            foreach ($setParams as $key => $value){
-                if (array_key_exists($key,$camposUser)){
-                    $querySql .= "`$key` = '$value', ";
-                }
-            }
-            $querySql = substr($querySql, 0, strlen($querySql) - 2);
-            $querySql .= armarWhere($bodyParams,$camposUser);
+            $querySql = generarUpdate('usuarios',$camposUser,$bodyParams);
             try {
                 $pdo->prepare($querySql)->execute();
                 $msgResponse = [
