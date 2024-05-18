@@ -149,7 +149,10 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
 
     $group->DELETE('/deleteCentro/{id}', function (Request $request, Response $response, $args) use ($pdo) {
         $id = $args['id'];
-        
+        //
+        //FALTA VERIFICAR SI NO TIENE VOLUNTARIOS
+        //FALTA VERIFICAR SI NO TIENE ASIGNADO ALGUN INTERCAMBIO (MENSAJE PARA LA PROXIMA)
+        //        
         if (!ExisteCentro($id, $pdo)) {    
             $errorResponse = ['error' => 'No existe un centro con ese id'];
             $response->getBody()->write(json_encode($errorResponse));
