@@ -1,6 +1,6 @@
 import { ButtonSubmit } from "../componets/ButtonSubmit"
 
-export function AgregarCatgoria() {
+export function AgregarCategoria() {
 	return <div>
 			<form method="post">
 				<label id="formtext" >Ingrese el nombre de la categoria a agregar! </label>

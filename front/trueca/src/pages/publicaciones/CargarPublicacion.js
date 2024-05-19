@@ -1,6 +1,6 @@
 import { ButtonSubmit } from "../componets/ButtonSubmit"
 
-export function AgregarProducto(){
+export function AgregarPublicacion(){
 	return <>
 	 <form method="post">
 	<label >Nombre del producto </label>
