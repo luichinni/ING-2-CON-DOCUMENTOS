@@ -12,7 +12,7 @@ require_once __DIR__ . '/../utilities/generadorQuerys.php';
 // listar SOLUCIONADO EN EL OBTENER CON LIMIT
 // CentroVolun = ((centro(FK),voluntario(FK))(PK))
 $campoPubliCentro = [
-    "Publicacion" => "varchar",
+    "publicacion" => "varchar",
     "centro" => "int"
 ];
 

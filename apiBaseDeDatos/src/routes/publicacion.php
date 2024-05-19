@@ -4,8 +4,8 @@ use Slim\Routing\RouteCollectorProxy;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-function validaDatos($data, $response) {
-    $columna = ['nombre', 'descripcion', 'user', 'categoria', 'estado'];
+function validaDatosPubli($data, $response) {
+    $columna = ['nombre', 'descripcion', 'user', 'categoria_id', 'estado'];
 
     foreach ($columna as $colum) {
         if (!isset($data[$colum]) || empty($data[$colum])) {
@@ -39,7 +39,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
         //vemos las validaciones
-        if (!validaDatos($data, $response)) {
+        if (!validaDatosPubli($data, $response)) {
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
         //preparamos la ejecucion
@@ -53,10 +53,21 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         try {
             $stmt->execute();
             //
-            // FALTARIA HACER FOREACH CENTRO EN EL BODY, GENERAR CONEXION
+            // FOREACH CENTRO EN EL BODY, GENERAR CONEXION
             //
-            // FALTA TAMBIEN POR CADA FOTO, ALMACENARLA
+            for($i = 1; $i<=3 ; $i++){
+                if(array_key_exists("centro$i",$data)){
+                    agregarPubliCentros(array('centro'=>$data["centro$i"],'publicacion'=>$pdo->lastInsertId()),$pdo);
+                }
+            }
             //
+            // CADA FOTO, ALMACENARLA
+            //
+            for($j = 1; $j<=6; $j++){
+                if (array_key_exists("imagen$i", $data)) {
+                    agregarImg(array('archivo' => $data["imagen$i"], 'publicacion' => $pdo->lastInsertId()), $pdo);
+                }
+            }
         } catch (PDOException $e) {
             $errorResponse = ['error' => 'Error al ejecutar la consulta: ' . $e->getMessage()];
             $response->getBody()->write(json_encode($errorResponse));
@@ -94,7 +105,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
         // validamos datos
-        if (!validaDatos($data, $response)) {
+        if (!validaDatosPubli($data, $response)) {
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
         // preparamos la consulta
