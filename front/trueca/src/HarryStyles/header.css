@@ -1,0 +1,5 @@
+.header {
+    width: 100%; /* Ancho completo de la ventana */
+    height: 30px; /* Altura fija de 30 píxeles */
+    background-color: #2f87cf; /* Color de fondo (opcional) */
+}

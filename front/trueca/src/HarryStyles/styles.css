@@ -8,10 +8,19 @@
     margin-left: 20px;
     margin-top: 20px;
     margin-bottom: 20px;
-    /*text-decoration: none;
-    height: 40px;
-    /* Modificar la altura del botón */
     padding: 10px 20px;
-    /* Opcional: ajustar el relleno para el contenido dentro del botón */
     font-size: 16px;
 }
+
+.botonHeader{
+    background-color: #8b0000;
+    border: 2px solid #6D071A;
+    color: #FFFF;
+    align-items: right;
+    padding-right: 50px;
+    margin-right: 20px;
+    margin-left: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+

@@ -1,7 +1,6 @@
 import { ButtonSubmit } from "../componets/ButtonSubmit";
 
-root.render(registrarse());
-function registrarse(){
+export function registrarse(){
 return <>
 	<h1>Trueca </h1>
 	<div id="Registrarse">

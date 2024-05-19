@@ -6,12 +6,10 @@ export function IniciarSesion(){
     <h2>Inicio de Sesión</h2>
             <fieldset id="FormInicio">
                 <form action="/login" method="post">
-                    <label id="formtext" >Usuario:</label>
-                    <input type="text" id="completar" name="usuario" required /> 
+                    <input placeholder="Ingrese su usuario" type="text" id="completar" name="usuario" required /> 
                     <br/>
     
-                    <label id="formtext" for="contrasena">Contraseña:</label>
-                    <input type="password" id="completar" name="contrasena" required />
+                    <input placeholder="Ingrese su contraseña" type="password" id="completar" name="contrasena" required />
                     <br/>
     
                     <ButtonSubmit text="Iniciar sesión"/>
