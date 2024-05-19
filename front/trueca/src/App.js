@@ -1,40 +1,37 @@
 import './App.css';
 import React from "react";
-import ReactDom from "react-dom/client";
+import ReactDom from "react-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import NavBar from "./components/NavBarComponent";
-import Header from "./components/HeaderComponent";
+import NavBar from "./components/Navbar";
+import Header from './components/Header'; // Cambiado de { Header } a Header
 import { ListarPublis } from './pages/publicaciones/ListarPublis';
 import { AgregarCategoria } from './pages/categorias/AgregarCategoria';
-
-
 
 function App() {
   return (
     <div className='body'>
       <BrowserRouter>
-        <div className='contenedor'>
-          <Header />
-          <NavBar className= '.navbar-nav' />
-        </div>
-        <div  className='contenido'>
-          <div className='publicaciones'>
-            <Routes>
-              <Route path='/' element={ListarPublis} />
-
-              <Route path='/categorias/new' element={AgregarCategoria} />
-              
-
-            </Routes>
+        <div>
+          <div className='contenedor'>
+            <Header />
+            <NavBar className= 'navbar-nav' />
+          </div>
+          <div  className='contenido'>
+            <div className='publicaciones'>
+              <Routes>
+              </Routes>
+            </div>
           </div>
         </div>
       </BrowserRouter>
     </div>
-
   )
 }
 
-export default app;
+export default App;
+
+
+
 
 
 /*import logo from './logo.svg';

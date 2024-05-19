@@ -1,4 +1,4 @@
-import { ButtonSubmit } from "../componets/ButtonSubmit"
+import { ButtonSubmit } from "../../components/ButtonSubmit"
 
 export function AgregarCategoria() {
 	return <div>
