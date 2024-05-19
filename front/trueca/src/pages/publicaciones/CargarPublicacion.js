@@ -1,6 +1,6 @@
 import { ButtonSubmit } from "../components/ButtonSubmit"
 
-export function AgregarPublicacion(){
+const AgregarPublicacion = () => {
 	return <>
 	 <form method="post">
 	<label >Nombre del producto </label>
@@ -32,3 +32,5 @@ export function AgregarPublicacion(){
 </form>
 </>
 }
+
+export default AgregarPublicacion;

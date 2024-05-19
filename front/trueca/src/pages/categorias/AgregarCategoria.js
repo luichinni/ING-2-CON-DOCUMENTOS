@@ -1,6 +1,6 @@
 import { ButtonSubmit } from "../../components/ButtonSubmit"
 
-export function AgregarCategoria() {
+const AgregarCategoria = () => {
 	return <div>
 			<form method="post">
 				<label id="formtext" >Ingrese el nombre de la categoria a agregar! </label>
@@ -12,3 +12,5 @@ export function AgregarCategoria() {
 			</form>
 		   </div>
 }
+
+export default AgregarCategoria;

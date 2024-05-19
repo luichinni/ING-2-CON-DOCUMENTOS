@@ -3,7 +3,7 @@ import { ButtonSubmit } from "../../components/ButtonSubmit";
 const  Registrarse = () => {
 return <>
 	<h1>Trueca </h1>
-	<div id="Registrarse">
+	<div id="Cont-Registr">
 		<br/>
 		<p> Registrate para poder ofertar intercambios con los demás usuarios! </p>
 		<form method="post">

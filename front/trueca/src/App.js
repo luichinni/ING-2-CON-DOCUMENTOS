@@ -3,9 +3,9 @@ import React from "react";
 import ReactDom from "react-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import NavBar from "./components/Navbar";
-import Header from './components/Header'; // Cambiado de { Header } a Header
-import { ListarPublis } from './pages/publicaciones/ListarPublis';
-import { AgregarCategoria } from './pages/categorias/AgregarCategoria';
+import Header from './components/Header';
+import ListarPublis from './pages/publicaciones/ListarPublis';
+import AgregarCategoria from './pages/categorias/AgregarCategoria';
 import Dashboard from "./pages/Dashboard";
 import Registrarse from './pages/sesion/Registrarse';
 import IniciarSesion from './pages/sesion/IniciarSesion';

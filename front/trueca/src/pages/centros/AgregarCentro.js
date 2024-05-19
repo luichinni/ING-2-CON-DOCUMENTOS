@@ -1,7 +1,6 @@
 import { ButtonSubmit } from "../../components/ButtonSubmit"
 
-
-export function AgregarCentro() {
+const AgregarCentro = () => {
 	return <div>
 			<form method="post">
 				<label id="formtext" >Ingrese el nombre del nuevo centro a ingresar </label>
@@ -16,3 +15,4 @@ export function AgregarCentro() {
 			</form>
 		   </div>
 }
+export default AgregarCentro;
