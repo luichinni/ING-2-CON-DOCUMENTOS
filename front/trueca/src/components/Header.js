@@ -3,8 +3,9 @@ import React from 'react';
 const Header = () => {
     return (
         <div className="header">
-            <br />
-            <a href="https://caritas.org.ar/quienes-somos/" className="botonHeader">¿Quiénes somos?</a>
+            {//<br />
+            //<a href="https://caritas.org.ar/quienes-somos/" className="botonHeader">¿Quiénes somos?</a>
+            }
         </div>
     );
 }

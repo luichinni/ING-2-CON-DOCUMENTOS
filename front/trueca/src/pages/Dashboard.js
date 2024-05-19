@@ -1,8 +1,8 @@
-import Tarjeta from './Tarjeta';
-import { ListaDePublicaciones } from './ListaDePublicaciones';
-import '../../HarryStyles/Publicaciones.css';
+import Tarjeta from './publicaciones/Tarjeta';
+import { ListaDePublicaciones } from './publicaciones/ListaDePublicaciones';
+import '../HarryStyles/Publicaciones.css';
 
-export function ListarPublis() {
+const ListarPublis = () => {
   
   if (ListaDePublicaciones.length === 0){
     return <h1 className="SinPubli">¡No hay publicaciones disponibles en este momento!</h1>;
@@ -27,3 +27,5 @@ export function ListarPublis() {
     </div>
   );
 }
+
+export default ListarPublis;

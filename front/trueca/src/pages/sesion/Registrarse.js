@@ -1,9 +1,10 @@
-import { ButtonSubmit } from "../components/ButtonSubmit";
+import { ButtonSubmit } from "../../components/ButtonSubmit";
 
-export function registrarse(){
+const  Registrarse = () => {
 return <>
 	<h1>Trueca </h1>
 	<div id="Registrarse">
+		<br/>
 		<p> Registrate para poder ofertar intercambios con los demás usuarios! </p>
 		<form method="post">
 			<label id="formtext" >Nombre </label>
@@ -46,3 +47,5 @@ return <>
 	</div>
 </>
 }
+
+export default Registrarse

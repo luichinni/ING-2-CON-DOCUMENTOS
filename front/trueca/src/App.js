@@ -6,6 +6,9 @@ import NavBar from "./components/Navbar";
 import Header from './components/Header'; // Cambiado de { Header } a Header
 import { ListarPublis } from './pages/publicaciones/ListarPublis';
 import { AgregarCategoria } from './pages/categorias/AgregarCategoria';
+import Dashboard from "./pages/Dashboard";
+import Registrarse from './pages/sesion/Registrarse';
+import IniciarSesion from './pages/sesion/IniciarSesion';
 
 function App() {
   return (
@@ -19,6 +22,11 @@ function App() {
           <div  className='contenido'>
             <div className='publicaciones'>
               <Routes>
+                <Route path={"/"} element={<Dashboard />} />
+
+                <Route path={"/Registrarse"} element={<Registrarse />} />
+                <Route path={"/IniciarSesion"} element={<IniciarSesion />} />
+                
               </Routes>
             </div>
           </div>

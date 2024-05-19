@@ -1,0 +1,51 @@
+.navbar {
+    width: 100%;
+    height: 15vh; 
+    background-color: #333;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 5px
+}
+.navbar-items {
+    list-style-type: none; /* Quitar los puntos de las listas */
+    margin: 0;
+    padding: 0;
+    display: flex; /* Usar flexbox para alinear los ítems */
+    justify-content: flex-end; /* Alinear los ítems a la derecha */
+}
+
+.navbar-items li {
+    display: inline; /* Asegurarse de que los ítems sean inline */
+}
+
+.botonNavBar{
+    background-color: #8b0000;
+    border: 2px solid #6D071A;
+    color: #FFFF;
+    align-items: right;
+    padding-right: 50px;
+    margin-right: 20px;
+    margin-left: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 14px 20px;
+    text-decoration: none;
+}
+
+.botonNavBar:hover{
+    background-color: #ffffff;
+    border: 2px solid #6D071A;
+    color: #8b0000;
+    align-items: right;
+    padding-right: 50px;
+    margin-right: 20px;
+    margin-left: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 14px 20px;
+}

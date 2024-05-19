@@ -1,0 +1,41 @@
+.SinPubli{
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px 30px;
+    text-align: center;
+    max-width: 400px;
+    }
+    
+.SinPubli p {
+    font-size: 18px;
+    color: #333;
+    margin: 0;
+}
+
+.ListadoPublis {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+}
+
+.ListadoPublis .fila {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px; /* Limitar el ancho máximo de las filas */
+    margin-bottom: 20px;
+}
+
+.publicacion{
+    width: calc(20% - 16px);
+    margin: 8px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    box-sizing: border-box;
+}
