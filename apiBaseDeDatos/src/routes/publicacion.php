@@ -52,6 +52,11 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         //ejecutamos o mandamos mensaje de error
         try {
             $stmt->execute();
+            //
+            // FALTARIA HACER FOREACH CENTRO EN EL BODY, GENERAR CONEXION
+            //
+            // FALTA TAMBIEN POR CADA FOTO, ALMACENARLA
+            //
         } catch (PDOException $e) {
             $errorResponse = ['error' => 'Error al ejecutar la consulta: ' . $e->getMessage()];
             $response->getBody()->write(json_encode($errorResponse));
