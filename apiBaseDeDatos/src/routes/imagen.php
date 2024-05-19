@@ -9,6 +9,22 @@ $camposImg = [
     'publicacion' => 'int'
 ];
 
+function agregarImg(array $valueParams, PDO $pdo){
+    global $camposImg;
+    $msgResponse = [
+        'exito' => 'Imagen cargada con exito'
+    ];
+    $querySql = generarInsert('imagen',$camposImg,$valueParams);
+    try {
+        $pdo->prepare($querySql)->execute();
+    } catch (Exception $e) {
+        $msgResponse = [
+            'error' => 'Ocurrio un error inesperado'
+        ];
+    }
+    return $msgResponse;
+}
+
 function obtenerImg(array $whereParams, PDO $pdo){
     global $camposImg;
     $querySql = generarSelect('imagen',$camposImg,$whereParams);
