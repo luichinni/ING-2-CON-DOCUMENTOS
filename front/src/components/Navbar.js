@@ -29,19 +29,6 @@ export function NavBar(){
                     className="botonNavBar"> 
                     Iniciar Sesion
                 </Link>
-                {
-                //<Link to={"../IniciarSesion.js"} className="botonHader"> Iniciar sesión </Link>
-                }
-            </li>
-            <li className='button-NavBar'>
-                <Link 
-                    to="/Registrarse"
-                    className="botonNavBar"> 
-                    Regístrarse 
-                </Link>
-                {
-                //<Link to={"../IniciarSesion.js"} className="botonHader"> Iniciar sesión </Link>
-                }
             </li>
         </div>
     </div>
