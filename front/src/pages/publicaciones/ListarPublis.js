@@ -1,11 +1,13 @@
 import axios from 'axios';
-import Tarjeta from './Tarjeta';
+import Publicacion from '../../components/PublicacionComponent';
+import Filtro from '../../components/Filtro';
 import { ListaDePublicaciones } from './ListaDePublicaciones';
 import '../../HarryStyles/Publicaciones.css';
 import { useEffect, useState } from 'react';
 
 const ListarPublis = () => {
   const [Publi, setPubli] = useState([]);
+  const [error, setError] = useState('');
   const [parametros, setParametros] = useState({
         nombre: "",
         user: "",
@@ -39,11 +41,36 @@ const ListarPublis = () => {
     fetchData();
   }, [parametros]);
   
-const handleParametrosChange = (newParametros) => {
+  const handleParametrosChange = (newParametros) => {
     setParametros(newParametros);
-};
+  };
 
-  const filasDePublicaciones = [];
+  return (
+      <div className='Content'>
+        <div className='Publi-Div'>
+          <Filtro onFiltroSubmit={handleParametrosChange} />
+          {error && <h1 className='SinPubli'>{error}</h1>}
+          {Publi.map (juego =>(
+            <Publicacion
+              key = {Publi.id}
+              nombre = {Publi.nombre}
+              descripcion = {Publi.descripcion}
+              user = {Publi.user}
+              categoria = {Publi.categoria}
+              estado = {Publi.estado}
+            />
+          ))}
+        </div>
+      </div>
+  )
+}
+
+export default ListarPublis;
+
+
+
+
+  /*const filasDePublicaciones = [];
   for (let i = 0; i < ListaDePublicaciones.length; i += 3) {
     filasDePublicaciones.push(ListaDePublicaciones.slice(i, i + 3));
   }
@@ -61,6 +88,4 @@ const handleParametrosChange = (newParametros) => {
       ))}
     </div>
   );
-}
-
-export default ListarPublis;
+}*/
