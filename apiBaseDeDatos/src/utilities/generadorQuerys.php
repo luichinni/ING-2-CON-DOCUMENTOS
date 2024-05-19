@@ -48,8 +48,9 @@ function generarInsert(string $tableName,array $camposTabla, array $valuesIn){
  * ]```
  * 
  * Se insertaran solo aquellos campos que aparezcan en $valuesWhere, si un campo no aparece no será tomado en cuenta.
+ * @param bool $like define si en el where se compara por exactos o coincidencias %valor%
  */
-function armarWhere(array $whereParams, array $camposTabla){
+function armarWhere(array $whereParams, array $camposTabla, bool $like = false){
     $queryWhere = "WHERE ";
     $querySize = strlen($queryWhere);
     foreach ($whereParams as $key => $value) { // para cada param
@@ -62,7 +63,11 @@ function armarWhere(array $whereParams, array $camposTabla){
                         $queryWhere .= "`$key`=$value ";
                         break;
                     default: // si es otra cosa
-                        $queryWhere .= "`$key` LIKE '$value' ";
+                        if ($like){
+                            $queryWhere .= "`$key` LIKE '%$value%' ";
+                        }else{
+                            $queryWhere .= "`$key` LIKE '$value' ";
+                        }
                         break;
                 }
             }
@@ -88,10 +93,11 @@ function armarWhere(array $whereParams, array $camposTabla){
  *      'nombre_campo' => 'valor',
  *      'username' => 'pepe'
  * ]```
+ * @param bool $like define si en el where se compara por exactos o coincidencias %valor%
  */
-function generarSelect(string $tableName, array $camposTabla, array $valuesWhere){
+function generarSelect(string $tableName, array $camposTabla, array $valuesWhere, bool $like = false){
     // SELECT * FROM `usuarios` WHERE params LIMIT 1
-    $querySql = "SELECT * FROM `$tableName` " . armarWhere($valuesWhere,$camposTabla);
+    $querySql = "SELECT * FROM `$tableName` " . armarWhere($valuesWhere,$camposTabla, $like);
     return $querySql;
 }
 
@@ -111,8 +117,9 @@ function generarSelect(string $tableName, array $camposTabla, array $valuesWhere
  * ]```
  * 
  * Los campos normales son los que iran en el where, los campos son el prefijo set serán los actualizados por el valor
+ * @param bool $like define si en el where se compara por exactos o coincidencias %valor%
  */
-function generarUpdate(string $tableName, array $camposTabla, array $valuesIn){
+function generarUpdate(string $tableName, array $camposTabla, array $valuesIn, bool $like = false){
     //UPDATE `usuarios` SET `dni` = '1234' WHERE `username` = 'claudio'
     $querySql = "UPDATE `$tableName` SET ";
     // ACA TIENEN QUE MANDAR setdni=1234 o setusername=nuevo_user
@@ -130,7 +137,7 @@ function generarUpdate(string $tableName, array $camposTabla, array $valuesIn){
     $querySql = substr($querySql, 0,
         strlen($querySql) - 2
     );
-    $querySql .= armarWhere($valuesIn, $camposTabla);
+    $querySql .= armarWhere($valuesIn, $camposTabla, $like);
 
     return $querySql;
 }
@@ -147,10 +154,11 @@ function generarUpdate(string $tableName, array $camposTabla, array $valuesIn){
  *      'nombre_campo' => 'valor',
  *      'username' => 'pepe'
  * ]```
+ * @param bool $like define si en el where se compara por exactos o coincidencias %valor%
  */
-function generarDelete(string $tableName, array $camposTabla, array $valuesWhere){
+function generarDelete(string $tableName, array $camposTabla, array $valuesWhere, bool $like = false){
     // DELETE FROM `usuarios` WHERE COSAS
-    $querySql = "DELETE FROM `$tableName` " . armarWhere($valuesWhere,$camposTabla);
+    $querySql = "DELETE FROM `$tableName` " . armarWhere($valuesWhere,$camposTabla, $like);
     return $querySql;
 }
 
