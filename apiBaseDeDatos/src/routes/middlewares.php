@@ -17,7 +17,7 @@ function validarSesion($req){
     return $ret;
 }
 
-function getUserRol($req){
+function getSessionUserRol($req){
     $queryParams = $req->getQueryParams();
     $queryParams = $queryParams == null ? [] : $queryParams;
     $ret = '';
@@ -37,7 +37,7 @@ $app->add(function (Request $req, RequestHandler $handler) use ($app){
     //$res = $app->getResponseFactory()->createResponse();
     $body = (array) json_decode($res->getBody());
     $body['activa'] = validarSesion($req);
-    $body['rolActivo'] = getUserRol($req);
+    $body['rolActivo'] = getSessionUserRol($req);
     $status = $res->getStatusCode();
     $res = $app->getResponseFactory()->createResponse();
     $res->getBody()->write(json_encode($body));

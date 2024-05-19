@@ -218,6 +218,12 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
             $querySql = generarUpdate('usuarios',$camposUser,$bodyParams);
             try {
                 $pdo->prepare($querySql)->execute();
+                if (array_key_exists('centro',$bodyParams) && array_key_exists('username',$bodyParams) && existeUsuario(array('username'=>$bodyParams['username'],'rol'=>'volunt'),$pdo,$camposUser)){
+                    // borrar otro centrovolun
+                    borrarCentroVolun(array('user'=>$bodyParams['username']),$pdo);
+                    // cargar el nuevo
+                    agregarCentroVolun(array('user'=>$bodyParams['username'],'centro'=>$bodyParams['centro']),$pdo);
+                }
                 $msgResponse = [
                     'Exito' => 'Usuario actualizado correctamente'
                 ];
