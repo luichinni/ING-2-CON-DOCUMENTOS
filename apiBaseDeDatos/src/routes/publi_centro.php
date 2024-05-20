@@ -16,63 +16,48 @@ $campoPubliCentro = [
     "centro" => "int"
 ];
 
+$publiCentroDB = new bdController('publi_centro',$pdo,$campoPubliCentro);
 
-function borrarPubliCentro(array $valuesWhere, PDO $pdo){
-    global $camposPubliCentro;
-    $querySql = generarDelete('publi_centro',$camposPubliCentro,$valuesWhere);
-    $where = armarWhere($valuesWhere,$camposPubliCentro);
+
+function borrarPubliCentro(array $valuesWhere){
+    global $publiCentroDB;
     $pudo = false;
-    if($where != ""){
-        try{
-            $pdo->query($querySql)->execute();
-            $pudo = true;
-        }catch (Exception $e){
-            $pudo = false;
-        }
-    }
+
+    if (!$publiCentroDB->exists($valuesWhere)) return $pudo;
+
+    $pudo = $publiCentroDB->delete($valuesWhere);
+
     return $pudo;
 }
 
-function validarPubliCentro(array $valuesWhere, PDO $pdo){
-    global $camposPubliCentro;
-    $tieneCampos = array_key_exists('publicacion', $valuesWhere) && array_key_exists('centro', $valuesWhere);
-    $valido = false;
-    if($tieneCampos){
-        $querySql = generarSelect('centro_volun', $camposPubliCentro, $valuesWhere);
-        $valido = $pdo->query($querySql)->rowCount() > 0;
-    }
-    return $valido;
+function validarPubliCentro(array $valuesWhere){
+    global $publiCentroDB;
+    return $publiCentroDB->exists($valuesWhere);
 }
 
-function listarPubliCentros(array $valuesWhere,PDO $pdo){
-    return obtenerPubliCentros($valuesWhere,$pdo,null);
+function listarPubliCentros(array $valuesWhere){
+    return obtenerPubliCentros($valuesWhere, null);
 }
 
-function obtenerPubliCentros(array $valuesWhere, PDO $pdo, ?int $limit = 1){
-    global $camposPubliCentro;
-    $querySql = generarSelect('publi_centro',$camposPubliCentro,$valuesWhere);
+function obtenerPubliCentros(array $valuesWhere, ?int $limit=1){
+    global $publiCentroDB;
+    $ret = '{}';
     if ($limit != null){
-        $querySql .= "LIMIT $limit";
+        $ret = $publiCentroDB->getFirst($valuesWhere, $limit);
+    }else{
+        $ret = $publiCentroDB->getAll($valuesWhere);
     }
-    $return = $pdo->query($querySql)->fetchAll();
-    return $return;
+
+    return ($ret == false) ? json_decode('{}') : json_decode($ret);
 }
 
 function agregarPubliCentros(array $datosIn, PDO $pdo){
-    global $camposPubliCentro;
-    $msgResponse = ['Exito' => 'Centro agregado con exito a la publicacion'];
-    // INSERT INTO `publi_centro` (`publicacion`, `centro`) VALUES ('', '')
-    $querySql = generarInsert('publi_centro',$camposPubliCentro,$datosIn);
-    // return response
-    try {
-        $pdo->prepare($querySql)->execute();
-    } catch (Exception $e) {
-        $msgResponse = [
-            'error' => 'Ocurrio un error inesperado'
-        ];
-    }
+    global $publiCentroDB;
+    $pudo = false;
 
-    return $msgResponse;
+    if ($publiCentroDB->exists($datosIn)) return $pudo;
+
+    return $publiCentroDB->insert($datosIn);
 }
 
 ?>

@@ -16,61 +16,45 @@ $camposCentroVolun = [
     "centro" => "int"
 ];
 
-function borrarCentroVolun(array $valuesWhere, PDO $pdo){
-    global $camposCentroVolun;
-    $querySql = generarDelete('centro_volun',$camposCentroVolun,$valuesWhere);
-    $where = armarWhere($valuesWhere,$camposCentroVolun);
+$centroVolunDB = new bdController('centro_volun',$pdo,$camposCentroVolun);
+
+function borrarCentroVolun(array $valuesWhere){
+    global $centroVolunDB;
     $pudo = false;
-    if($where != ""){
-        try{
-            $pdo->query($querySql)->execute();
-            $pudo = true;
-        }catch (Exception $e){
-            $pudo = false;
-        }
-    }
-    return $pudo;
+
+    if (!$centroVolunDB->exists($valuesWhere)) return $pudo;
+
+    return $centroVolunDB->delete($valuesWhere);
 }
 
-function validarCentroVolun(array $valuesWhere, PDO $pdo){
-    global $camposCentroVolun;
-    $tieneCampos = array_key_exists('voluntario', $valuesWhere) && array_key_exists('centro', $valuesWhere);
-    $valido = false;
-    if($tieneCampos){
-        $querySql = generarSelect('centro_volun', $camposCentroVolun, $valuesWhere);
-        $valido = $pdo->query($querySql)->rowCount() > 0;
-    }
-    return $valido;
+function validarCentroVolun(array $valuesWhere){
+    global $centroVolunDB;
+    return $centroVolunDB->exists($valuesWhere);
 }
 
-function listarCentroVolun(array $valuesWhere,PDO $pdo){
-    return obtenerCentroVolun($valuesWhere,$pdo,null);
+function listarCentroVolun(array $valuesWhere){
+    return obtenerCentroVolun($valuesWhere,null);
 }
 
-function obtenerCentroVolun(array $valuesWhere, PDO $pdo, ?int $limit = 1){
-    global $camposCentroVolun;
-    $querySql = generarSelect('centro_volun',$camposCentroVolun,$valuesWhere);
+function obtenerCentroVolun(array $valuesWhere, ?int $limit = 1){
+    global $centroVolunDB;
+    $retCV = '';
     if ($limit != null){
-        $querySql .= "LIMIT $limit";
+        $retCV = $centroVolunDB->getFirst($valuesWhere, false, $limit);
+    }else{
+        $retCV = $centroVolunDB->getAll($valuesWhere);
     }
-    $return = $pdo->query($querySql)->fetchAll();
-    return $return;
+    
+    return json_decode($retCV);
 }
 
-function agregarCentroVolun(array $datosIn, PDO $pdo){
-    global $camposCentroVolun;
-    $msgResponse = ['Exito' => 'Voluntario agregado con exito al centro'];
-    // INSERT INTO `centro_volun` (`centro`, `voluntario`) VALUES ('', '')
-    $querySql = generarInsert('centro_volun',$camposCentroVolun,$datosIn);
-    // return response
-    try {
-        $pdo->prepare($querySql)->execute();
-    } catch (Exception $e) {
-        $msgResponse = [
-            'error' => 'Ocurrio un error inesperado'
-        ];
-    }
-    return $msgResponse;
+function agregarCentroVolun(array $datosIn){
+    global $centroVolunDB;
+    $pudo = false;
+
+    if ($centroVolunDB->exists($datosIn)) return $pudo;
+
+    return $centroVolunDB->insert($datosIn);
 }
 
 ?>

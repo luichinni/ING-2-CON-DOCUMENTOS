@@ -3,7 +3,8 @@
 use Slim\Routing\RouteCollectorProxy;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Slim\Psr7\Response as Psr7Response;
+
+require_once __DIR__ . '/../utilities/bdController.php';
 
 $camposSesion = [
     "user" => "varchar",
@@ -15,15 +16,16 @@ $camposSesion = [
 
 $app->group('/public', function (RouteCollectorProxy $group) use ($pdo, $camposSesion) {
     //obtener usuario
-    $group->post('/crearSesion', function (Request $req, Response $res, $args) use ($pdo, $camposSesion) {
+    $group->post('/crearSesion', function (Request $req, Response $res, $args) {
+        global $userDB;
         $queryParams = $req->getParsedBody();
         $queryParams = $queryParams == null ? [] : $queryParams;
         $return = [
             'Error' => 'user o clave invalido'
         ];
         $status = 404;
-        if (array_key_exists('username',$queryParams) && array_key_exists('clave', $queryParams) && existeUsuario(array('username' => $queryParams['username']), $pdo, array('username' => 'varchar'))){
-            $user = obtenerUsuario(array('username' => $queryParams['username']), $pdo, array('username' => 'varchar'))[0];
+        if (array_key_exists('username',$queryParams) && array_key_exists('clave', $queryParams) && $userDB->exists(array('username' => $queryParams['username']))){
+            $user = json_decode($userDB->getFirst(array('username' => $queryParams['username'])));
             $tok = "token" . strtoupper($user['rol'][0]) . substr($user['rol'], 1);
             $return = [
                 'token' => $tok

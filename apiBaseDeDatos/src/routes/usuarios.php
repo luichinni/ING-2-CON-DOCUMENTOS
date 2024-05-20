@@ -2,7 +2,7 @@
 use Slim\Routing\RouteCollectorProxy;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-require_once __DIR__ . '/../utilities/generadorQuerys.php';
+require_once __DIR__ . '/../utilities/bdController.php';
 
 $camposUser = [
     "username" => "varchar",
@@ -11,16 +11,19 @@ $camposUser = [
     "apellido" => "varchar",
     "dni" => "int",
     "mail" => "varchar",
-    "telefono" => "int",
+    "telefono" => "?int",
     "rol" => "enum",
 ];
 
+$userDB = new bdController('usuarios',$pdo,$camposUser);
+
 function userValidator(array $data, PDO $pdo, array $camposUser){
+    global $userDB;
     $valid = true;
     $roles = ['admin', 'user', 'volunt'];
     match ($valid){
         // menos de 50 chars y que no esté utilizado
-        (array_key_exists('username', $data)) && ((strlen($data['username']) > 50) || (existeUsuario(array('username' => $data['username']), $pdo, $camposUser))) => $valid = false,
+        (array_key_exists('username', $data)) && ((strlen($data['username']) > 50) || ($userDB->exists(array('username' => $data['username'])))) => $valid = false,
         // menos de 50 char y que tenga más de 6
         (array_key_exists('clave', $data)) && ((strlen($data['clave']) > 50) || (strlen($data['clave']) < 6)) => $valid = false,
         // mayor a 2 letras
@@ -30,7 +33,7 @@ function userValidator(array $data, PDO $pdo, array $camposUser){
         // que sea solo numerico
         (array_key_exists('dni', $data)) && (!ctype_digit($data['dni'])) => $valid = false,
         // que tenga @ y que no sea utilizado por nadie
-        (array_key_exists('mail', $data)) && ((strpos($data['mail'], '@') === false) || (existeUsuario(array('mail' => $data['mail']), $pdo, $camposUser))) => $valid = false,
+        (array_key_exists('mail', $data)) && ((strpos($data['mail'], '@') === false) || ($userDB->exists(array('mail' => $data['mail'])))) => $valid = false,
         // que sea solo numerico
         (array_key_exists('telefono', $data)) && (!ctype_digit($data['telefono'])) => $valid = false,
         // rol existente
@@ -40,202 +43,101 @@ function userValidator(array $data, PDO $pdo, array $camposUser){
     return $valid;
 }
 
-
-
-function existeUsuario(array $queryParams, PDO $pdo, array $camposUser){
-    // armar query SELECT * FROM `usuarios` WHERE params LIMIT 1
-    $querySql = generarSelect('usuarios',$camposUser,$queryParams);
-    $querySql .= "LIMIT 1";
-    // ejecutar query y retornar si se obtuvo o no algun user
-    $return = $pdo->query($querySql)->rowCount();
-    return $return > 0;
-}
-
-function obtenerUsuario(array $queryParams,PDO $pdo,array $camposUser){
-    // armar query SELECT * FROM `usuarios` WHERE params LIMIT 1
-    $querySql = generarSelect('usuarios',$camposUser,$queryParams);
-    $querySql .= "LIMIT 1";
-    // ejecutar query y retornar json
-    $return = $pdo->query($querySql)->fetchAll();
-    return $return;
-}
-
-function listarUsuarios(array $queryParams,PDO $pdo, array $camposUser, int $limite = 20){
-    // armar query SELECT * FROM `usuarios` WHERE params LIMIT 1
-    $querySql = generarSelect('usuarios',$camposUser,$queryParams);
-    $querySql .= "LIMIT $limite";
-    if (array_key_exists('pag', $queryParams) && $queryParams['pag'] >= 0) {
-        $querySql .= " OFFSET " . ($queryParams['pag'] * 20);
-    }
-    // ejecutar query y retornar json
-    return $pdo->query($querySql)->fetchAll();
-}
-
 $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUser) {
     //obtener usuario
-    $group->get('/obtenerUsuario', function (Request $req,Response $res, $args) use ($pdo,$camposUser){
+    $group->get('/obtenerUsuario', function (Request $req,Response $res, $args){
+        global $userDB;
+        $status = 404;
         // obtener los parametros de la query
         $queryParams = $req->getQueryParams();
 
-        // obtener user
-        $userValid = existeUsuario($queryParams,$pdo,$camposUser);
-        //comprobar existencia
-        $msgResponse = [];
-        $status = 200;
-        if(!$userValid){
-            $msgResponse = [
-                'error' => 'No existe el usuario'
-            ];
-            $status = 404;
-        }else{
-            $msgResponse = obtenerUsuario($queryParams,$pdo,$camposUser)[0];
-        }
+        $where = $userDB->getWhereParams($queryParams);
 
-        //retornar user
-        $res->getBody()->write(json_encode($msgResponse));
+        if (empty($where)) return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
+
+        $existe = $userDB->exists($where);
+
+        if (!$existe) return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
+
+        $user = $userDB->getFirst($where);
+
+        $res->getBody()->write($user);
+        $status = 200;
+
         return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
     });
 
     //listar usuarios
-    $group->get('/listarUsuarios',function (Request $req, Response $res, $args) use ($pdo,$camposUser){
+    $group->get('/listarUsuarios',function (Request $req, Response $res, $args){
+        global $userDB;
+        $status = 404;
         // obtener los parametros de la query
         $queryParams = $req->getQueryParams();
 
-        $sqlRes = listarUsuarios($queryParams,$pdo,$camposUser);
+        $where = $userDB->getWhereParams($queryParams);
 
-        $res->getBody()->write(json_encode($sqlRes));
-        return $res->withHeader('Content-Type', 'application/json');
+        if (empty($where) || !$userDB->exists($where)) return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
+
+        $user = $userDB->getFirst($where,false,20);
+
+        $res->getBody()->write($user);
+        $status = 200;
+
+        return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
     });
 
     $group->post('/newUsuario',function (Request $req, Response $res, $args) use ($pdo,$camposUser){
-        $msgResponse = [
-            'error' => 'No fue posible registrar el usuario'
-        ];
-        $status = 409;
-        // separar querys
-        $bodyParams = (array) $req->getParsedBody();
+        global $userDB;
+        $pudo = false;
+        $status = 500;
 
-        $valid = userValidator($bodyParams,$pdo,$camposUser);
-        if ($valid){
-            //chequear todos los campos
-            $contador = 0;
-            foreach ($bodyParams as $key => $value) {
-                if (array_key_exists($key, $camposUser)) {
-                    $contador++;
-                }
-            }
-            $msgResponse = [
-                'Exito' => 'Usuario registrado con exito'
-            ];
-            $status = 200;
-            //comprobar existencia
-            $tryUser = existeUsuario(array('username' => $bodyParams['username']), $pdo, $camposUser);
-            if ($tryUser) {
-                $msgResponse = [
-                    'error' => 'Ya existe el usuario',
-                ];
-                $status = 409; // conflict
-            } else {
-                if ($contador < count($camposUser) - 1) {
-                    $msgResponse = [
-                        'error' => 'Faltan datos',
-                    ];
-                    $status = 500;
-                } else {
-                    // armar querysql
-                    $querySql = generarInsert('usuarios',$camposUser,$bodyParams);
-                    // return response
-                    try {
-                        $pdo->prepare($querySql)->execute();
-                    } catch (Exception $e) {
-                        $msgResponse = [
-                            'error' => 'Ocurrio un error inesperado'
-                        ];
-                        $status = 500; // internal server error
-                    }
-                }
-            }
-        }
-        $res->getBody()->write(json_encode($msgResponse));
+        $bodyParams = (array) $req->getParsedBody();
+        $where = $userDB->getWhereParams($bodyParams); // esto es para los values
+
+        if (empty($where)) return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
+
+        $valid = userValidator($bodyParams,$pdo,$camposUser) && !$userDB->exists($where);
+
+        if (!$valid) return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
+
+        $pudo = $userDB->insert($bodyParams);
+
+        $status = ($pudo) ? 200 : $status;
+
         return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
     });
 
-    $group->delete('/deleteUsuario',function (Request $req,Response $res, $args) use ($pdo,$camposUser){
-        //obtener params de la query url
+    $group->delete('/deleteUsuario',function (Request $req,Response $res, $args){
+        global $userDB;
+        $pudo = false;
+        $status = 500;
+
         $queryParams = $req->getQueryParams();
+        $where = $userDB->getWhereParams($queryParams);
 
-        $tryUsers = existeUsuario($queryParams,$pdo,$camposUser);
+        if (!$userDB->exists($where)) return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
 
-        $msgResponse = [
-            'Exito' => 'Usuario eliminado con exito'
-        ];
-        $status = 200;
-        if (!$tryUsers){
-            $msgResponse = [
-                'error' => 'No existe usuario que cumpla con la descripcion'
-            ];
-            $status = 500;
-        }else{
-            $querySql = generarDelete('usuarios',$camposUser,$queryParams);
-            $queryWhere = armarWhere($queryParams,$camposUser);
-            
-            $hayParams = false;
-            if ($queryWhere != "") {
-                $hayParams = true;
-            }
+        $pudo = $userDB->delete($where);
 
-            if ($hayParams) {
-                try {
-                    $pdo->prepare($querySql)->execute();
-                } catch (Exception $e) {
-                    $msgResponse = [
-                        'error' => 'No fue posible eliminar, ocurrió un error inesperado'
-                    ];
-                    $status = 500;
-                }
-            } else {
-                $msgResponse = [
-                    'error' => 'No existe usuario que cumpla con la descripcion'
-                ];
-                $status = 500;
-            }
-        }
+        $status = ($pudo) ? 200 : $status;
 
-        $res->getBody()->write(json_encode($msgResponse));
         return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
     });
 
     $group->put('/updateUsuario',function(Request $req,Response $res, $args) use ($pdo,$camposUser){
-        $bodyParams = (array) $req->getParsedBody();
-        $valid = existeUsuario($bodyParams,$pdo,$camposUser);
-        $msgResponse = [
-            'Error' => 'No fue posible actualizar el usuario'
-        ];
+        global $userDB;
+        $pudo = false;
         $status = 500;
 
-        if ($valid){
-            // UPDATE `usuarios` SET `dni` = '1234' WHERE `username` = 'claudio'
-            $querySql = generarUpdate('usuarios',$camposUser,$bodyParams);
-            try {
-                $pdo->prepare($querySql)->execute();
-                if (array_key_exists('centro',$bodyParams) && array_key_exists('username',$bodyParams) && existeUsuario(array('username'=>$bodyParams['username'],'rol'=>'volunt'),$pdo,$camposUser)){
-                    // borrar otro centrovolun
-                    borrarCentroVolun(array('user'=>$bodyParams['username']),$pdo);
-                    // cargar el nuevo
-                    agregarCentroVolun(array('user'=>$bodyParams['username'],'centro'=>$bodyParams['centro']),$pdo);
-                }
-                $msgResponse = [
-                    'Exito' => 'Usuario actualizado correctamente'
-                ];
-                $status = 200; // internal server error
-            } catch (Exception $e) {
-                $msgResponse = [
-                    'error' => 'Ocurrio un error inesperado'
-                ];
-                $status = 500; // internal server error
-            }
-        }
-        $res->getBody()->write(json_encode($msgResponse));
+        $bodyParams = (array) $req->getParsedBody();
+        $where = $userDB->getWhereParams($bodyParams);
+
+        if (empty($where) || !$userDB->exists($where)) return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
+
+        $pudo = $userDB->update($bodyParams);
+
+        $status = ($pudo) ? 200 : $status;
+            
         return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
     });
 });

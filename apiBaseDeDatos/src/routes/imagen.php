@@ -9,44 +9,34 @@ $camposImg = [
     'publicacion' => 'int'
 ];
 
-function agregarImg(array $valueParams, PDO $pdo){
-    global $camposImg;
-    $msgResponse = [
-        'exito' => 'Imagen cargada con exito'
-    ];
-    $querySql = generarInsert('imagen',$camposImg,$valueParams);
-    try {
-        $pdo->prepare($querySql)->execute();
-    } catch (Exception $e) {
-        $msgResponse = [
-            'error' => 'Ocurrio un error inesperado'
-        ];
-    }
-    return $msgResponse;
-}
+$imgDB = new bdController('imagen',$pdo,$camposImg);
 
-function obtenerImg(array $whereParams, PDO $pdo){
-    global $camposImg;
-    $querySql = generarSelect('imagen',$camposImg,$whereParams);
-    $imagenes = $pdo->query($querySql)->fetchAll();
-    return $imagenes;
-}
-
-function eliminarImg(array $whereParams, PDO $pdo){
-    global $camposImg;
-    $where = armarWhere($whereParams,$camposImg);
+function agregarImg(array $valueParams){
+    global $imgDB;
     $pudo = false;
-    if ($where != ""){
-        $querySql = generarDelete('imagen',$camposImg,$whereParams);
-        try{
-            $pdo->query($querySql)->execute();
-            $pudo = true;
-        }catch (Exception $e){
-            $pudo = false;
-        }
-    
-    }
-    return $pudo;
+
+    if ($imgDB->exists($valueParams)) return $pudo;
+
+    return $imgDB->insert($valueParams);
+}
+
+function listarImg(array $whereParams){
+    global $imgDB;
+    return json_decode($imgDB->getAll($whereParams));
+}
+
+function obtenerImg(array $whereParams){
+    global $imgDB;
+    return json_decode($imgDB->getFirst($whereParams));
+}
+
+function eliminarImg(array $whereParams){
+    global $imgDB;
+    $pudo = false;
+
+    if (!$imgDB->exists($whereParams)) return $pudo;
+
+    return $imgDB->delete($whereParams);
 }
 
 ?>
