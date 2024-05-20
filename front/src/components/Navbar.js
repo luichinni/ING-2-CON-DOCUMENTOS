@@ -21,6 +21,20 @@ export function NavBar(){
                 </Link>
             </li>
             <li className='button-NavBar'>
+                <Link 
+                    to="/agregarCentro"
+                    className="botonNavBar"> 
+                    Agregar Centro  
+                </Link>
+            </li>
+            <li className='button-NavBar'>
+                <Link 
+                    to="/AgregarCategoria"
+                    className="botonNavBar"> 
+                    Agregar Categoria
+                </Link>
+            </li>
+            <li className='button-NavBar'>
                 <a href="https://caritas.org.ar/quienes-somos/" className="botonNavBar">¿Quiénes somos?</a>
             </li>
             <li className='button-NavBar'>

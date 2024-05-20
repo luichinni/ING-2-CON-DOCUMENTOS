@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import Registrarse from './pages/sesion/Registrarse';
 import IniciarSesion from './pages/sesion/IniciarSesion';
 import AgregarPublicacion from './pages/publicaciones/CargarPublicacion';
+import AgregarCentro from './pages/centros/AgregarCentro';
 
 function App() {
   return (
@@ -30,6 +31,10 @@ function App() {
 
                 <Route path={"/agregarPublicacion"} element={<AgregarPublicacion />} />
                 
+                <Route path={"/agregarCentro"} element={<AgregarCentro />} />
+
+                <Route path={"/AgregarCategoria"} element={<AgregarCategoria />} />
+
               </Routes>
             </div>
           </div>

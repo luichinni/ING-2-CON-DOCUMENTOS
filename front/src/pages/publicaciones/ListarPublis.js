@@ -23,12 +23,12 @@ const ListarPublis = () => {
 
       try {
         const queryParams = new URLSearchParams(parametros).toString();
-        const url = `https://localhost:8000/public/listarPublicaciones?${queryParams}`;
+        const url = `https://localhost:3000/public/listarPublicaciones?${queryParams}`;
         const response = await axios.get(url);
 
         if (response.data.length === 0) {
           setError('No hay publicaciones disponibles');
-          setPublicaciones([]); // Limpiar el estado de las publicaciones en caso de error
+          setPublicaciones([]); 
         } else {
           setPublicaciones(response.data);
         }
