@@ -14,6 +14,13 @@ export function NavBar(){
                 </Link>
             </li>
             <li className='button-NavBar'>
+                <Link 
+                    to="/agregarPublicacion"
+                    className="botonNavBar"> 
+                    Subir Publicacion
+                </Link>
+            </li>
+            <li className='button-NavBar'>
                 <a href="https://caritas.org.ar/quienes-somos/" className="botonNavBar">¿Quiénes somos?</a>
             </li>
             <li className='button-NavBar'>

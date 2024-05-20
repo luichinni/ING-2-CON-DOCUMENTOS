@@ -39,4 +39,13 @@
     padding: 20px;
     box-sizing: border-box;
 }
-
+.Contents {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+  
+  .Publi-Div {
+    margin: 10px;
+  }

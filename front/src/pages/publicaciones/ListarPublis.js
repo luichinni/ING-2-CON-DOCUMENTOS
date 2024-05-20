@@ -1,72 +1,78 @@
 import axios from 'axios';
 import Publicacion from '../../components/PublicacionComponent';
 import Filtro from '../../components/Filtro';
-import { ListaDePublicaciones } from './ListaDePublicaciones';
 import '../../HarryStyles/Publicaciones.css';
 import { useEffect, useState } from 'react';
 
 const ListarPublis = () => {
-  const [Publi, setPubli] = useState([]);
+  const [publicaciones, setPublicaciones] = useState([]);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const [parametros, setParametros] = useState({
-        nombre: "",
-        user: "",
-        categoria: "",
-        estado: "",
-        id: ""
-  })
+    nombre: "",
+    user: "",
+    categoria: "",
+    estado: "",
+    id: ""
+  });
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
+      setError('');
+
       try {
-        const queryParams = new URLSearchParams(parametros);
-        const url = `https://localhost:8000/public/listarPublicaciones?${queryParams.toString()}`;
+        const queryParams = new URLSearchParams(parametros).toString();
+        const url = `https://localhost:8000/public/listarPublicaciones?${queryParams}`;
         const response = await axios.get(url);
 
-        if (response.data.length === 0){
-          setError('No hay publicaciones disponibles')
-          return <h1 className="SinPubli">¡No hay publicaciones disponibles en este momento!</h1>;
-         } else {
-          setPubli(response.data);
-          setError('');
-         }
-
-        console.log(response.data);
+        if (response.data.length === 0) {
+          setError('No hay publicaciones disponibles');
+          setPublicaciones([]); // Limpiar el estado de las publicaciones en caso de error
+        } else {
+          setPublicaciones(response.data);
+        }
       } catch (error) {
-        setError('Ocurrio un error al obtener las publicaciones.');
-        console.log(error);
+        setError('Ocurrió un error al obtener las publicaciones.');
+        console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
-  
+
     fetchData();
   }, [parametros]);
-  
+
   const handleParametrosChange = (newParametros) => {
     setParametros(newParametros);
   };
 
   return (
-      <div className='Content'>
-        <div className='Publi-Div'>
-          <Filtro onFiltroSubmit={handleParametrosChange} />
-          {error && <h1 className='SinPubli'>{error}</h1>}
-          {Publi.map (juego =>(
+    <div className='Content'>
+      <div className='Publi-Div'>
+        <Filtro onFiltroSubmit={handleParametrosChange} />
+        {loading ? (
+          <h1 className='Cargando'>Cargando...</h1>
+        ) : error ? (
+          <h1 className='SinPubli'>{error}</h1>
+        ) : (
+          publicaciones.map(publicacion => (
             <Publicacion
-              key = {Publi.id}
-              nombre = {Publi.nombre}
-              descripcion = {Publi.descripcion}
-              user = {Publi.user}
-              categoria = {Publi.categoria}
-              estado = {Publi.estado}
+              key={publicacion.id}
+              nombre={publicacion.nombre}
+              descripcion={publicacion.descripcion}
+              user={publicacion.user}
+              categoria={publicacion.categoria}
+              estado={publicacion.estado}
             />
-          ))}
-        </div>
+          ))
+        )}
       </div>
-  )
+    </div>
+  );
 }
 
 export default ListarPublis;
-
 
 
 
