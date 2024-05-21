@@ -1,8 +1,20 @@
 import {Link} from 'react-router-dom';
+import React, { useState } from 'react';
 import '../HarryStyles/NavBar.css';
 
 
 export function NavBar(){
+
+    const [menuOpen, setMenuOpen] = useState(false);
+
+    const toggleMenu = () => {
+        if (menuOpen) {
+            setMenuOpen(false);
+        } else {
+            setMenuOpen(true);
+        }
+    };
+    
     return <>
     <div className='navbar'>
         <div className='navbar-items'>
@@ -44,6 +56,19 @@ export function NavBar(){
                     Iniciar Sesion
                 </Link>
             </li>
+            <li className='button-NavBar'>
+                <button className="botonNavBar" onClick={toggleMenu}>Menú</button>
+            </li>
+            {menuOpen && (
+                 <div className={`dropdown-menu ${menuOpen ? 'show' : ''}`}>
+                 <ul>
+                     <li><button onClick={() => console.log("Cerrar Sesión")}>Cerrar Sesión</button></li>
+                     <li><button onClick={() => console.log("Configuraciones")}>Configuraciones</button></li>
+                     <li><button onClick={() => console.log("Ver mi Perfil")}>Ver mi Perfil</button></li>
+                 </ul>
+                </div>
+            )}
+
         </div>
     </div>
     </>
