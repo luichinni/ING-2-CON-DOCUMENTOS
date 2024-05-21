@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import {Link} from 'react-router-dom';
 
 const IniciarSesion = () => {
 
@@ -43,16 +44,18 @@ const IniciarSesion = () => {
             <div>
                 <br /><br /><br /><br /><br /><br />
                 <form onSubmit={handleSubmit}>
-                    <label>
-                        <input placeholder="Ingrese su usuario" type="text" value={username} onChange={handleUsernameChange} required /> 
-                    </label>
-                    <br />
-                    <label>
-                        <input placeholder="Ingrese su contraseña" type="password" value={clave} onChange={handleClaveChange} required />
-                    </label>
-                    <br />
+                    <label id="formtext" >Nombre de Usuario </label> <br/>
+                    <input placeholder="Ingrese su usuario" type="text" value={username} onChange={handleUsernameChange} required /> <br/>
+                    
+                    <label id="formtext" >Contraseña </label> <br/>
+                    <input placeholder="Ingrese su contraseña" type="password" value={clave} onChange={handleClaveChange} required /> <br/>
                     <button type="submit" className="botonSubmit"> Iniciar sesión</button>
                 </form>
+                <br/><br/>
+                <p className='textRegistrarse'>
+                    ¿No tenes un usuario?
+                    <Link to="/Registrarse" className='botonRegistrarse'> Registrarse </Link>
+                </p>
             </div>
         );
     };
