@@ -21,7 +21,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo, $camposS
         $queryParams = $req->getParsedBody();
         $queryParams = $queryParams == null ? [] : $queryParams;
         $return = [
-            'Error' => 'user o clave invalido'
+            'Mensaje' => 'user o clave invalido'
         ];
         $status = 404;
         if (array_key_exists('username',$queryParams) && array_key_exists('clave', $queryParams) && $userDB->exists(array('username' => $queryParams['username']))){
