@@ -73,7 +73,7 @@ const ListarPublis = () => {
                   nombre={publicacion.nombre}
                   descripcion={publicacion.descripcion}
                   user={publicacion.user}
-                  categoria={publicacion.categoria_id}
+                  categoria_id={publicacion.categoria_id}
                   estado={publicacion.estado}
                 />
               ))
