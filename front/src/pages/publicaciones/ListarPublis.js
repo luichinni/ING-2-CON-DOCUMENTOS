@@ -26,11 +26,11 @@ const ListarPublis = () => {
         const url = `http://localhost:8000/public/listarPublicaciones?${queryParams}`;
         const response = await axios.get(url);
 
-        if (response.data.length === 0) {
+        if (response.data.length === 3) {
           setError('No hay publicaciones disponibles');
           setPublicaciones([]); 
         } else {
-          setPublicaciones(response.data);
+          setPublicaciones(procesar(response.data));
         }
       } catch (error) {
         setError('Ocurrió un error al obtener las publicaciones.');
@@ -41,31 +41,39 @@ const ListarPublis = () => {
     };
 
     fetchData();
-  }, [parametros]);
+  });
 
   const handleParametrosChange = (newParametros) => {
     setParametros(newParametros);
   };
 
+  function procesar(publicaciones) {
+    let publisCopy = [];
+    Object.keys(publicaciones).forEach(function (clave) {
+      if (!isNaN(clave)) {
+        publisCopy[clave] = publicaciones[clave]
+      }
+    })
+    return publisCopy
+  }
+
   return (
     <div className='Content'>
       <div className='Publi-Div'>
         <Filtro onFiltroSubmit={handleParametrosChange} />
-        {loading ? (
-          <h1 className='Cargando'>Cargando...</h1>
-        ) : error ? (
+        {error ? (
           <h1 className='SinPubli'>{error}</h1>
-        ) : (
-          publicaciones.map(publicacion => (
-            <Publicacion
-              key={publicacion.id}
-              nombre={publicacion.nombre}
-              descripcion={publicacion.descripcion}
-              user={publicacion.user}
-              categoria={publicacion.categoria_id}
-              estado={publicacion.estado}
-            />
-          ))
+        ) : ( 
+              publicaciones.map(publicacion => (
+                <Publicacion
+                  key={publicacion.id}
+                  nombre={publicacion.nombre}
+                  descripcion={publicacion.descripcion}
+                  user={publicacion.user}
+                  categoria={publicacion.categoria_id}
+                  estado={publicacion.estado}
+                />
+              ))
         )}
       </div>
     </div>
