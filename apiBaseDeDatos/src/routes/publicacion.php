@@ -43,18 +43,21 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
 
         $publiID = (array)((json_decode($publiDB->getFirst($where)))[0]);
         $publiID = $publiID[0];
+        $bodyParams['publicacion'] = $publiID;
 
         for ($i = 1; $i <= 3; $i++) {
             $strCentro = "centro" . $i;
             if (array_key_exists($strCentro, $bodyParams)) {
-                $pudo = $pudo && agregarPubliCentros(array('centro' => $bodyParams[$strCentro], 'publicacion' => $publiID),$pdo);
+                $bodyParams['centro'] = $bodyParams[$strCentro];
+                $pudo = $pudo && agregarPubliCentros($bodyParams,$pdo);
             }
         }
 
         for ($j = 1; $j <= 6; $j++) {
             $strImg = "imagen" . $j;
             if (array_key_exists($strImg, $bodyParams)) {
-                $pudo = $pudo && agregarImg(array('archivo' => $bodyParams[$strImg], 'publicacion' => $publiID), $pdo);
+                $bodyParams['archivo'] = $bodyParams[$strImg];
+                $pudo = $pudo && agregarImg($bodyParams, $pdo);
             }
         }
 
@@ -163,16 +166,11 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
 
             for ($i = 0; $i < count($publiCent); $i++){
                 $wherCentro = ['id' => $publiCent[$i]['centro']];
-                $strCentro = "centro" . ($i+1);
-                $value[$strCentro] = $centroDB->getFirst($wherCentro);
+                $value['centros'][$i] = $centroDB->getFirst($wherCentro);
             }
             
-            $publiImg = listarImg($where);
+            $value['imagenes'] = listarImg($where);
 
-            for ($i = 0; $i < count($publiImg); $i++) {
-                $strImg = "imagen" . ($i+1);
-                $value[$strImg] = $publiImg[$i];
-            }
             $publis[$key] = $value;
         }
 

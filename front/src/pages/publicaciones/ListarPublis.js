@@ -41,7 +41,7 @@ const ListarPublis = () => {
     };
 
     fetchData();
-  });
+  },[parametros]);
 
   const handleParametrosChange = (newParametros) => {
     setParametros(newParametros);
@@ -61,7 +61,10 @@ const ListarPublis = () => {
     <div className='Content'>
       <div className='Publi-Div'>
         <Filtro onFiltroSubmit={handleParametrosChange} />
-        {error ? (
+        {loading ?(
+            <h1 className='Cargando'>Cargando...</h1>
+        ) :
+        error ? (
           <h1 className='SinPubli'>{error}</h1>
         ) : ( 
               publicaciones.map(publicacion => (

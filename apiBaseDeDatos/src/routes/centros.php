@@ -17,7 +17,7 @@ CREATE TABLE Centros (
 */
 
 $camposCentro = [
-    'id' => 'int',
+    'id' => '?int',
     'nombre' => 'varchar',
     'direccion' => 'varchar',
     'hora_abre' => 'time',

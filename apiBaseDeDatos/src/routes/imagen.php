@@ -6,7 +6,9 @@ require_once __DIR__ . '/../utilities/bdController.php';
 
 $camposImg = [
     'archivo' => 'varchar',
-    'publicacion' => 'int'
+    'publicacion' => 'int',
+    'tipo_imagen' => 'varchar',
+    'id' => '?int'
 ];
 
 $imgDB = new bdController('imagen',$pdo,$camposImg);

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-05-2024 a las 22:08:10
+-- Tiempo de generación: 21-05-2024 a las 18:32:12
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -31,6 +31,13 @@ CREATE TABLE `categoria` (
   `id` int(11) NOT NULL,
   `nombre` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `categoria`
+--
+
+INSERT INTO `categoria` (`id`, `nombre`) VALUES
+(1, 'limpieza');
 
 -- --------------------------------------------------------
 
@@ -77,9 +84,18 @@ CREATE TABLE `comentario` (
 --
 
 CREATE TABLE `imagen` (
-  `archivo` varchar(255) NOT NULL,
-  `publicacion` int(11) NOT NULL
+  `id` int(11) NOT NULL,
+  `tipo_imagen` varchar(5) DEFAULT NULL,
+  `archivo` varchar(255) DEFAULT NULL,
+  `publicacion` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `imagen`
+--
+
+INSERT INTO `imagen` (`id`, `tipo_imagen`, `archivo`, `publicacion`) VALUES
+(1, '.png', 'estoEsUnaFotoJajaja', 3);
 
 -- --------------------------------------------------------
 
@@ -124,6 +140,13 @@ CREATE TABLE `publicacion` (
   `categoria_id` int(11) DEFAULT NULL,
   `estado` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `publicacion`
+--
+
+INSERT INTO `publicacion` (`id`, `nombre`, `descripcion`, `user`, `categoria_id`, `estado`) VALUES
+(3, 'cloro', 'esto es un producto', 'pepe', 1, 'alta');
 
 -- --------------------------------------------------------
 
@@ -178,6 +201,17 @@ CREATE TABLE `usuarios` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`username`, `clave`, `nombre`, `apellido`, `dni`, `mail`, `telefono`, `rol`) VALUES
+('pepe', 'ssasght', 'lolero', 'promedio', 477838, 'nose@gmai', NULL, 'user'),
+('sofi', 'lumirey', 'sofia', 'martinez', 48383988, 'sofix@gmail.com', NULL, 'admin'),
+('soyadmin', 'ssasght', 'alguien', 'kijijij', 1234142, 'ffff@gmai', NULL, 'admin'),
+('soyvolunt', 'ssasght', 'seex', 'promedio', 696969, 'diegomaradona@gmai', NULL, 'user'),
+('soyvoluntReal', 'ssasght', 'nya', 'promedio', 9876234, 'unodos@gmai', 2147483647, 'volunt');
+
+--
 -- Índices para tablas volcadas
 --
 
@@ -212,7 +246,7 @@ ALTER TABLE `comentario`
 -- Indices de la tabla `imagen`
 --
 ALTER TABLE `imagen`
-  ADD PRIMARY KEY (`archivo`,`publicacion`),
+  ADD PRIMARY KEY (`id`),
   ADD KEY `publicacion` (`publicacion`);
 
 --
@@ -273,7 +307,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `categoria`
 --
 ALTER TABLE `categoria`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `centros`
@@ -286,6 +320,12 @@ ALTER TABLE `centros`
 --
 ALTER TABLE `comentario`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `imagen`
+--
+ALTER TABLE `imagen`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `intercambio`
@@ -303,7 +343,7 @@ ALTER TABLE `notificacion`
 -- AUTO_INCREMENT de la tabla `publicacion`
 --
 ALTER TABLE `publicacion`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas
