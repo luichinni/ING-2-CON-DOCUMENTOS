@@ -4,7 +4,7 @@ const Filtro = ({ onFiltroSubmit }) => {
   const [filtro, setFiltro] = useState({
     nombre: "",
     user: "",
-    categoria: "",
+    categoria_id: "",
     estado: "",
     id: ""
   });
@@ -26,7 +26,7 @@ const Filtro = ({ onFiltroSubmit }) => {
     <form onSubmit={handleSubmit}>
       <input type="text" name="nombre" value={filtro.nombre} onChange={handleChange} placeholder="Nombre" />
       <input type="text" name="user" value={filtro.user} onChange={handleChange} placeholder="Usuario" />
-      <input type="text" name="categoria" value={filtro.categoria} onChange={handleChange} placeholder="Categoría" />
+      <input type="text" name="categoria_id" value={filtro.categoria_id} onChange={handleChange} placeholder="Categoría_id" />
       <input type="text" name="estado" value={filtro.estado} onChange={handleChange} placeholder="Estado" />
       <button type="submit">Filtrar</button>
     </form>

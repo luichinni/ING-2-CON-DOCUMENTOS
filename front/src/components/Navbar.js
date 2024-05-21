@@ -83,7 +83,7 @@ export function NavBar(){
                 </div>
             )}
 
-            <li className='button-NavBar'>
+          {/*  <li className='button-NavBar'>
                 <button className="botonNavBar" onClick={toggleMenu}>categorias</button>
             </li>
             {menuOpen && (
@@ -94,7 +94,7 @@ export function NavBar(){
                     <li><button onClick={() => console.log("Ver mi Perfil")}>Ver mi Perfil</button></li>
                 </ul>
                 </div>
-            )}
+            )}*/}
 
         </div>
     </div>

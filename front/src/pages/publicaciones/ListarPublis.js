@@ -23,7 +23,7 @@ const ListarPublis = () => {
 
       try {
         const queryParams = new URLSearchParams(parametros).toString();
-        const url = `https://localhost:8000/public/listarPublicaciones?${queryParams}`;
+        const url = `http://localhost:8000/public/listarPublicaciones?${queryParams}`;
         const response = await axios.get(url);
 
         if (response.data.length === 0) {
@@ -62,7 +62,7 @@ const ListarPublis = () => {
               nombre={publicacion.nombre}
               descripcion={publicacion.descripcion}
               user={publicacion.user}
-              categoria={publicacion.categoria}
+              categoria={publicacion.categoria_id}
               estado={publicacion.estado}
             />
           ))

@@ -15,7 +15,7 @@ const publicacion = (props) => {
                             <br />
                             descripci&oacute;n:{props.descripcion}
                             <br />
-                            categoria: {props.categoria}
+                            categoria: {props.categoria_id}
                         </p>
                     </div>
                 </fieldset>

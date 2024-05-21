@@ -1,33 +1,50 @@
-import {Link} from 'react-router-dom'
+import React, { useState } from 'react';
 import { ButtonSubmit } from "../../components/ButtonSubmit";
 
 const IniciarSesion = () => {
-    return <>
-    <h2>Inicio de Sesión</h2>
-            <fieldset id="FormInicio">
-                <form action="/login" method="post">
-                    <br/>
-                    <br/>
-                    <input placeholder="Ingrese su usuario" type="text" id="completar" name="usuario" required /> 
-                    <br/>
+
+        const [user, setUser] = useState('');
+        const [clave, setClave] = useState('');
     
-                    <input placeholder="Ingrese su contraseña" type="password" id="completar" name="contrasena" required />
-                    <br/>
+        const handleUserChange = (e) => setUser(e.target.value);
+        const handleClaveChange = (e) => setClave(e.target.value);
     
-                    <ButtonSubmit text="Iniciar sesión"/>
+        const handleSubmit = async (e) => {
+            e.preventDefault();
+            console.log('Submit button clicked!');
+    
+            const formData = new FormData();
+            formData.append('user', user);
+            formData.append('clave', clave);
+    
+            try {
+                const response = await fetch('/public/crearSesion', {
+                    method: 'POST',
+                    body: formData,
+                });
+                const result = await response.json();
+                console.log('Success:', result);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+    
+        return (
+            <div>
+                <br /><br /><br /><br /><br /><br />
+                <form onSubmit={handleSubmit}>
+                    <label>
+                        <input placeholder="Ingrese su usuario" type="text" value={user} onChange={handleUserChange} required /> 
+                    </label>
+                    <br />
+                    <label>
+                        <input placeholder="Ingrese su contraseña" type="password" value={clave} onChange={handleClaveChange} required />
+                    </label>
+                    <br />
+                    <ButtonSubmit text="Iniciar sesión" />
                 </form>
-            </fieldset>
-            <br />
-            <fieldset>
-                <div>
-                    <label>¿No tienes una cuenta? </label>
-                    <Link 
-                        to="/Registrarse"
-                        className="boton"> 
-                        Regístrate 
-                    </Link>
-                </div>
-            </fieldset>
-    </>
-}
+            </div>
+        );
+    };
+
 export default IniciarSesion;
