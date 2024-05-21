@@ -1,0 +1,76 @@
+import axios from 'axios';
+import Centro from '../../components/Centro';
+import FiltroCentro from '../../components/FiltroCentro';
+import '../../HarryStyles/centros.css';
+import '../../HarryStyles/styles.css'
+import { useEffect, useState } from 'react';
+
+const ListarCentro = () => {
+  const [centros, setCentros] = useState([]);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [parametros, setParametros] = useState({
+    id: "",
+    nombre: "",
+    direccion: "",
+    hora_abre: "",
+    hora_cierra: ""
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError('');
+
+      try {
+        const queryParams = new URLSearchParams(parametros).toString();
+        const url = `https://localhost:8000/public/listarCentros?${queryParams}`;
+        const response = await axios.get(url);
+
+        if (response.data.length === 0) {
+          setError('No hay centros disponibles');
+          setCentros([]); 
+        } else {
+          setCentros(response.data);
+        }
+      } catch (error) {
+        setError('Ocurrió un error al obtener los centros.');
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [parametros]);
+
+  const handleParametrosChange = (newParametros) => {
+    setParametros(newParametros);
+  };
+
+  return (
+    <div className='Content'>
+      <br /><br /><br /><br /><br /><br /><br />
+      <div className='Publi-Div'>
+        <FiltroCentro onFiltroSubmit={handleParametrosChange} />
+        {loading ? (
+          <h1 className='Cargando'>Cargando...</h1>
+        ) : error ? (
+          <h1 className='SinCentros'>{error}</h1>
+        ) : (
+          centros.map(centro => (
+            <Centro
+                key = {centro.id}
+                nombre = {centro.nombre}
+                direccion = {centro.direccion}
+                hora_abre = {centro.hora_abre}
+                hora_cierra = {centro.hora_cierra}
+            />
+          ))
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default ListarCentro;

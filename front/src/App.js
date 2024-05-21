@@ -5,12 +5,14 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import NavBar from "./components/Navbar";
 import Header from './components/Header';
 import ListarPublis from './pages/publicaciones/ListarPublis';
+import ListarCentro from './pages/centros/ListarCentro';
 import AgregarCategoria from './pages/categorias/AgregarCategoria';
 import Dashboard from "./pages/Dashboard";
 import Registrarse from './pages/sesion/Registrarse';
 import IniciarSesion from './pages/sesion/IniciarSesion';
 import AgregarPublicacion from './pages/publicaciones/CargarPublicacion';
 import AgregarCentro from './pages/centros/AgregarCentro';
+import MisPublis from './pages/publicaciones/MisPublicaciones';
 
 function App() {
   return (
@@ -25,6 +27,7 @@ function App() {
             <div className='publicaciones'>
               <Routes>
                 <Route path={"/"} element={<Dashboard />} />
+                <Route path={"/MisPublicaciones"} element={<MisPublis />} />
 
                 <Route path={"/Registrarse"} element={<Registrarse />} />
                 <Route path={"/IniciarSesion"} element={<IniciarSesion />} />
@@ -32,6 +35,7 @@ function App() {
                 <Route path={"/agregarPublicacion"} element={<AgregarPublicacion />} />
                 
                 <Route path={"/agregarCentro"} element={<AgregarCentro />} />
+                <Route path={"/Centros"} element={<ListarCentro />} />
 
                 <Route path={"/AgregarCategoria"} element={<AgregarCategoria />} />
 

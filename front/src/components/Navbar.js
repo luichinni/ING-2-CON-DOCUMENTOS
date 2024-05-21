@@ -39,11 +39,25 @@ export function NavBar(){
                     Agregar Centro  
                 </Link>
             </li>
-            <li className='button-NavBar'>
+           {/* <li className='button-NavBar'>
                 <Link 
                     to="/AgregarCategoria"
                     className="botonNavBar"> 
                     Agregar Categoria
+                </Link>
+</li>*/}
+            <li className='button-NavBar'>
+                <Link 
+                    to="/Centros"
+                    className="botonNavBar"> 
+                    Centros
+                </Link>
+            </li>
+            <li className='button-NavBar'>
+                <Link 
+                    to="/MisPublicaciones"
+                    className="botonNavBar"> 
+                    Mis Publicaciones
                 </Link>
             </li>
             <li className='button-NavBar'>
@@ -60,12 +74,25 @@ export function NavBar(){
                 <button className="botonNavBar" onClick={toggleMenu}>Menú</button>
             </li>
             {menuOpen && (
-                 <div className={`dropdown-menu ${menuOpen ? 'show' : ''}`}>
-                 <ul>
-                     <li><button onClick={() => console.log("Cerrar Sesión")}>Cerrar Sesión</button></li>
-                     <li><button onClick={() => console.log("Configuraciones")}>Configuraciones</button></li>
-                     <li><button onClick={() => console.log("Ver mi Perfil")}>Ver mi Perfil</button></li>
-                 </ul>
+                <div className={`dropdown-menu ${menuOpen ? 'show' : ''}`}>
+                <ul>
+                    <li><button onClick={() => console.log("Cerrar Sesión")}>Cerrar Sesión</button></li>
+                    <li><button onClick={() => console.log("Configuraciones")}>Configuraciones</button></li>
+                    <li><button onClick={() => console.log("Ver mi Perfil")}>Ver mi Perfil</button></li>
+                </ul>
+                </div>
+            )}
+
+            <li className='button-NavBar'>
+                <button className="botonNavBar" onClick={toggleMenu}>categorias</button>
+            </li>
+            {menuOpen && (
+                <div className={`dropdown-menu ${menuOpen ? 'show' : ''}`}>
+                <ul>
+                    <li><button onClick={() => console.log("Cerrar Sesión")}>Articulos</button></li>
+                    <li><button onClick={() => console.log("Configuraciones")}>Configuraciones</button></li>
+                    <li><button onClick={() => console.log("Ver mi Perfil")}>Ver mi Perfil</button></li>
+                </ul>
                 </div>
             )}
 
