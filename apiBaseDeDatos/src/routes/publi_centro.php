@@ -3,7 +3,7 @@ use Slim\Routing\RouteCollectorProxy;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-require_once __DIR__ . '/../utilities/generadorQuerys.php';
+require_once __DIR__ . '/../utilities/bdController.php';
 // //obtener, 
 // //validar, 
 // //borrar, 
@@ -12,7 +12,7 @@ require_once __DIR__ . '/../utilities/generadorQuerys.php';
 // listar SOLUCIONADO EN EL OBTENER CON LIMIT
 // CentroVolun = ((centro(FK),voluntario(FK))(PK))
 $campoPubliCentro = [
-    "publicacion" => "varchar",
+    "publicacion" => "int",
     "centro" => "int"
 ];
 

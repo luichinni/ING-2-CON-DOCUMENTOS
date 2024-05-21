@@ -78,7 +78,9 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
 
         if (empty($where) || !$userDB->exists($where)) return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
 
-        $user = $userDB->getFirst($where,false,20);
+        $offset = (array_key_exists('pag',$queryParams)) ? $queryParams['pag'] : 0;
+
+        $user = $userDB->getFirst($where,false,20, $offset);
 
         $res->getBody()->write($user);
         $status = 200;

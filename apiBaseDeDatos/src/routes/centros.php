@@ -4,6 +4,8 @@ use Slim\Routing\RouteCollectorProxy;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
+require_once __DIR__ . '/../utilities/bdController.php';
+
 /*
 CREATE TABLE Centros (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -68,7 +70,7 @@ function validaDatos($data, $response) {
 }
 
 $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
-    $group->POST('/newCentros', function ($request, $response, $args){
+    $group->POST('/newCentro', function ($request, $response, $args){
         $data = $request->getParsedBody();
 
         if (json_last_error() !== JSON_ERROR_NONE) {

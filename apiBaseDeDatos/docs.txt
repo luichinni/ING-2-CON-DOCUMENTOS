@@ -1,0 +1,444 @@
+Se describen a continuacion las rutas con sus respectivos parametros y retornos.
+
+Consideraciones adicionales:
+                - Todas las rutas son /public/<ruta>
+                - Todas las respuestas traen los campos:
+                        - activa: true o false segun se encuentre activa la sesión.
+                        - rolActivo: rol de la sesión actual, aparece vacio si no hay sesión abierta.
+                - Para conseguir validaciones correctas segun rol, se debe poner en cada llamada ?token=<tokenDelCliente>
+                - Para listar por coincidencia parcial y no total, falta implementación.
+
+NOTAS:
+    TODOS LOS DELETE DEBEN RECIBIR PARAMETROS EN LA QUERY PARA FILTRAR QUE SE BORRA, SI NO HAY FILTRO NO BORRA NADA
+
+    TODOS LOS UPDATE RECIBEN EN EL CUERPO/BODY COMO "set<campo>" EL NUEVO VALOR Y "campo" EL QUE SE USA PARA FILTRAR EL WHERE
+
+    TODOS LOS LISTAR DEBENE RECIBIR LOS PARAMS EN LA QUERY PUEDEN SER ACCEDIDOS CON "pag" PARA OBTENER DE A 20 UNIDADES CAMBIABLE POR CODIGO
+
+    TODOS LOS NEW REQUIEREN LOS DATOS EN EL CUERPO/BODY CON EL MISMO NOMBRE DE LA TABLA Y SU VALOR ASOCIADO
+
+Sesion:
+    /crearSesion -> comprueba que exista el usuario (por ahora no su clave ya que es para test)
+                    retorna un token segun el rol del usuario, dicho token deberia ser enviado al back
+                    en cada operacion para detener operaciones sin permiso (A IMPLEMENTAR EN EL FUTURO)
+
+    La comprobacion del token se hace automaticamente en un middleware, el cual inserta a la respuesta:
+        "activa": false,
+        "rolActivo": ""
+    Con token valido cambia a:
+        "activa": true,
+        "rolActivo": "user"
+        -------------------
+        "activa": true,
+        "rolActivo": "volunt"
+        -------------------
+        "activa": true,
+        "rolActivo": "admin"
+    Segun el rol del user
+    
+Usuarios:
+    Todas las rutas de usuarios pueden recibir los siguentes parametros:
+        - username
+        - clave
+        - nombre
+        - apellido
+        - dni
+        - mail
+        - telefono
+        - rol
+
+    /obtenerUsuario ->  Recibe los parametros en la query, retorna la primer ocurrencia 
+                        que cumpla con la descripcion brindada con los parametros.
+                        - Status code 200: Ok
+                        - Status code 404: No se encontró ningun usuario que cumpla
+                        - Tipo de Request: GET
+
+                Ejemplos con datos cargados mano:
+                    /obtenerUsuario?username=luwu
+                    retorna:
+                        {
+                            "0": {
+                                "username": "luwu",
+                                "0": "luwu",
+                                "clave": "sofiamireina123",
+                                "1": "sofiamireina123",
+                                "nombre": "luciano",
+                                "2": "luciano",
+                                "apellido": "macias",
+                                "3": "macias",
+                                "dni": 44130359,
+                                "4": 44130359,
+                                "mail": "luwuntu@gmail.com",
+                                "5": "luwuntu@gmail.com",
+                                "telefono": null,
+                                "6": null,
+                                "rol": "admin",
+                                "7": "admin"
+                            },
+                            "activa": false,
+                            "rolActivo": ""
+                        }
+
+                    /obtenerUsuario?rol=user
+                    retorna:
+                        {
+                            "0": {
+                                "username": "pedro12",
+                                "0": "pedro12",
+                                "clave": "picandopiedra",
+                                "1": "picandopiedra",
+                                "nombre": "pedro",
+                                "2": "pedro",
+                                "apellido": "pica piedra",
+                                "3": "pica piedra",
+                                "dni": 1234,
+                                "4": 1234,
+                                "mail": "laspiedras@outlook.com",
+                                "5": "laspiedras@outlook.com",
+                                "telefono": 22233123,
+                                "6": 22233123,
+                                "rol": "user",
+                                "7": "user"
+                            },
+                            "activa": false,
+                            "rolActivo": ""
+                        }
+
+    /listaUsuarios ->   Funciona igual que obtenerUsuario, retorna las primeras 20 ocurrencias
+                        que cumplen con la descripcion. (Se puede modificar por código la cantidad
+                        de instancias que se retornan)
+                        - Se puede enviar el parametro "pag" para ir pasando las páginas, rango 0..n
+                        - Si no se pasa "pag", se retorna la pagina 0 por defecto.
+                        - Status code 200: Ok
+                        - Status code 404: No se encontró ningun usuario que cumpla
+                        - Tipo de Request: GET
+                
+                Ejemplos con pocos datos:
+                    /listarUsuarios?apellido=martinez
+                    retorna: 
+                        {
+                            "0": {
+                                "username": "omarAlgoAndaMal",
+                                "0": "omarAlgoAndaMal",
+                                "clave": "calveSecreta123",
+                                "1": "calveSecreta123",
+                                "nombre": "omar",
+                                "2": "omar",
+                                "apellido": "martinez",
+                                "3": "martinez",
+                                "dni": 28348729,
+                                "4": 28348729,
+                                "mail": "soyomar@skibidi.com",
+                                "5": "soyomar@skibidi.com",
+                                "telefono": 9283285,
+                                "6": 9283285,
+                                "rol": "volunt",
+                                "7": "volunt"
+                            },
+                            "1": {
+                                "username": "sofiuwu",
+                                "0": "sofiuwu",
+                                "clave": "lucianomirey",
+                                "1": "lucianomirey",
+                                "nombre": "sofia",
+                                "2": "sofia",
+                                "apellido": "martinez",
+                                "3": "martinez",
+                                "dni": 44620873,
+                                "4": 44620873,
+                                "mail": "sofita@xxx.com",
+                                "5": "sofita@xxx.com",
+                                "telefono": 66666,
+                                "6": 66666,
+                                "rol": "user",
+                                "7": "user"
+                            },
+                            "activa": false,
+                            "rolActivo": ""
+                        }
+
+    /newUsuario ->      Agrega un usuario a la base de datos, recibe todos los parametros en el cuerpo
+                        del Request, el tipo de form en el postman es "x-www-form-urlencoded".
+                        Datos y validaciones:
+                            - username  -> unico, tamaño < 50 chars
+                            - clave     -> 6 < tamaño < 50 chars
+                            - nombre    -> tamaño > 2 chars
+                            - apellido  -> tamaño > 2 chars
+                            - dni       -> todos los simbolos deben ser digitos numericos
+                            - mail      -> unico, debe tener un @ (no comprueba por muchos arrobas o puntos, ojo)
+                            - telefono  -> todos los simbolos deben ser digitos numericos
+                            - rol       -> rol debe ser: user, volunt o admin
+                        - Los parametros enviados en el cuerpo deben seguir el formato (aprox):
+                            campo1:valor1
+                            campo2:valor2
+                                ...
+                            campoN:valorN
+                        - Status code 200: Ok
+                        - Status code 500: Ocurrio algun error (no distinguibles en front por ahora)
+                        - Tipo de Request: POST
+
+                Ejemplo:
+                    /newUsuario
+                    body:
+                        username:soyNuevo00
+                        clave:contraseña
+                        nombre:mauri
+                        apellido:bessa
+                        dni:62636487
+                        mail:mauri@deanto.com
+                        telefono:0800999111
+                        rol:admin
+                    retorna con status 200 Ok:
+                        {
+                            "activa": false,
+                            "rolActivo": ""
+                        }
+                    luego se puede hacer un /obtenerUsuario?username=soyNuevo00 para comprobar
+
+    /deleteUsuario ->   Elimina el/los usuarios que cumplan con la descripcion dada por medio de la query.
+                        - Si no se pasan parametros falla
+                        - Busqueda solo por coincidencia exacta, parcial a implementar %string%
+                        - Status code 200: Ok
+                        - Status code 500: Falla interna no distinguible
+                        - Tipo de Request: DELETE
+
+                Ejemplo:
+                    /deleteUsuario?username=soyNuevo00
+                    retorna con status 200 Ok:
+                        {
+                            "activa": false,
+                            "rolActivo": ""
+                        }
+
+                    Si user no existe retorna status 500.
+
+    /updateUsuario ->   Actualiza los datos pasados como "set<campo>" con los valores "<campo>" del cuerpo
+                        del Request.
+                        - A implementar la validacion de los campos nuevamente.
+                        - Permite actualizar uno o más campos, a su vez permite actualizar uno o más usuarios.
+                        - Formato:
+                            setcampoX:valorNuevo
+                            campoY:valorABuscar
+                        - Status code 200: Ok
+                        - Status code 500: Falla interna no distinguible
+                        - Tipo de Request: PUT
+                
+                Ejemplo:
+                    /updateUsuario
+                    body:
+                        setclave:contraseñaGenerica
+                        apellido:martinez
+                    antes:
+                        {
+                            "0": {
+                                "username": "omarAlgoAndaMal",
+                                "0": "omarAlgoAndaMal",
+                                "clave": "calveSecreta123",
+                                "1": "calveSecreta123",
+                                "nombre": "omar",
+                                "2": "omar",
+                                "apellido": "martinez",
+                                "3": "martinez",
+                                "dni": 28348729,
+                                "4": 28348729,
+                                "mail": "soyomar@skibidi.com",
+                                "5": "soyomar@skibidi.com",
+                                "telefono": 9283285,
+                                "6": 9283285,
+                                "rol": "volunt",
+                                "7": "volunt"
+                            },
+                            "1": {
+                                "username": "sofiuwu",
+                                "0": "sofiuwu",
+                                "clave": "lucianomirey",
+                                "1": "lucianomirey",
+                                "nombre": "sofia",
+                                "2": "sofia",
+                                "apellido": "martinez",
+                                "3": "martinez",
+                                "dni": 44620873,
+                                "4": 44620873,
+                                "mail": "sofita@xxx.com",
+                                "5": "sofita@xxx.com",
+                                "telefono": 66666,
+                                "6": 66666,
+                                "rol": "user",
+                                "7": "user"
+                            },
+                            "activa": false,
+                            "rolActivo": ""
+                        }
+                    despues:
+                        {
+                            "0": {
+                                "username": "omarAlgoAndaMal",
+                                "0": "omarAlgoAndaMal",
+                                "clave": "contraseñaGenerica",
+                                "1": "contraseñaGenerica",
+                                "nombre": "omar",
+                                "2": "omar",
+                                "apellido": "martinez",
+                                "3": "martinez",
+                                "dni": 28348729,
+                                "4": 28348729,
+                                "mail": "soyomar@skibidi.com",
+                                "5": "soyomar@skibidi.com",
+                                "telefono": 9283285,
+                                "6": 9283285,
+                                "rol": "volunt",
+                                "7": "volunt"
+                            },
+                            "1": {
+                                "username": "sofiuwu",
+                                "0": "sofiuwu",
+                                "clave": "contraseñaGenerica",
+                                "1": "contraseñaGenerica",
+                                "nombre": "sofia",
+                                "2": "sofia",
+                                "apellido": "martinez",
+                                "3": "martinez",
+                                "dni": 44620873,
+                                "4": 44620873,
+                                "mail": "sofita@xxx.com",
+                                "5": "sofita@xxx.com",
+                                "telefono": 66666,
+                                "6": 66666,
+                                "rol": "user",
+                                "7": "user"
+                            },
+                            "activa": false,
+                            "rolActivo": ""
+                        }
+
+Mostrados los ejemplos con usuarios, el resto de tablas se describiran sin ejemplos dado que deberian retornarse de igual manera.
+
+Publicacion:
+    Campos:
+        - id
+        - nombre
+        - descripcion
+        - user
+        - categoria_id
+        - estado
+
+    /newPublicacion ->      - Status 200 Ok
+                            - Status 500 falla no distinguible
+                            - Recibe 3 centros máximo como centro1, centro2 y centro3 junto al resto de datos
+                            - Recibe 6 fotos máximo como imagen1, imagen2, ..., imagen6 junto al resto de datos
+                            - Las imagenes deben ser texto base64 ya codificado (convertir en el front)
+                            - Pendiente la falla cuando no se le envia ninguna imagen ya que necesita minimo 1
+                            - Todos sus campos menos id son obligatorios, la id se le asigna automaticamente
+                            - Pendiente chequear que exista user
+                            - Recibe params en el cuerpo del Request
+                            - Tipo de Request: POST
+
+    /updatePublicacion ->   - Status 200 Ok
+                            - Status 500 falla no distinguible
+                            - Pendiente actualizar centros e imagenes, quizas se haga por separado
+                            - Recibe params en el cuerpo del Request
+                            - Tipo de Request: PUT
+
+    /deletePublicacion ->   - Status 200 Ok
+                            - Status 500 falla no distinguible
+                            - Pendiente borrar del back la conexion de centros y las imagenes, quizas optar por
+                            borrado logico por medio del estado
+                            - Recibe params por la query
+                            - Tipo de Request: DELETE
+
+    /listarPublicaciones -> - Status 200 Ok
+                            - Status 500 falla no distinguible
+                            - Lista las fotos y centros también
+                            - Se puede usar pag para obtener de a 20 filas
+                            - Recibe params por la query
+                            - Tipo de Request: GET
+
+                    Ej: /listarPublicaciones?categoria_id=1
+                    retorna:
+                        {
+                            "0": {
+                                "id": 25,
+                                "0": 25,
+                                "nombre": "arroz por unidad",
+                                "1": "arroz por unidad",
+                                "descripcion": "muy rico, importado de china",
+                                "2": "muy rico, importado de china",
+                                "user": "luwu",
+                                "3": "luwu",
+                                "categoria_id": 1,
+                                "4": 1,
+                                "estado": "alta",
+                                "5": "alta",
+                                "imagen1": {
+                                    "archivo": "supongamosEsUnBase64",
+                                    "0": "supongamosEsUnBase64",
+                                    "publicacion": 25,
+                                    "1": 25
+                                }
+                            },
+                            "activa": false,
+                            "rolActivo": ""
+                        }
+                    Si tuviera más cosas en categoria 1 se pondrian en este retorno.
+                    Se puede simular el obtener listando por ?id=publiDeseada
+
+Categoria:
+    /newCategoria ->        - comprueba existencia antes de cargar
+                            - Status 200 Ok
+                            - Status 500 error no identificable en front
+                            - Recibe params por el body
+                            - Tipo de Request: POST
+
+    /updateCategoria ->     - Recibe todo por el body
+                            - Status 200 Ok
+                            - Status 500 error si no puede
+                            - Tipo de Request: PUT
+
+    /listarCategorias ->    - Recibe params por la query (no se pa q serviria pero esta)
+                            - Si no se manda nada deberia listar todas las categorias disponibles
+                            Ej:
+                                {
+                                    "0": {
+                                        "id": 1,
+                                        "0": 1,
+                                        "nombre": "comida",
+                                        "1": "comida"
+                                    },
+                                    "1": {
+                                        "id": 2,
+                                        "0": 2,
+                                        "nombre": "arroz por unidad",
+                                        "1": "arroz por unidad"
+                                    },
+                                    "activa": false,
+                                    "rolActivo": ""
+                                }
+    
+    /deleteCategoria ->     - Elimina categoria si existe
+                            - Status 200 Ok si puede
+                            - Status 500 si no puede
+
+Centros:
+    /newCentro ->           - Status 200 Ok si puede
+                            - Status 500 si no puede o error
+                            - Comprueba los horarios (desconozco como hizo mauri)
+
+    /updateCentros ->       - Status 200 Ok si puede
+                            - Status 500 si no puede o error
+                            - Valida datos nuevamente
+
+    /deleteCentro ->        - Status 200 Ok si puede
+                            - Status 500 si no puede o error
+
+    /listarCentros ->       - Status 200 Ok si puede
+                            - Status 500 si no puede o error
+                            - Lista todos los centros, se pueden mandar parametros
+
+NOTAS:
+    TODOS LOS DELETE DEBEN RECIBIR PARAMETROS EN LA QUERY PARA FILTRAR QUE SE BORRA, SI NO HAY FILTRO NO BORRA NADA
+
+    TODOS LOS UPDATE RECIBEN EN EL CUERPO/BODY COMO "set<campo>" EL NUEVO VALOR Y "campo" EL QUE SE USA PARA FILTRAR EL WHERE
+
+    TODOS LOS LISTAR DEBENE RECIBIR LOS PARAMS EN LA QUERY PUEDEN SER ACCEDIDOS CON "pag" PARA OBTENER DE A 20 UNIDADES CAMBIABLE POR CODIGO
+
+    TODOS LOS NEW REQUIEREN LOS DATOS EN EL CUERPO/BODY CON EL MISMO NOMBRE DE LA TABLA Y SU VALOR ASOCIADO

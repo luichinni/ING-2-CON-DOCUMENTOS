@@ -72,7 +72,7 @@ class bdController{
 
         if ($contador >= $this->obligatorios){
             $queryInsert = $this->generarInsert($datosIn);
-            $pudo = $this->pdo->query($queryInsert)->execute();
+            $pudo = $this->pdo->prepare($queryInsert)->execute();
         }
 
         return $pudo;
@@ -87,8 +87,8 @@ class bdController{
      * @param bool $like define si en el where se compara por exactos o coincidencias %valor%
      * @param ?int $limit define la cantidad de lineas a retornar
      */
-    public function getFirst(array $whereParams, bool $like = false, int $limit = 1){
-        $querySelect = $this->generarSelect($whereParams,$limit,$like);
+    public function getFirst(array $whereParams, bool $like = false, int $limit = 1, int $offset = 0){
+        $querySelect = $this->generarSelect($whereParams,$limit,$like,$offset);
         $result = $this->pdo->query($querySelect)->fetchAll();
         if ($result == false){
             $result = [];
@@ -112,7 +112,7 @@ class bdController{
             $result = [];
         }
         $json = json_encode($result); 
-        return ($json == false) ? '{}' : json_encode($result); // esto retorna un json con los objetos, si está vacio retorna {}
+        return ($json == false) ? '{}' : $json; // esto retorna un json con los objetos, si está vacio retorna {}
     }
 
     /**
@@ -178,8 +178,10 @@ class bdController{
                             break;
                     }
                 }
+                $queryWhere .= "AND ";
             }
         }
+        $queryWhere = substr($queryWhere,0,strlen($queryWhere)-4);
 
         if (strlen($queryWhere) <= $querySize) {
             $queryWhere = "";
@@ -196,14 +198,15 @@ class bdController{
      * ]```
      * @param bool $like define si en el where se compara por exactos o coincidencias %valor%
      * @param ?int $limit define la cantidad de lineas a retornar
+     * @param int $offset numero de pagina arrancando en 0
      */
-    private function generarSelect(array $whereParams, ?int $limit = 1, bool $like = false)
+    private function generarSelect(array $whereParams, ?int $limit = 1,bool $like = false, int $offset = 0)
     {
         // SELECT * FROM `usuarios` WHERE params LIMIT 1
         $querySql = "SELECT * FROM `$this->tableName` " . $this->armarWhere($whereParams, $like);
         if ($limit != null){
-            $querySql .= "LIMIT $limit";
-        }        
+            $querySql .= "LIMIT $limit OFFSET " . ($offset * $limit);
+        }
         return $querySql;
     }
 
