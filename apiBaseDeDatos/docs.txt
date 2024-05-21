@@ -361,25 +361,32 @@ Publicacion:
                     retorna:
                         {
                             "0": {
-                                "id": 25,
-                                "0": 25,
-                                "nombre": "arroz por unidad",
-                                "1": "arroz por unidad",
-                                "descripcion": "muy rico, importado de china",
-                                "2": "muy rico, importado de china",
-                                "user": "luwu",
-                                "3": "luwu",
-                                "categoria_id": 1,
+                                "id": 3,
+                                "0": 3,
+                                "nombre": "cloro",
+                                "1": "cloro",
+                                "descripcion": "esto es un producto",
+                                "2": "esto es un producto",
+                                "user": "pepe",
+                                "3": "pepe",
+                                "categoria_id": "limpieza",
                                 "4": 1,
                                 "estado": "alta",
                                 "5": "alta",
-                                "imagen1": {
-                                    "archivo": "supongamosEsUnBase64",
-                                    "0": "supongamosEsUnBase64",
-                                    "publicacion": 25,
-                                    "1": 25
-                                }
+                                "imagenes": [
+                                    {
+                                        "id": 1,
+                                        "0": 1,
+                                        "tipo_imagen": ".png",
+                                        "1": ".png",
+                                        "archivo": "estoEsUnaFotoJajaja",
+                                        "2": "estoEsUnaFotoJajaja",
+                                        "publicacion": 3,
+                                        "3": 3
+                                    }
+                                ]
                             },
+                            "Mensaje": "Publicaciones listadas con éxito",
                             "activa": false,
                             "rolActivo": ""
                         }

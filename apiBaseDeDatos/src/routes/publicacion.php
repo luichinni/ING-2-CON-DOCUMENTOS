@@ -139,7 +139,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
     });
 
     $group->GET('/listarPublicaciones', function ($request, Response $response, $args) use ($pdo) {
-        global $publiDB, $centroDB, $publiCentroDB, $imgDB;
+        global $publiDB, $centroDB, $publiCentroDB, $imgDB, $categoriaDB;
         $status = 404;
         $msgReturn = ['Mensaje'=>'No se encontraron coincidencias'];
         // obtener los parametros de la query
@@ -158,6 +158,10 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
 
         foreach($publis as $key => $value){
             $value = (array) $value;
+
+            $miCategoria = (array) json_decode($categoriaDB->getFirst(array('id' => $value['categoria_id'])));
+            $value['categoria_id'] = ((array) $miCategoria[0])['nombre'];
+
             $where = [
                 'publicacion' => $value['id']
             ];
