@@ -11,7 +11,7 @@ const ListarPublis = () => {
   const [parametros, setParametros] = useState({
     nombre: "",
     user: "",
-    categoria: "",
+    categoria_id: "",
     estado: "",
     id: ""
   });
