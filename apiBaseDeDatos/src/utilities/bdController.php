@@ -158,7 +158,7 @@ class bdController{
         $queryWhere = "WHERE ";
         $querySize = strlen($queryWhere);
         foreach ($whereParams as $key => $value) { // para cada param
-            if (array_key_exists($key, $this->camposTabla)) { // si existe en la lista de campos
+            if (array_key_exists($key, $this->camposTabla) && $value != "") { // si existe en la lista de campos
                 if ($value == "null") { // si es null en la query
                     $queryWhere .= "`$key` IS NULL ";
                 } else {
