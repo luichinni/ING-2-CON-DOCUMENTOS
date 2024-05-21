@@ -25,8 +25,10 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo, $camposS
         ];
         $status = 404;
         if (array_key_exists('username',$queryParams) && array_key_exists('clave', $queryParams) && $userDB->exists(array('username' => $queryParams['username']))){
-            $user = json_decode($userDB->getFirst(array('username' => $queryParams['username'])));
-            $tok = "token" . strtoupper($user['rol'][0]) . substr($user['rol'], 1);
+            $user = (array) json_decode($userDB->getFirst(array('username' => $queryParams['username'])));
+            $userRol = (array) $user[0];
+            $userRol = $userRol['rol'];
+            $tok = "token" . strtoupper($userRol[0]) . substr($userRol, 1);
             $return = [
                 'token' => $tok
             ];
