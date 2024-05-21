@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { ButtonSubmit } from "../../components/ButtonSubmit";
+import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 const IniciarSesion = () => {
 
-        const [user, setUser] = useState('');
+    const navigate = useNavigate();    
+    const [username, setUsername] = useState('');
         const [clave, setClave] = useState('');
     
-        const handleUserChange = (e) => setUser(e.target.value);
+        const handleUsernameChange = (e) => setUsername(e.target.value);
         const handleClaveChange = (e) => setClave(e.target.value);
     
         const handleSubmit = async (e) => {
@@ -14,16 +16,24 @@ const IniciarSesion = () => {
             console.log('Submit button clicked!');
     
             const formData = new FormData();
-            formData.append('user', user);
+            formData.append('username', username);
             formData.append('clave', clave);
     
             try {
-                const response = await fetch('/public/crearSesion', {
-                    method: 'POST',
-                    body: formData,
+                
+                const response = await axios.post("http://localhost:8000/public/crearSesion", formData,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
                 });
-                const result = await response.json();
-                console.log('Success:', result);
+                console.log('Success:', response.data.token);
+                localStorage.setItem('token',response.data.token);
+                localStorage.setItem('username',username);
+                console.log(username);
+                navigate("../");
+                window.location.reload();
+                
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -34,14 +44,14 @@ const IniciarSesion = () => {
                 <br /><br /><br /><br /><br /><br />
                 <form onSubmit={handleSubmit}>
                     <label>
-                        <input placeholder="Ingrese su usuario" type="text" value={user} onChange={handleUserChange} required /> 
+                        <input placeholder="Ingrese su usuario" type="text" value={username} onChange={handleUsernameChange} required /> 
                     </label>
                     <br />
                     <label>
                         <input placeholder="Ingrese su contraseña" type="password" value={clave} onChange={handleClaveChange} required />
                     </label>
                     <br />
-                    <ButtonSubmit text="Iniciar sesión" />
+                    <button type="submit" className="botonSubmit"> "Iniciar sesión"</button>
                 </form>
             </div>
         );

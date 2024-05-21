@@ -35,7 +35,7 @@ $categoriaDB = new bdController('categoria',$pdo,$camposCategorias);
 } */
 
 
-$app->group('/public', function (RouteCollectorProxy $group) use ($pdo, $onlyAdmin) {
+$app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
     $group->POST('/newCategoria', function ($request, $response, $args){
         global $categoriaDB;
         //traemos los paremetros y los asignamos a las variables
@@ -60,7 +60,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo, $onlyAdm
         $response->getBody()->write(json_encode($msgReturn));
 
         return $response->withStatus($status)->withHeader('content-type', 'application/json');
-    })->add($onlyAdmin);
+    });
 
     $group->PUT('/updateCategoria', function($request, Response $response,$args){
         global $categoriaDB;
@@ -86,7 +86,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo, $onlyAdm
         $response->getBody()->write(json_encode($msgReturn));
 
         return $response->withStatus($status)->withHeader('content-type', 'application/json');
-    })->add($onlyAdmin);
+    });
 
     $group->DELETE('/deleteCategoria', function(Request $request, Response $response,$args){
         global $categoriaDB, $publiDB;
@@ -107,7 +107,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo, $onlyAdm
         $response->getBody()->write(json_encode($msgReturn));
 
         return $response->withStatus($status)->withHeader('Content-type','application/json');
-    })->add($onlyAdmin);
+    });
     
     $group->GET('/listarCategorias', function($request, Response $response, $args) use ($pdo){
         global $categoriaDB;

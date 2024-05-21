@@ -1,7 +1,8 @@
 import React from 'react';
 import ListarMisPublis from './ListarPublis';
 import '../../HarryStyles/Publicaciones.css';
-import '../../HarryStyles/styles.css'
+import '../../HarryStyles/styles.css';
+
 
 const MisPublis = () => {
   return (

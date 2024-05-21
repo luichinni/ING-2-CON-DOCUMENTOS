@@ -1,5 +1,6 @@
 import { ButtonSubmit } from "../../components/ButtonSubmit";
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const AgregarCentro = () => {
     const [nombre, setNombre] = useState('');
@@ -17,12 +18,13 @@ const AgregarCentro = () => {
 		formData.append('direccion', direccion);
 
         try {
-            const response = await fetch('/public/newCentro', {
-                method: 'POST',
-                body: formData,
-            });
-            const result = await response.json();
-            console.log('Success:', result);
+            const response = await axios.post("http://localhost:8000/public/newCentro", formData,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+            console.log('Success:', response);
         } catch (error) {
             console.error('Error:', error);
         }

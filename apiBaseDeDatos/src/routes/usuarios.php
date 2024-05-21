@@ -189,4 +189,4 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
 
         return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
     });
-})->add($onlyAdmin);
+});

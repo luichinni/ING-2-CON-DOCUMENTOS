@@ -69,7 +69,7 @@ function validaDatos($data, $response) {
     return true;
 }
 
-$app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$onlyAdmin) {
+$app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
     $group->POST('/newCentro', function ($request, $response, $args){
         $msgReturn = ['Mensaje' => 'Error de formato'];
         $data = $request->getParsedBody();
@@ -96,7 +96,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$onlyAdmi
         $response->getBody()->write(json_encode($msgReturn));
 
         return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
-    })->add($onlyAdmin);
+    });
 
     $group->PUT('/updateCentros', function ($request, Response $response, $args){
         global $centroDB;
@@ -121,7 +121,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$onlyAdmi
         $response->getBody()->write(json_encode($msgReturn));
 
         return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
-    })->add($onlyAdmin);
+    });
 
     $group->DELETE('/deleteCentro', function (Request $request, Response $response, $args){
         global $centroDB;
@@ -152,7 +152,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$onlyAdmi
         $response->getBody()->write(json_encode($msgReturn));
 
         return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
-    })->add($onlyAdmin);
+    });
 
     $group->GET('/listarCentros', function (Request $request, Response $response, $args) use ($pdo) {
         global $centroDB;

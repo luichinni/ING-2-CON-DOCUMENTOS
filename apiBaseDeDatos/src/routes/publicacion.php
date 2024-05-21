@@ -17,7 +17,7 @@ $camposPublicacion = [
 
 $publiDB = new bdController('publicacion',$pdo,$camposPublicacion);
 
-$app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$onlyUser) {
+$app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
     $group->POST('/newPublicacion', function ($request, $response, $args) use ($pdo){
         global $publiDB, $camposPublicacion;
         $pudo = false;
@@ -27,7 +27,12 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$onlyUser
         $bodyParams = (array) $request->getParsedBody();
         $where = $publiDB->getWhereParams($bodyParams); // esto es para los values
 
-        if (empty($where) || count($camposPublicacion) < count($where) /*|| $publiDB->exists($where)*/) {
+        $foto = false;
+        for ($i = 1; $i <= 6; $i++){
+            $foto = $foto || array_key_exists('imagen'.$i,$bodyParams);
+        }
+
+        if (empty($where) || count($camposPublicacion) < count($where) || !$foto) {
             $response->getBody()->write(json_encode($msgReturn));
             return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
@@ -85,7 +90,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$onlyUser
 
         $response->getBody()->write(json_encode($msgReturn));
         return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
-    })->add($onlyUser);
+    });
 
     $group->PUT('/updatePublicacion', function ($request, Response $response, $args){
         global $publiDB;
@@ -113,7 +118,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$onlyUser
         $response->getBody()->write(json_encode($msgReturn));
 
         return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
-    })->add($onlyUser);
+    });
 
     $group->DELETE('/deletePublicacion', function (Request $request, Response $response, $args){
         global $publiDB;

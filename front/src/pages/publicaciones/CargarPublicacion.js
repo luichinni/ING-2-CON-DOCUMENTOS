@@ -1,5 +1,6 @@
 import { ButtonSubmit } from "../../components/ButtonSubmit";
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const AgregarPublicacion = () => {
     const [nombre, setNombre] = useState('');
@@ -33,12 +34,14 @@ const AgregarPublicacion = () => {
         });
 
         try {
-            const response = await fetch('/public/newPublicacion', {
-                method: 'POST',
-                body: formData,
-            });
-            const result = await response.json();
-            console.log('Success:', result);
+			const response = await axios.post("http://localhost:8000/public/newPublicacion", formData,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+           {/* const result = await response.json();*/}
+            console.log('Success:', response);
         } catch (error) {
             console.error('Error:', error);
         }

@@ -1,5 +1,6 @@
 import { ButtonSubmit } from "../../components/ButtonSubmit";
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const Registrarse = () => {
     const [nombre, setNombre] = useState('');
@@ -9,7 +10,9 @@ const Registrarse = () => {
     const [mail, setEmail] = useState('');
     const [telefono, setTelefono] = useState('');
 	const [contraseña, setContraseña] =useState('');
+	const [username, setUsername] =useState('');
 
+	const handleUsernameChange = (e) => setUsername(e.target.value);
     const handleNombreChange = (e) => setNombre(e.target.value);
     const handleApellidoChange = (e) => setApellido(e.target.value);
     const handleEdadChange = (e) => setEdad(e.target.value);
@@ -24,21 +27,24 @@ const Registrarse = () => {
 		console.log('Submit button clicked!');
 
         const formData = new FormData();
+		formData.append('username', username);	
         formData.append('nombre', nombre);
         formData.append('apellido', apellido);
 		formData.append('edad', edad);
-		formData.append('numeroDocumento', numeroDocumento);
+		formData.append('dni', numeroDocumento);
 		formData.append('mail', mail);
 		formData.append('telefono', telefono);
-		formData.append('contraseña', contraseña);
+		formData.append('clave', contraseña);
+		formData.append('rol', "user");
 
         try {
-            const response = await fetch('/public/newUsuario', {
-                method: 'POST',
-                body: formData,
-            });
-            const result = await response.json();
-            console.log('Success:', result);
+            const response = await axios.post("http://localhost:8000/public/newUsuario", formData,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+            console.log('Success:', response);
         } catch (error) {
             console.error('Error:', error);
         }
@@ -51,6 +57,10 @@ const Registrarse = () => {
 		<br/>
 		<p> Registrate para poder ofertar intercambios con los demás usuarios! </p>
 		<form onSubmit={handleSubmit}>
+			<label id="formtext" >Nombre de Usuario </label>
+			<br/>
+			<input type="text" NameClass="registrarse" value={username} onChange={handleUsernameChange} required />
+			<br/>
 			<label id="formtext" >Nombre </label>
 			<br/>
 			<input type="text" NameClass="registrarse" value={nombre} onChange={handleNombreChange} required />

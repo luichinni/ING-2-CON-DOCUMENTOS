@@ -23,7 +23,7 @@ const ListarPublis = () => {
 
       try {
         const queryParams = new URLSearchParams(parametros).toString();
-        const url = `http://localhost:8000/public/listarPublicaciones?${queryParams}`;
+        const url = `http://localhost:8000/public/listarPublicaciones?${queryParams}&token=${localStorage.getItem('token')}`;
         const response = await axios.get(url);
 
         if (response.data.length === 3) {
