@@ -71,21 +71,29 @@ function validaDatos($data, $response) {
 
 $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
     $group->POST('/newCentro', function ($request, $response, $args){
+        $msgReturn = ['Mensaje' => 'Error de formato'];
         $data = $request->getParsedBody();
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-/*             $errorResponse = ['error' => 'JSON no válido'];
+            /*             $errorResponse = ['error' => 'JSON no válido'];
             $response->getBody()->write(json_encode($errorResponse)); */
+            $response->getBody()->write(json_encode($msgReturn));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
         if (!validaDatos($data, $response)) {
+            $msgReturn['Mensaje'] = 'Los datos de centro son invalidos';
+            $response->getBody()->write(json_encode($msgReturn));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
         global $centroDB;
 
         $status = $centroDB->insert($data) ? 200 : 500;
+
+        $msgReturn['Mensaje'] = ($status == 200) ? 'Centro cargado con éxito' : 'Ocurrió un error al cargar el centro';
+
+        $response->getBody()->write(json_encode($msgReturn));
 
         return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
     });
@@ -94,14 +102,23 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         global $centroDB;
         $queryParams = $request->getParsedBody();
         $status = 500;
+        $msgReturn = ['Mensaje'=> 'Faltan datos para poder actualizar el centro'];
 
-        if ($centroDB->exists($queryParams['id'])) return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
+        if ($centroDB->exists($queryParams['id'])) {
+            $response->getBody()->write(json_encode($msgReturn));
+            return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
+        }
 
         if (!validaDatos($queryParams, $response)) {
+            $response->getBody()->write(json_encode($msgReturn));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
         $status = $centroDB->update($queryParams) ? 200 : $status;
+
+        $msgReturn['Mensaje'] = ($status == 200) ? 'Centro actualizado con éxito' : 'Ocurrió un error al actualizar el centro';
+
+        $response->getBody()->write(json_encode($msgReturn));
 
         return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
     });
@@ -113,21 +130,44 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         //FALTA VERIFICAR SI NO TIENE ASIGNADO ALGUN INTERCAMBIO (MENSAJE PARA LA PROXIMA)
         //        
         $status = 500;
-        $queryParams = $request->getQueryParams();
-        if (!$centroDB->exists($queryParams)) return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
+        $msgReturn = ['Mensaje'=>'No existe el centro a eliminar'];
 
-        if (validarCentroVolun(array('centro'=>$queryParams['id']))) return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
+        $queryParams = $request->getQueryParams();
+
+        if (!$centroDB->exists($queryParams)) {
+            $response->getBody()->write(json_encode($msgReturn));
+            return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
+        }
+
+        if (validarCentroVolun(array('centro'=>$queryParams['id']))){
+            $msgReturn['Mensaje'] = 'No se pudo eliminar, el centro tiene voluntarios asociados';
+            $response->getBody()->write(json_encode($msgReturn));
+            return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
+        }
 
         $status = $centroDB->delete($queryParams) ? 200 : $status;
+
+        $msgReturn['Mensaje'] = ($status == 200) ? 'Centro eliminado con éxito' : 'Ocurrió un error al eliminar el centro';
+
+        $response->getBody()->write(json_encode($msgReturn));
 
         return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
     });
 
     $group->GET('/listarCentros', function (Request $request, Response $response, $args) use ($pdo) {
         global $centroDB;
+        $msgReturn = ['Mensaje'=>'No existen centros'];
+
         $queryParams = $request->getQueryParams();
 
-        $centros = $centroDB->getAll($queryParams);
+        $centros = json_decode($centroDB->getAll($queryParams));
+
+        if (empty($centros)){
+            $response->getBody()->write($centros);
+            return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
+        }
+
+        $centros['Mensaje'] = 'Centros listados con éxito';
 
         $response->getBody()->write($centros);
         return $response->withStatus(200)->withHeader('Content-Type', 'application/json');

@@ -3,6 +3,7 @@ Se describen a continuacion las rutas con sus respectivos parametros y retornos.
 Consideraciones adicionales:
                 - Todas las rutas son /public/<ruta>
                 - Todas las respuestas traen los campos:
+                        - mensaje: descripcion del status.
                         - activa: true o false segun se encuentre activa la sesión.
                         - rolActivo: rol de la sesión actual, aparece vacio si no hay sesión abierta.
                 - Para conseguir validaciones correctas segun rol, se debe poner en cada llamada ?token=<tokenDelCliente>
@@ -16,6 +17,8 @@ NOTAS:
     TODOS LOS LISTAR DEBENE RECIBIR LOS PARAMS EN LA QUERY PUEDEN SER ACCEDIDOS CON "pag" PARA OBTENER DE A 20 UNIDADES CAMBIABLE POR CODIGO
 
     TODOS LOS NEW REQUIEREN LOS DATOS EN EL CUERPO/BODY CON EL MISMO NOMBRE DE LA TABLA Y SU VALOR ASOCIADO
+
+    TODAS LAS RUTAS DEVUELVEN EL CAMPO "Mensaje": "mensaje ejemplo, error o exito"
 
 Sesion:
     /crearSesion -> comprueba que exista el usuario (por ahora no su clave ya que es para test)
@@ -75,6 +78,7 @@ Usuarios:
                                 "rol": "admin",
                                 "7": "admin"
                             },
+                            "Mensaje": "Usuario encontrado",
                             "activa": false,
                             "rolActivo": ""
                         }
@@ -174,7 +178,7 @@ Usuarios:
                                 ...
                             campoN:valorN
                         - Status code 200: Ok
-                        - Status code 500: Ocurrio algun error (no distinguibles en front por ahora)
+                        - Status code 500: Ocurrio algun error (ver mensaje)
                         - Tipo de Request: POST
 
                 Ejemplo:
@@ -199,7 +203,7 @@ Usuarios:
                         - Si no se pasan parametros falla
                         - Busqueda solo por coincidencia exacta, parcial a implementar %string%
                         - Status code 200: Ok
-                        - Status code 500: Falla interna no distinguible
+                        - Status code 500: Ocurrio algun error (ver mensaje)
                         - Tipo de Request: DELETE
 
                 Ejemplo:
@@ -220,7 +224,7 @@ Usuarios:
                             setcampoX:valorNuevo
                             campoY:valorABuscar
                         - Status code 200: Ok
-                        - Status code 500: Falla interna no distinguible
+                        - Status code 500: Ocurrio algun error (ver mensaje)
                         - Tipo de Request: PUT
                 
                 Ejemplo:
@@ -323,7 +327,7 @@ Publicacion:
         - estado
 
     /newPublicacion ->      - Status 200 Ok
-                            - Status 500 falla no distinguible
+                            - Status 500 Ocurrio algun error (ver mensaje)
                             - Recibe 3 centros máximo como centro1, centro2 y centro3 junto al resto de datos
                             - Recibe 6 fotos máximo como imagen1, imagen2, ..., imagen6 junto al resto de datos
                             - Las imagenes deben ser texto base64 ya codificado (convertir en el front)
@@ -334,20 +338,20 @@ Publicacion:
                             - Tipo de Request: POST
 
     /updatePublicacion ->   - Status 200 Ok
-                            - Status 500 falla no distinguible
+                            - Status 500 Ocurrio algun error (ver mensaje)
                             - Pendiente actualizar centros e imagenes, quizas se haga por separado
                             - Recibe params en el cuerpo del Request
                             - Tipo de Request: PUT
 
     /deletePublicacion ->   - Status 200 Ok
-                            - Status 500 falla no distinguible
+                            - Status 500 Ocurrio algun error (ver mensaje)
                             - Pendiente borrar del back la conexion de centros y las imagenes, quizas optar por
                             borrado logico por medio del estado
                             - Recibe params por la query
                             - Tipo de Request: DELETE
 
     /listarPublicaciones -> - Status 200 Ok
-                            - Status 500 falla no distinguible
+                            - Status 500 Ocurrio algun error (ver mensaje)
                             - Lista las fotos y centros también
                             - Se puede usar pag para obtener de a 20 filas
                             - Recibe params por la query
@@ -385,13 +389,13 @@ Publicacion:
 Categoria:
     /newCategoria ->        - comprueba existencia antes de cargar
                             - Status 200 Ok
-                            - Status 500 error no identificable en front
+                            - Status 500 Ocurrio algun error (ver mensaje)
                             - Recibe params por el body
                             - Tipo de Request: POST
 
     /updateCategoria ->     - Recibe todo por el body
                             - Status 200 Ok
-                            - Status 500 error si no puede
+                            - Status 500 Ocurrio algun error (ver mensaje)
                             - Tipo de Request: PUT
 
     /listarCategorias ->    - Recibe params por la query (no se pa q serviria pero esta)
@@ -416,22 +420,22 @@ Categoria:
     
     /deleteCategoria ->     - Elimina categoria si existe
                             - Status 200 Ok si puede
-                            - Status 500 si no puede
+                            - Status 500 Ocurrio algun error (ver mensaje)
 
 Centros:
     /newCentro ->           - Status 200 Ok si puede
-                            - Status 500 si no puede o error
+                            - Status 500 Ocurrio algun error (ver mensaje)
                             - Comprueba los horarios (desconozco como hizo mauri)
 
     /updateCentros ->       - Status 200 Ok si puede
-                            - Status 500 si no puede o error
+                            - Status 500 Ocurrio algun error (ver mensaje)
                             - Valida datos nuevamente
 
     /deleteCentro ->        - Status 200 Ok si puede
-                            - Status 500 si no puede o error
+                            - Status 500 Ocurrio algun error (ver mensaje)
 
     /listarCentros ->       - Status 200 Ok si puede
-                            - Status 500 si no puede o error
+                            - Status 500 Ocurrio algun error (ver mensaje)
                             - Lista todos los centros, se pueden mandar parametros
 
 NOTAS:

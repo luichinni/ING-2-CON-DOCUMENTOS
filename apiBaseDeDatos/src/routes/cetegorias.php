@@ -41,15 +41,23 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         //traemos los paremetros y los asignamos a las variables
         $data = $request->getParsedBody(); 
         $status = 500;
+        $msgReturn = ['Mensaje'=>'Ya existe una categoria con ese nombre'];
         // revisamos si tienen todos los campos y hacemos las revisiones
         //$validar = validaciones ($data,$request);
 
         //if ($validar != null) return $validar;
         //preparamos la insersion
         
-        if ($categoriaDB->exists($data)) return $response->withStatus($status)->withHeader('content-type', 'application/json');
-        
+        if ($categoriaDB->exists($data)) {
+            $response->getBody()->write(json_encode($msgReturn));
+            return $response->withStatus($status)->withHeader('content-type', 'application/json');
+        }
+
         $status = $categoriaDB->insert($data) ? 200 : $status;
+
+        $msgReturn['Mensaje'] = ($status == 200) ? 'Categoria cargada con éxito' : 'Ocurrió un error al cargar la categoria';
+
+        $response->getBody()->write(json_encode($msgReturn));
 
         return $response->withStatus($status)->withHeader('content-type', 'application/json');
     });
@@ -57,6 +65,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
     $group->PUT('/updateCategoria', function($request, Response $response,$args){
         global $categoriaDB;
         $status = 500;
+        $msgReturn = ['Mensaje'=>'No existe la publicación que se intentó modificar'];
         // preparamos para ver si existe una categoria con ese id
 
         $data = $request->getParsedBody();
@@ -65,27 +74,37 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         //$validar = validaciones($data,$request);
         //if ($validar !== null) return $validar;
 
-        if (!$categoriaDB->exists($data)) return $response->withStatus($status)->withHeader('content-type', 'application/json');
-        
+        if (!$categoriaDB->exists($data)) {
+            $response->getBody()->write(json_encode($msgReturn));
+            return $response->withStatus($status)->withHeader('content-type', 'application/json');
+        }
+
         $status = $categoriaDB->update($data) ? 200 : $status;
+
+        $msgReturn['Mensaje'] = ($status == 200) ? 'Publicación modificada con éxito' : 'Ocurrió un erro al modificar la publicación';
+
+        $response->getBody()->write(json_encode($msgReturn));
 
         return $response->withStatus($status)->withHeader('content-type', 'application/json');
     });
 
     $group->DELETE('/deleteCategoria', function(Request $request, Response $response,$args){
-        //
-        //
-        //---------FALTA VERIFICAR QUE NO HAYA PUBLICACIONES CON ESTA CATEGORIA!!!!
-        //
-        //
         global $categoriaDB, $publiDB;
         $status = 500;
+        $msgReturn = ['Mensaje' => 'No se pudo eliminar la categoria, verifique el nombre y si no tiene publicaciones dependendientes'];
 
         $data = $request->getQueryParams();
 
-        if (!$categoriaDB->exists($data) || $publiDB->exists(array('categoria_id' => $data['id']))) return $response->withStatus($status)->withHeader('Content-type', 'application/json');
+        if (!$categoriaDB->exists($data) || $publiDB->exists(array('categoria_id' => $data['id']))) {
+            $response->getBody()->write(json_encode($msgReturn));
+            return $response->withStatus($status)->withHeader('Content-type', 'application/json');
+        }
 
         $status = $categoriaDB->delete($data) ? 200 : $status;
+
+        $msgReturn['Mensaje'] = ($status == 200) ? 'Categoria eliminada con éxito' : 'Ocurrió un error al eliminar la categoria';
+
+        $response->getBody()->write(json_encode($msgReturn));
 
         return $response->withStatus($status)->withHeader('Content-type','application/json');
     });
@@ -94,11 +113,17 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         global $categoriaDB;
         $data = $request->getQueryParams();  
         $status = 500;
+        $msgReturn = ['Mensaje' => 'No existen categorias'];
 
-        if (!$categoriaDB->exists($data)) return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
+        if (!$categoriaDB->exists($data,true)) {
+            $response->getBody()->write(json_encode($msgReturn));
+            return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
+        }
 
         $retCat = $categoriaDB->getAll($data,true);
         $status = 200;
+
+        $retCat['Mensaje'] = 'Categorias listadas con éxito';
 
         $response->getBody()->write($retCat);
         return $response->withStatus($status)->withHeader('Content-Type','application/json');

@@ -22,15 +22,24 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         global $publiDB, $camposPublicacion;
         $pudo = false;
         $status = 500;
+        $msgReturn = ['Mensaje' => 'Faltan campos por completar'];
 
         $bodyParams = (array) $request->getParsedBody();
         $where = $publiDB->getWhereParams($bodyParams); // esto es para los values
 
-        if (empty($where) || count($camposPublicacion) < count($where) || $publiDB->exists($where)) return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
+        if (empty($where) || count($camposPublicacion) < count($where) /*|| $publiDB->exists($where)*/) {
+            $response->getBody()->write(json_encode($msgReturn));
+            return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
+        }
 
         $pudo = $publiDB->insert($bodyParams);
 
-        if (!$pudo) return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
+        $msgReturn['Mensaje'] = 'Ocurrió un error al cargar la publicación';
+
+        if (!$pudo) {
+            $response->getBody()->write(json_encode($msgReturn));
+            return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
+        }
 
         $publiID = (array)((json_decode($publiDB->getFirst($where)))[0]);
         $publiID = $publiID[0];
@@ -51,7 +60,11 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
 
         $status = ($pudo) ? 200 : $status;
 
-        if ($status == 200) return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
+        if ($status == 200) {
+            $msgReturn['Mensaje'] = 'Publicación cargada exitosamente';
+            $response->getBody()->write(json_encode($msgReturn));
+            return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
+        }
 
         // si falla algo borra todo para evitar inconsistencias
         $publiDB->delete(array('id'=>$publiID));
@@ -67,6 +80,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
             }
         }
 
+        $response->getBody()->write(json_encode($msgReturn));
         return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
     });
 
@@ -74,6 +88,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         global $publiDB;
         $pudo = false;
         $status = 500;
+        $msgReturn = ['Mensaje'=>'Faltan datos para poder actualizar la publicación'];
 
         //
         // FALTARIA PODER ACTUALIZAR LAS FOTOS Y CENTROS, QUIZAS HACERLO POR OTRA RUTA DE ELIMINAR ESPECIFICO ESO
@@ -82,11 +97,17 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         $bodyParams = (array) $request->getParsedBody();
         $where = $publiDB->getWhereParams($bodyParams);
 
-        if (empty($where) || !$publiDB->exists($where)) return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
-
+        if (empty($where) || !$publiDB->exists($where)) {
+            $response->getBody()->write(json_encode($msgReturn));
+            return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
+        }
         $pudo = $publiDB->update($bodyParams);
 
         $status = ($pudo) ? 200 : $status;
+
+        $msgReturn['Mensaje'] = ($status == 200) ? 'Publicación actualizada con éxito' : 'Ocurrió un erro al actualizar la publicación';
+
+        $response->getBody()->write(json_encode($msgReturn));
 
         return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
     });
@@ -95,15 +116,21 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         global $publiDB;
         $pudo = false;
         $status = 500;
+        $msgReturn = ['Mensaje' => 'No existe una publicación que coincida con los datos'];
 
         $queryParams = $request->getQueryParams();
         $where = $publiDB->getWhereParams($queryParams);
 
-        if (!$publiDB->exists($where)) return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
+        if (!$publiDB->exists($where)) {
+            $response->getBody()->write(json_encode($msgReturn));
+            return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
+        }
 
         $pudo = $publiDB->delete($where);
 
         $status = ($pudo) ? 200 : $status;
+
+        $msgReturn['Mensaje'] = ($status == 200) ? 'Publicación eliminada correctamente' : 'Ocurrió un error al eliminar la publicación';
 
         return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
     });
@@ -111,12 +138,16 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
     $group->GET('/listarPublicaciones', function ($request, Response $response, $args) use ($pdo) {
         global $publiDB, $centroDB, $publiCentroDB, $imgDB;
         $status = 404;
+        $msgReturn = ['Mensaje'=>'No se encontraron coincidencias'];
         // obtener los parametros de la query
         $queryParams = $request->getQueryParams();
 
         $where = $publiDB->getWhereParams($queryParams);
 
-        if (empty($where) || !$publiDB->exists($where)) return $response->withHeader('Content-Type', 'application/json')->withStatus($status);
+        if (empty($where) || !$publiDB->exists($where)) {
+            $response->getBody()->write(json_encode($msgReturn));
+            return $response->withHeader('Content-Type', 'application/json')->withStatus($status);
+        }
 
         $offset = (array_key_exists('pag', $queryParams)) ? $queryParams['pag'] : 0;
 
@@ -145,6 +176,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
             $publis[$key] = $value;
         }
 
+        $publis['Mensaje'] = 'Publicaciones listadas con éxito';
         $response->getBody()->write(json_encode($publis));
         $status = 200;
 

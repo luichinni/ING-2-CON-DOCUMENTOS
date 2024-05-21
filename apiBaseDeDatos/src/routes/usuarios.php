@@ -48,21 +48,32 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
     $group->get('/obtenerUsuario', function (Request $req,Response $res, $args){
         global $userDB;
         $status = 404;
+        $msgReturn = ['Mensaje' => 'Usuario no encontrado'];
         // obtener los parametros de la query
         $queryParams = $req->getQueryParams();
 
         $where = $userDB->getWhereParams($queryParams);
 
-        if (empty($where)) return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
+        if (empty($where)){
+            $msgReturn['Mensaje'] = 'Necesita parametros para buscar';
+            $res->getBody()->write(json_encode($msgReturn));
+            return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
+        } 
 
         $existe = $userDB->exists($where);
 
-        if (!$existe) return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
+        if (!$existe) {
+            $res->getBody()->write(json_encode($msgReturn));
+            return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
+        } 
 
-        $user = $userDB->getFirst($where);
+        $user = (array) json_decode($userDB->getFirst($where));
+        $user['Mensaje'] = 'Usuario encontrado';
 
-        $res->getBody()->write($user);
+        $res->getBody()->write(json_encode($user));
         $status = 200;
+
+        $msgReturn['Mensaje'] = 'Usuario encontrado con éxito';
 
         return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
     });
@@ -71,18 +82,24 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
     $group->get('/listarUsuarios',function (Request $req, Response $res, $args){
         global $userDB;
         $status = 404;
+        $msgReturn = ['Mensaje'=>'Usuarios no encontrados'];
         // obtener los parametros de la query
         $queryParams = $req->getQueryParams();
 
         $where = $userDB->getWhereParams($queryParams);
 
-        if (empty($where) || !$userDB->exists($where)) return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
+        if (!$userDB->exists($where)) {
+            $res->getBody()->write(json_encode($msgReturn));
+            return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
+        }
 
         $offset = (array_key_exists('pag',$queryParams)) ? $queryParams['pag'] : 0;
 
-        $user = $userDB->getFirst($where,false,20, $offset);
+        $user = json_decode($userDB->getFirst($where,false,20, $offset));
 
-        $res->getBody()->write($user);
+        $user['Mensaje'] = 'Usuarios encontrados con éxito';
+
+        $res->getBody()->write(json_encode($user));
         $status = 200;
 
         return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
@@ -92,19 +109,31 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
         global $userDB;
         $pudo = false;
         $status = 500;
+        $msgReturn = ['Mensaje' => 'Faltan parametros'];
 
         $bodyParams = (array) $req->getParsedBody();
         $where = $userDB->getWhereParams($bodyParams); // esto es para los values
 
-        if (empty($where)) return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
+        if (empty($where)) {
+            $res->getBody()->write(json_encode($msgReturn));
+            return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
+        }
 
         $valid = userValidator($bodyParams,$pdo,$camposUser) && !$userDB->exists($where);
 
-        if (!$valid) return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
+        if (!$valid) {
+            $msgReturn['Mensaje'] = 'Alguno de los parametros no es válido';
+            $res->getBody()->write(json_encode($msgReturn));
+            return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
+        }
 
         $pudo = $userDB->insert($bodyParams);
 
         $status = ($pudo) ? 200 : $status;
+
+        $msgReturn['Mensaje'] = $status == 200 ? 'Usuario agregado con éxito' : 'Ocurrio un error al agregar el usuario';
+
+        $res->getBody()->write(json_encode($msgReturn));
 
         return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
     });
@@ -113,15 +142,23 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
         global $userDB;
         $pudo = false;
         $status = 500;
+        $msgReturn = ['Mensaje' => 'No existe usuario que cumpla con los datos ingresados'];
 
         $queryParams = $req->getQueryParams();
         $where = $userDB->getWhereParams($queryParams);
 
-        if (!$userDB->exists($where)) return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
+        if (!$userDB->exists($where)) {
+            $res->getBody()->write(json_encode($msgReturn));
+            return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
+        }
 
         $pudo = $userDB->delete($where);
 
         $status = ($pudo) ? 200 : $status;
+
+        $msgReturn['Mensaje'] = $status == 200 ? 'Usuario eliminado con éxito' : 'Ocurrio un error al eliminar el usuario';
+
+        $res->getBody()->write(json_encode($msgReturn));
 
         return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
     });
@@ -130,16 +167,24 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
         global $userDB;
         $pudo = false;
         $status = 500;
+        $msgReturn = ['Mensaje' => 'Faltan datos para identificar y modificar el usuario'];
 
         $bodyParams = (array) $req->getParsedBody();
         $where = $userDB->getWhereParams($bodyParams);
 
-        if (empty($where) || !$userDB->exists($where)) return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
+        if (empty($where) || !$userDB->exists($where)) {
+            $res->getBody()->write(json_encode($msgReturn));
+            return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
+        }
 
         $pudo = $userDB->update($bodyParams);
 
         $status = ($pudo) ? 200 : $status;
-            
+
+        $msgReturn['Mensaje'] = $status == 200 ? 'Usuario actualizado con éxito' : 'Ocurrio un error al actualizar el usuario';
+
+        $res->getBody()->write(json_encode($msgReturn));
+
         return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
     });
 });
