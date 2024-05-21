@@ -7,6 +7,45 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
 require_once __DIR__ . '/../utilities/bdController.php';
 
+$onlyUser = function (Request $req, RequestHandler $handler){
+    $res = $handler->handle($req);
+    $body = (array) json_decode($res->getBody());
+
+    if ($body['rolActivo'] != 'user'){
+        $res = new Response();
+        $res->getBody()->write("{'Mensaje':'No puedes hacer eso :c'}");
+        return $res->withStatus(403);//Forbidden
+    }
+
+    return $res;
+};
+
+$onlyAdmin = function (Request $req, RequestHandler $handler) {
+    $res = $handler->handle($req);
+    $body = (array) json_decode($res->getBody());
+
+    if ($body['rolActivo'] != 'admin') {
+        $res = new Response();
+        $res->getBody()->write("{'Mensaje':'No puedes hacer eso :c'}");
+        return $res->withStatus(403); //Forbidden
+    }
+
+    return $res;
+};
+
+$onlyVoluntAdmin = function (Request $req, RequestHandler $handler) {
+    $res = $handler->handle($req);
+    $body = (array) json_decode($res->getBody());
+
+    if ($body['rolActivo'] == 'user') {
+        $res = new Response();
+        $res->getBody()->write("{'Mensaje':'No puedes hacer eso :c'}");
+        return $res->withStatus(403); //Forbidden
+    }
+
+    return $res;
+};
+
 function validarSesion($req){
     $queryParams = $req->getQueryParams();
     $queryParams = $queryParams == null ? [] : $queryParams;

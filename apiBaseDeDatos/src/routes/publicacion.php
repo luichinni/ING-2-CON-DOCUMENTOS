@@ -17,7 +17,7 @@ $camposPublicacion = [
 
 $publiDB = new bdController('publicacion',$pdo,$camposPublicacion);
 
-$app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
+$app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$onlyUser) {
     $group->POST('/newPublicacion', function ($request, $response, $args) use ($pdo){
         global $publiDB, $camposPublicacion;
         $pudo = false;
@@ -85,7 +85,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
 
         $response->getBody()->write(json_encode($msgReturn));
         return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
-    });
+    })->add($onlyUser);
 
     $group->PUT('/updatePublicacion', function ($request, Response $response, $args){
         global $publiDB;
@@ -113,7 +113,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         $response->getBody()->write(json_encode($msgReturn));
 
         return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
-    });
+    })->add($onlyUser);
 
     $group->DELETE('/deletePublicacion', function (Request $request, Response $response, $args){
         global $publiDB;

@@ -2,6 +2,8 @@
 use Slim\Routing\RouteCollectorProxy;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
+
 require_once __DIR__ . '/../utilities/bdController.php';
 
 $camposUser = [
@@ -187,4 +189,4 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
 
         return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
     });
-});
+})->add($onlyAdmin);
