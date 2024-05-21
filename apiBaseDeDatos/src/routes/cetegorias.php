@@ -4,44 +4,47 @@ use Slim\Routing\RouteCollectorProxy;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
+require_once __DIR__ . '/../utilities/bdController.php';
+
 $camposCategorias = [
-    'id' => 'int',
+    'id' => '?int',
     'nombre' => 'varchar'
 ];
 
-$categoriaDB = new bdController('categorias',$pdo,$camposCategorias);
+$categoriaDB = new bdController('categoria',$pdo,$camposCategorias);
 
+// LE TUVE QUE SACAR ESTO PORQ DABA ERROR, LUEGO HAY QUE MIRARLO
 //funcion de validaciones
-function validaciones ($data, $response){
+/* function validaciones ($data, $response){
     $columna=['nombre'];
         //vemos si los campos no estan vacios
         foreach($columna as $colu){
             if (!isset($data[$colu]) || $data[$colu]===0){
 /*                 $errorResponse = ['error' => 'El campo: ' . $colu . 'es necesario'];
-                $response->getbody()->write (json_encode($errorResponse)); */
+                $response->getbody()->write (json_encode($errorResponse));
                 return $response->withStatus(400);
             }
         }
         //vemos si el tamaño de los strings es correcto
         if (isset($data['nombre']) && strlen($data['nombre'] > 255)){
 /*             $errorResponse = ['error' => 'el campo nombre no puede excedere los 255 caracteres'];
-            $response->getBody()->write (json_encode($errorResponse)); */
+            $response->getBody()->write (json_encode($errorResponse));
             return $response->withStatus(500)->withHeader('Content-Type','application/json');
         }
         return null;
-}
+} */
 
 
 $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
-    $group->POST('/categorias', function ($request, $response, $args){
+    $group->POST('/newCategoria', function ($request, $response, $args){
         global $categoriaDB;
         //traemos los paremetros y los asignamos a las variables
         $data = $request->getParsedBody(); 
         $status = 500;
         // revisamos si tienen todos los campos y hacemos las revisiones
-        $validar = validaciones ($data,$request);
+        //$validar = validaciones ($data,$request);
 
-        if ($validar != null) return $validar;
+        //if ($validar != null) return $validar;
         //preparamos la insersion
         
         if ($categoriaDB->exists($data)) return $response->withStatus($status)->withHeader('content-type', 'application/json');
@@ -51,7 +54,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         return $response->withStatus($status)->withHeader('content-type', 'application/json');
     });
 
-    $group->PUT('/categoria', function($request, Response $response,$args){
+    $group->PUT('/updateCategoria', function($request, Response $response,$args){
         global $categoriaDB;
         $status = 500;
         // preparamos para ver si existe una categoria con ese id
@@ -59,8 +62,8 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         $data = $request->getParsedBody();
         
         //revisamos si tiene todos los campos y hacemos validaciones
-        $validar = validaciones($data,$request);
-        if ($validar !== null) return $validar;
+        //$validar = validaciones($data,$request);
+        //if ($validar !== null) return $validar;
 
         if (!$categoriaDB->exists($data)) return $response->withStatus($status)->withHeader('content-type', 'application/json');
         
@@ -69,7 +72,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         return $response->withStatus($status)->withHeader('content-type', 'application/json');
     });
 
-    $group->DELETE('/centros', function(Request $request, Response $response,$args){
+    $group->DELETE('/deleteCategoria', function(Request $request, Response $response,$args){
         //
         //
         //---------FALTA VERIFICAR QUE NO HAYA PUBLICACIONES CON ESTA CATEGORIA!!!!
@@ -87,7 +90,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         return $response->withStatus($status)->withHeader('Content-type','application/json');
     });
     
-    $group->GET('/categoria', function($request, Response $response, $args) use ($pdo){
+    $group->GET('/listarCategorias', function($request, Response $response, $args) use ($pdo){
         global $categoriaDB;
         $data = $request->getQueryParams();  
         $status = 500;

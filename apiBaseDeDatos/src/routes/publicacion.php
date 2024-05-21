@@ -7,7 +7,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 require_once __DIR__ . '/../utilities/bdController.php';
 
 $camposPublicacion = [
-    'id' => 'int',
+    'id' => '?int',
     'nombre' => 'varchar',
     'descripcion' => 'text',
     'user' => 'varchar',
@@ -26,23 +26,26 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         $bodyParams = (array) $request->getParsedBody();
         $where = $publiDB->getWhereParams($bodyParams); // esto es para los values
 
-        if (empty($where) || count($camposPublicacion) != count($where) || $publiDB->exists($where)) return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
+        if (empty($where) || count($camposPublicacion) < count($where) || $publiDB->exists($where)) return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
 
         $pudo = $publiDB->insert($bodyParams);
 
         if (!$pudo) return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
 
-        $publiID = json_decode($publiDB->getFirst($where))['id'];
+        $publiID = (array)((json_decode($publiDB->getFirst($where)))[0]);
+        $publiID = $publiID[0];
 
         for ($i = 1; $i <= 3; $i++) {
-            if (array_key_exists("centro$i", $bodyParams)) {
-                $pudo = $pudo && agregarPubliCentros(array('centro' => $bodyParams["centro$i"], 'publicacion' => $publiID),$pdo);
+            $strCentro = "centro" . $i;
+            if (array_key_exists($strCentro, $bodyParams)) {
+                $pudo = $pudo && agregarPubliCentros(array('centro' => $bodyParams[$strCentro], 'publicacion' => $publiID),$pdo);
             }
         }
 
         for ($j = 1; $j <= 6; $j++) {
-            if (array_key_exists("imagen$i", $bodyParams)) {
-                $pudo = $pudo && agregarImg(array('archivo' => $bodyParams["imagen$i"], 'publicacion' => $publiID), $pdo);
+            $strImg = "imagen" . $j;
+            if (array_key_exists($strImg, $bodyParams)) {
+                $pudo = $pudo && agregarImg(array('archivo' => $bodyParams[$strImg], 'publicacion' => $publiID), $pdo);
             }
         }
 
@@ -115,9 +118,12 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
 
         if (empty($where) || !$publiDB->exists($where)) return $response->withHeader('Content-Type', 'application/json')->withStatus($status);
 
-        $publis = json_decode($publiDB->getFirst($where, false, 20));
+        $offset = (array_key_exists('pag', $queryParams)) ? $queryParams['pag'] : 0;
+
+        $publis = json_decode($publiDB->getFirst($where, false, 20,$offset));
 
         foreach($publis as $key => $value){
+            $value = (array) $value;
             $where = [
                 'publicacion' => $value['id']
             ];
@@ -126,14 +132,17 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
 
             for ($i = 0; $i < count($publiCent); $i++){
                 $wherCentro = ['id' => $publiCent[$i]['centro']];
-                $value["centro$i"] = $centroDB->getFirst($wherCentro);
+                $strCentro = "centro" . ($i+1);
+                $value[$strCentro] = $centroDB->getFirst($wherCentro);
             }
             
             $publiImg = listarImg($where);
 
             for ($i = 0; $i < count($publiImg); $i++) {
-                $value["imagen$i"] = $publiImg[$i];
+                $strImg = "imagen" . ($i+1);
+                $value[$strImg] = $publiImg[$i];
             }
+            $publis[$key] = $value;
         }
 
         $response->getBody()->write(json_encode($publis));

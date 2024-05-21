@@ -8,7 +8,7 @@ require_once __DIR__ . '/../utilities/bdController.php';
 
 $camposSesion = [
     "user" => "varchar",
-    "token" => "varchar",
+    "token" => "?varchar",
     "nombre" => "varchar",
     "ultimaAccion" => "timestamp",
     "fechaInicio" => "timestamp"

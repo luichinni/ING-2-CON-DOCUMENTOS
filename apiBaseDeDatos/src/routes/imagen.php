@@ -2,7 +2,7 @@
 // Imagen = (archivo,publicacion(FK))
 // obtener
 // eliminar
-require_once __DIR__ . '/../utilities/generadorQuerys.php';
+require_once __DIR__ . '/../utilities/bdController.php';
 
 $camposImg = [
     'archivo' => 'varchar',
@@ -16,7 +16,7 @@ function agregarImg(array $valueParams){
     $pudo = false;
 
     if ($imgDB->exists($valueParams)) return $pudo;
-
+    
     return $imgDB->insert($valueParams);
 }
 
