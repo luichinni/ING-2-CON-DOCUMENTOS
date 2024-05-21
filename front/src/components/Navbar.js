@@ -34,47 +34,48 @@ export function NavBar(){
                     Explorar
                 </Link>
             </li>
-            // USUARIO
-            <li className='button-NavBar'>
-                <Link 
-                    to="/agregarPublicacion"
-                    className="botonNavBar"> 
-                    Subir Publicacion
-                </Link>
-            </li>
-            //USUARIO
-            <li className='button-NavBar'>
-                <Link 
-                    to="/MisPublicaciones"
-                    className="botonNavBar"> 
-                    Mis Publicaciones
-                </Link>
-            </li>
-            //ADMIN
-            <li className='button-NavBar'>
-                <Link 
-                    to="/agregarCentro"
-                    className="botonNavBar"> 
-                    Agregar Centro  
-                </Link>
-            </li>
-            //ADMIN
-            <li className='button-NavBar'>
-                <Link 
-                    to="/AgregarCategoria"
-                    className="botonNavBar"> 
-                    Agregar Categoria
-                </Link>
-            </li>
-            //ADMIN
-            <li className='button-NavBar'>
-                <Link 
-                    to="/Centros"
-                    className="botonNavBar"> 
-                    Centros
-                </Link>
-            </li> 
-            //TODOS
+            {(Token == 'tokenUser') ?(
+            <>
+                <li className='button-NavBar'>
+                    <Link 
+                        to="/agregarPublicacion"
+                        className="botonNavBar"> 
+                        Subir Publicacion
+                    </Link>
+                </li>
+                <li className='button-NavBar'>
+                    <Link 
+                        to="/MisPublicaciones"
+                        className="botonNavBar"> 
+                        Mis Publicaciones
+                    </Link>
+                </li>
+            </>
+            ):(Token == 'tokenAdmin')?(
+            <>
+                <li className='button-NavBar'>
+                    <Link 
+                        to="/agregarCentro"
+                        className="botonNavBar"> 
+                        Agregar Centro  
+                    </Link>
+                </li>
+                <li className='button-NavBar'>
+                    <Link 
+                        to="/AgregarCategoria"
+                        className="botonNavBar"> 
+                        Agregar Categoria
+                    </Link>
+                </li>
+                <li className='button-NavBar'>
+                    <Link 
+                        to="/Centros"
+                        className="botonNavBar"> 
+                        Centros
+                    </Link>
+                </li> 
+            </>
+            ):(<></>)}
             <li className='button-NavBar'>
                 <a href="https://caritas.org.ar/quienes-somos/" className="botonNavBar">¿Quiénes somos?</a>
             </li>

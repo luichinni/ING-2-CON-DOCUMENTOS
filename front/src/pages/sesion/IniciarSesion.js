@@ -51,7 +51,7 @@ const IniciarSesion = () => {
                         <input placeholder="Ingrese su contraseña" type="password" value={clave} onChange={handleClaveChange} required />
                     </label>
                     <br />
-                    <button type="submit" className="botonSubmit"> "Iniciar sesión"</button>
+                    <button type="submit" className="botonSubmit"> Iniciar sesión</button>
                 </form>
             </div>
         );
