@@ -55,9 +55,9 @@ export function NavBar(){
             <>
                 <li className='button-NavBar'>
                     <Link 
-                        to="/agregarCentro"
+                        to="/listarCentro"
                         className="botonNavBar"> 
-                        Agregar Centro  
+                        Centro  
                     </Link>
                 </li>
                 <li className='button-NavBar'>

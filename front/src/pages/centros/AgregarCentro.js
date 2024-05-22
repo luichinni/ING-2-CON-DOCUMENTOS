@@ -44,6 +44,16 @@ const AgregarCentro = () => {
 					<input type="text" value={direccion} onChange={handleDireccionChange} required />
 				</label>
 				<br />
+                <label>
+					Ingrese el horario de apertura del centro: 
+					<input type="text" value={nombre} onChange={handleNombreChange} required />
+				</label>
+				<br />
+                <label>
+					Ingrese el horario de cierre del centro: 
+					<input type="text" value={nombre} onChange={handleNombreChange} required />
+				</label>
+				<br />
 				<ButtonSubmit text="Agregar Centro!" />
 			</form>
 		</div>

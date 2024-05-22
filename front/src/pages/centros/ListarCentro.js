@@ -31,7 +31,7 @@ const ListarCentro = () => {
           setError('No hay centros disponibles');
           setCentros([]); 
         } else {
-          setCentros(response.data);
+          setCentros(procesar(response.data));
         }
       } catch (error) {
         setError('Ocurrió un error al obtener los centros.');
@@ -47,6 +47,16 @@ const ListarCentro = () => {
   const handleParametrosChange = (newParametros) => {
     setParametros(newParametros);
   };
+
+  function procesar(centros) {
+    let centroCopy = [];
+    Object.keys(centros).forEach(function (clave) {
+      if (!isNaN(clave)) {
+        centroCopy[clave] = centros[clave]
+      }
+    })
+    return centroCopy
+  }
 
   return (
     <div className='Content'>

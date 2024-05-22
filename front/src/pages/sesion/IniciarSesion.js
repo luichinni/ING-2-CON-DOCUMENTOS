@@ -53,8 +53,8 @@ const IniciarSesion = () => {
                 </form>
                 <br/><br/>
                 <p className='textRegistrarse'>
-                    ¿No tenes un usuario?
-                    <Link to="/Registrarse" className='botonRegistrarse'> Registrarse </Link>
+                    ¿No tienes un usuario?
+                    <Link to="/Registrarse" className='botonRegistrarse'> Regístrate </Link>
                 </p>
             </div>
         );

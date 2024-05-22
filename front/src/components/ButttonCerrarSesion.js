@@ -1,9 +1,18 @@
-function onClick(){
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+export function ButtonCerrarSesion() {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
     localStorage.clear();
+    navigate('../');
     window.location.reload();
-}
-export function ButtonCerrarSesion (){
-    return<button onClick={() => onClick()}>
-                Cerrar Sesion
-          </button>
+  };
+
+  return (
+    <button onClick={handleClick}>
+      Cerrar Sesion
+    </button>
+  );
 }

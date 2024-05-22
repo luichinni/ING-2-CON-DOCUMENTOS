@@ -84,25 +84,3 @@ const ListarPublis = () => {
 }
 
 export default ListarPublis;
-
-
-
-  /*const filasDePublicaciones = [];
-  for (let i = 0; i < ListaDePublicaciones.length; i += 3) {
-    filasDePublicaciones.push(ListaDePublicaciones.slice(i, i + 3));
-  }
-  
-  return (
-    <div className="ListadoPublis">
-      {filasDePublicaciones.map((fila, index) => (
-        <div key={index} className="fila">
-          {fila.map(publicacion => (
-            <div key={publicacion.ID} className="publicacion">
-              <Tarjeta publicacion={publicacion} />
-            </div>
-          ))}
-        </div>
-      ))}
-    </div>
-  );
-}*/

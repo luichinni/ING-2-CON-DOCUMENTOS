@@ -10,7 +10,7 @@ const ListarMisPublis = () => {
   const [loading, setLoading] = useState(false);
   const [parametros, setParametros] = useState({
     nombre: "",
-    user: "",
+    user: localStorage.getItem(username),
     categoria: "",
     estado: "",
     id: ""
