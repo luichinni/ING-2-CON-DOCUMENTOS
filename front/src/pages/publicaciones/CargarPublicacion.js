@@ -49,7 +49,7 @@ const AgregarPublicacion = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 		  try {
-			const respon = await axios.get(`http://localhost:8000/public/listarCategorias`);
+			const respon = await axios.get(`http://localhost:8000/public/listarCategorias?id=&nombre=`);
 			setCategorias(procesarcat(respon.data));
 			console.log(respon.data);
 		  } catch (error) {
@@ -62,7 +62,7 @@ const AgregarPublicacion = () => {
 	  useEffect(() => {
 		const fetchData = async () => {
 		  try {
-			const res = await axios.get(`http://localhost:8000/public/listarCentros`);
+			const res = await axios.get(`http://localhost:8000/public/listarCentros?id=&nombre=&direccion=&hora_abre=&hora_cierra=`);
 			setCentros(procesarcen(res.data));
 			console.log(res.data);
 		  } catch (error) {

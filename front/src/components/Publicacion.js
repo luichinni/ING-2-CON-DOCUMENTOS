@@ -23,13 +23,6 @@ const publicacion = (props) => {
                         <br />
                         categoria: {props.categoria_id}
                     </p>
-                    <Link
-                        to={`/PubliDetalle/${props.id}`}
-                        className="botonDetalle"
-                        onClick={handleDetalleClick}
-                    >
-                        Detalles
-                    </Link>
                 </div>
             </fieldset>
 }
