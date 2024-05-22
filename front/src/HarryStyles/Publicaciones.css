@@ -2,61 +2,64 @@
     display: flex;
     min-height: 100vh;
     background-color: #f9f9f9;
-}
-
-.sidebar {
+  }
+  
+  .sidebar {
     width: 370px;
     padding: 20px;
     background-color: #ffffff;
     border-right: 1px solid #ddd;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.publi-container {
+  }
+  
+  .publi-container {
     flex: 1;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
     padding: 20px;
-}
-
-.publicacion {
+  }
+  
+  .publicacion {
     background-color: #ffffff;
     border: 1px solid #ddd;
     border-radius: 8px;
     overflow: hidden;
-    transition: box-shadow 0.3s ease;
-}
-
-.publicacion:hover {
+    transition: box-shadow 0.3s ease, transform 0.3s ease; /* Agrega transición para el efecto de crecimiento */
+  }
+  
+  .publicacion:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.publicacion img {
+    transform: scale(1.05); /* Aumenta el tamaño al pasar el ratón */
+  }
+  
+  .publicacion img {
     width: 100%;
     height: auto;
     border-bottom: 1px solid #ddd;
-}
-
-.publicacion-info {
+  }
+  
+  .publicacion-info {
     padding: 15px;
-}
-
-.publicacion-info h2 {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .publicacion-info h2 {
     font-size: 18px;
     margin: 0 0 10px;
     color: #333;
-}
-
-.publicacion-info p {
+  }
+  
+  .publicacion-info p {
     margin: 5px 0;
     font-size: 14px;
     color: #666;
-}
-
-.publicacion-info button {
-    display: inline-block;
-    margin-top: 10px;
+  }
+  
+  .publicacion-info button {
+    margin-top: auto; /* Alinea el botón en la parte inferior */
+    align-self: flex-end; /* Alinea el botón a la derecha */
     padding: 10px 15px;
     font-size: 14px;
     color: #fff;
@@ -65,20 +68,21 @@
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-}
-
-.publicacion-info button:hover {
+  }
+  
+  .publicacion-info button:hover {
     background-color: #0056b3;
-}
-
-.cargando,
-.sin-publi {
+  }
+  
+  .cargando,
+  .sin-publi {
     text-align: center;
     font-size: 24px;
     color: #333;
     grid-column: 1 / -1;
-}
-.banner {
+  }
+  
+  .banner {
     display: flex;
     justify-content: center; /* Centra horizontalmente */
     align-items: center; /* Centra verticalmente */
