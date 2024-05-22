@@ -1,3 +1,5 @@
+/* Publicaciones.css */
+
 .content {
     display: flex;
     min-height: 100vh;
@@ -12,54 +14,61 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
-  .publi-container {
+
+.publi-container {
     flex: 1;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 300px)); /* Ancho fijo de 300px */
+    gap: 10px; /* Reducir el espacio entre las publicaciones */
     padding: 20px;
+    max-height: 80vh; /* Limitar la altura */
+    overflow-y: auto; /* Agregar desplazamiento vertical si el contenido es demasiado largo */
   }
   
+  
+  
+  
   .publicacion {
+    display: flex;
     background-color: #ffffff;
     border: 1px solid #ddd;
     border-radius: 8px;
     overflow: hidden;
-    transition: box-shadow 0.3s ease, transform 0.3s ease; /* Agrega transición para el efecto de crecimiento */
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
   }
   
   .publicacion:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transform: scale(1.05); /* Aumenta el tamaño al pasar el ratón */
+    transform: scale(1.05);
   }
   
-  .publicacion img {
+  .publicacion-img {
+    flex: 1;
+  }
+  
+  .publicacion-img img {
     width: 100%;
     height: auto;
-    border-bottom: 1px solid #ddd;
   }
   
   .publicacion-info {
+    flex: 1;
     padding: 15px;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
   }
   
-  .publicacion-info h2 {
-    font-size: 18px;
-    margin: 0 0 10px;
-    color: #333;
-  }
-  
-  .publicacion-info p {
-    margin: 5px 0;
+  .descripcion {
     font-size: 14px;
     color: #666;
   }
   
-  .publicacion-info button {
-    margin-top: auto; /* Alinea el botón en la parte inferior */
-    align-self: flex-end; /* Alinea el botón a la derecha */
+  .descripcion p {
+    margin: 5px 0;
+  }
+  
+  .descripcion button {
     padding: 10px 15px;
     font-size: 14px;
     color: #fff;
@@ -70,7 +79,7 @@
     transition: background-color 0.3s ease;
   }
   
-  .publicacion-info button:hover {
+  .descripcion button:hover {
     background-color: #0056b3;
   }
   
@@ -84,9 +93,9 @@
   
   .banner {
     display: flex;
-    justify-content: center; /* Centra horizontalmente */
-    align-items: center; /* Centra verticalmente */
-    height: 100px; /* Establece la altura deseada */
-    background-color: #f0f0f0; /* Cambia el color de fondo según sea necesario */
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    background-color: #f0f0f0;
   }
   
