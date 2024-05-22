@@ -1,8 +1,10 @@
 import { ButtonSubmit } from "../../components/ButtonSubmit";
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 const Registrarse = () => {
+	const navigate = useNavigate(); 
     const [nombre, setNombre] = useState('');
     const [apellido, setApellido] = useState('');
     const [edad, setEdad] = useState('');
@@ -11,6 +13,8 @@ const Registrarse = () => {
     const [telefono, setTelefono] = useState('');
 	const [contraseña, setContraseña] =useState('');
 	const [username, setUsername] =useState('');
+	const [myError, setMyError] = useState(false);
+	const [msgError, setMsgError] = useState('No deberías estar viendo este mensaje');
 
 	const handleUsernameChange = (e) => setUsername(e.target.value);
     const handleNombreChange = (e) => setNombre(e.target.value);
@@ -20,34 +24,45 @@ const Registrarse = () => {
     const handleMailChange = (e) => setEmail(e.target.value);
     const handleTelefonoChange = (e) => setTelefono(e.target.value);
 	const handleContraseñaChange = (e) => setContraseña(e.target.value);
-    
 
     const handleSubmit = async (e) => {
+		
         e.preventDefault();
 		console.log('Submit button clicked!');
 
-        const formData = new FormData();
-		formData.append('username', username);	
-        formData.append('nombre', nombre);
-        formData.append('apellido', apellido);
-		formData.append('edad', edad);
-		formData.append('dni', numeroDocumento);
-		formData.append('mail', mail);
-		formData.append('telefono', telefono);
-		formData.append('clave', contraseña);
-		formData.append('rol', "user");
+		if (edad < 18){
+			setMyError(true);
+			setMsgError('Debes ser mayor de edad para registrarte.');
+		}else{
+			console.log('entro');
+			const formData = new FormData();
+			formData.append('username', username);
+			formData.append('nombre', nombre);
+			formData.append('apellido', apellido);
+			formData.append('edad', edad);
+			formData.append('dni', numeroDocumento);
+			formData.append('mail', mail);
+			formData.append('telefono', telefono);
+			formData.append('clave', contraseña);
+			formData.append('rol', "user");
 
-        try {
-            const response = await axios.post("http://localhost:8000/public/newUsuario", formData,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                });
-            console.log('Success:', response);
-        } catch (error) {
-            console.error('Error:', error);
-        }
+			try {
+				setMyError(false);
+				console.log('myErr  =false')
+				const response = await axios.post("http://localhost:8000/public/newUsuario", formData,
+					{
+						headers: {
+							"Content-Type": "application/json",
+						},
+					});
+				console.log('Success:', response);
+				navigate("../IniciarSesion");
+			} catch (error) {
+				console.error('Error:', error.response.data.Mensaje);
+				setMyError(true);
+				setMsgError(error.response.data.Mensaje);
+			}
+		}
     };
 
     return (
@@ -56,6 +71,9 @@ const Registrarse = () => {
 	<div id="registrarse">
 		<br/>
 		<p> Registrate para poder ofertar intercambios con los demás usuarios! </p>
+				{myError &&
+					<p style={{ backgroundColor: "red", color: "white", textAlign:"center" }}>{msgError}</p>
+				}
 		<form onSubmit={handleSubmit}>
 			<label id="formtext" >Nombre de Usuario </label> <br/>
 			<input placeholder='Nombre de usuario' type="text" value={username} onChange={handleUsernameChange} required /> <br/>

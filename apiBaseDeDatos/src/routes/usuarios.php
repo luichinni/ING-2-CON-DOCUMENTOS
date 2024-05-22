@@ -21,26 +21,26 @@ $userDB = new bdController('usuarios',$pdo,$camposUser);
 
 function userValidator(array $data, PDO $pdo, array $camposUser){
     global $userDB;
-    $valid = true;
+    $valid = ['invalido'=>''];
     $roles = ['admin', 'user', 'volunt'];
-    match ($valid){
+    match (true){
         // menos de 50 chars y que no esté utilizado
-        (array_key_exists('username', $data)) && ((strlen($data['username']) > 50) || ($userDB->exists(array('username' => $data['username'])))) => $valid = false,
+        (array_key_exists('username', $data)) && ((strlen($data['username']) > 50) || ($userDB->exists(array('username' => $data['username'])))) => $valid['invalido'] = 'username',
         // menos de 50 char y que tenga más de 6
-        (array_key_exists('clave', $data)) && ((strlen($data['clave']) > 50) || (strlen($data['clave']) < 6)) => $valid = false,
+        (array_key_exists('clave', $data)) && ((strlen($data['clave']) > 50) || (strlen($data['clave']) < 6)) => $valid['invalido'] = 'clave',
         // mayor a 2 letras
-        (array_key_exists('nombre', $data)) && (strlen($data['nombre']) < 2) => $valid = false,
+        (array_key_exists('nombre', $data)) && (strlen($data['nombre']) < 2) => $valid['invalido'] = 'nombre',
         // mayor a 2 letras
-        (array_key_exists('apellido', $data)) && (strlen($data['apellido']) < 2) => $valid = false,
+        (array_key_exists('apellido', $data)) && (strlen($data['apellido']) < 2) => $valid['invalido'] = 'apellido',
         // que sea solo numerico
-        (array_key_exists('dni', $data)) && (!ctype_digit($data['dni'])) => $valid = false,
+        (array_key_exists('dni', $data)) && (!ctype_digit($data['dni'])) => $valid['invalido'] = 'dni',
         // que tenga @ y que no sea utilizado por nadie
-        (array_key_exists('mail', $data)) && ((strpos($data['mail'], '@') === false) || ($userDB->exists(array('mail' => $data['mail'])))) => $valid = false,
+        (array_key_exists('mail', $data)) && ((strpos($data['mail'], '@') === false) || ($userDB->exists(array('mail' => $data['mail'])))) => $valid['invalido'] = 'mail',
         // que sea solo numerico
-        (array_key_exists('telefono', $data)) && (!ctype_digit($data['telefono'])) => $valid = false,
+        (array_key_exists('telefono', $data)) && (!ctype_digit($data['telefono'])) => $valid['invalido'] = 'telefono',
         // rol existente
-        (array_key_exists('rol', $data)) && (!in_array($data['rol'], $roles)) => $valid = false,
-        default => $valid = true
+        (array_key_exists('rol', $data)) && (!in_array($data['rol'], $roles)) => $valid['invalido'] = 'rol',
+        default => $valid = null
     };
     return $valid;
 }
@@ -121,10 +121,11 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
             return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
 
-        $valid = userValidator($bodyParams,$pdo,$camposUser) && !$userDB->exists($where);
-
+        $campoInv = userValidator($bodyParams, $pdo, $camposUser);
+        $valid = ($campoInv == null) && !$userDB->exists($where);
+        
         if (!$valid) {
-            $msgReturn['Mensaje'] = 'Alguno de los parametros no es válido';
+            $msgReturn['Mensaje'] = "El campo " . $campoInv['invalido'] . " no es válido";
             $res->getBody()->write(json_encode($msgReturn));
             return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
