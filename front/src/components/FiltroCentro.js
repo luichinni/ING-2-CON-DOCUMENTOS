@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ButtonSubmit } from './ButtonSubmit';
 
 const Filtro = ({ onFiltroSubmit }) => {
   const [filtro, setFiltro] = useState({
@@ -29,7 +30,7 @@ const Filtro = ({ onFiltroSubmit }) => {
       <input type="text" name="direccion" value={filtro.categoria} onChange={handleChange} placeholder="Direccion" />
       <input type="text" name="hora_abre" value={filtro.estado} onChange={handleChange} placeholder="Hora_abre" />
       <input type="text" name="hora_cierra" value={filtro.estado} onChange={handleChange} placeholder="Hora_cierra" />
-      <button type="submit">Filtrar</button>
+      <ButtonSubmit text="Filtrar" />
     </form>
   );
 }

@@ -19,12 +19,12 @@ const Centro = (props) => {
                             <br />
                             hora de cierre: {props.hora_cierra}
                             <br />
-                            <boton className="boton_editar">
+                            <button className="boton_editar">
                                 Editar
-                            </boton>
-                            <boton className="boton_eliminar">
+                            </button>
+                            <button className="boton_eliminar">
                                 Eliminar
-                            </boton>
+                            </button>
                             <br />
                         </p>
                     </div>
