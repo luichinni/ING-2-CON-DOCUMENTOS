@@ -186,7 +186,11 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
                 $value['centros'][$i] = $centroDB->getFirst($wherCentro);
             }
             
+            error_log(json_encode($where));
+
             $value['imagenes'] = listarImg($where);
+
+            error_log(json_encode(count($value['imagenes'])));
 
             $publis[$key] = $value;
         }

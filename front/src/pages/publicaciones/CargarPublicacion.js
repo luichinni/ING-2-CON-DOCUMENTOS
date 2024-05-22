@@ -37,6 +37,7 @@ const AgregarPublicacion = () => {
 			const base64 = await fileToBase64(file);
 			base64Array.push(base64);
 		}
+		console.log(base64Array);
 		setFotosBase64(base64Array);
 	};
     const handleCategoriaChange = (e) => setCategoriaSeleccionada(e.target.value);
