@@ -1,18 +1,18 @@
 import { ButtonSubmit } from "../../components/ButtonSubmit";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const AgregarPublicacion = () => {
     const [nombre, setNombre] = useState('');
     const [descripcion, setDescripcion] = useState('');
     const [fotos, setFotos] = useState([]);
-    const [categoria, setCategoria] = useState('');
+    const [categorias, setCategorias] = useState('');
     const [centros, setCentros] = useState([]);
 
     const handleNombreChange = (e) => setNombre(e.target.value);
     const handleDescripcionChange = (e) => setDescripcion(e.target.value);
     const handleFotosChange = (e) => setFotos(e.target.files);
-    const handleCategoriaChange = (e) => setCategoria(e.target.value);
+    const handleCategoriaChange = (e) => setCategorias(e.target.value);
     const handleCentrosChange = (e) => {
         const selectedValues = Array.from(e.target.selectedOptions, option => option.value);
         setCentros(selectedValues);
@@ -28,7 +28,7 @@ const AgregarPublicacion = () => {
         Array.from(fotos).forEach((file, index) => {
             formData.append(`fotos[${index}]`, file);
         });
-        formData.append('categoria', categoria);
+        formData.append('categoria', categorias);
         centros.forEach((centro, index) => {
             formData.append(`centros[${index}]`, centro);
         });
@@ -40,12 +40,37 @@ const AgregarPublicacion = () => {
                         "Content-Type": "application/json",
                     },
                 });
-           {/* const result = await response.json();*/}
             console.log('Success:', response);
         } catch (error) {
             console.error('Error:', error);
         }
     };
+
+	useEffect(() => {
+		const fetchData = async () => {
+		  try {
+			const respon = await axios.get(`http://localhost:8000/public/listarCategorias`);
+			setCategorias(respon.data);
+			console.log(respon.data);
+		  } catch (error) {
+			console.error(error);
+		  }
+		};	
+		fetchData();
+	  }, []);
+
+	  useEffect(() => {
+		const fetchData = async () => {
+		  try {
+			const res = await axios.get(`http://localhost:8000/public/listarCentros`);
+			setCentros(res.data);
+			console.log(res.data);
+		  } catch (error) {
+			console.error(error);
+		  }
+		};	
+		fetchData();
+	  }, []);
 
     return (
 		<div>
@@ -68,21 +93,26 @@ const AgregarPublicacion = () => {
 				<br />
 				<label>
 					Categoría:
-					<select value={categoria} onChange={handleCategoriaChange}>
-						<option value="Alimentos">Alimentos</option>
-						<option value="ArtLimpieza">Articulos de Limpieza</option>
-						<option value="Ropa">Ropa</option>
-						<option value="UtilesEscolares">Utiles escolares</option>
-					</select>
+				<select id="categoria" onChange={handleCategoriaChange}>
+            		<option value="">Categoria</option>
+            		{categorias.map((categoria) => (
+              		<option key={categoria.id} value={categoria.id}>
+            		{categoria.nombre}
+              		</option>
+            		))}
+          		</select>
 				</label>
 				<br /><br />
 				<label>
 					Centros:
-					<select multiple onChange={handleCentrosChange}>
-						<option value="centro1">Centro 1</option>
-						<option value="centro2">Centro 2</option>
-						<option value="centro3">Centro 3</option>
-					</select>
+					<select id="centro" onChange={handleCentrosChange}>
+            		<option value="">Centro</option>
+            		{centros.map((centro) => (
+              		<option key={centro.id} value={centro.id}>
+            		{centro.nombre}
+              		</option>
+            		))}
+          		</select>
 				</label>
 				<br />
 				<ButtonSubmit text="Subir producto!" />
