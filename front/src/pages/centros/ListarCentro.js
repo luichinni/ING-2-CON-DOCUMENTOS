@@ -24,7 +24,7 @@ const ListarCentro = () => {
 
       try {
         const queryParams = new URLSearchParams(parametros).toString();
-        const url = `https://localhost:8000/public/listarCentros?${queryParams}`;
+        const url = `http://localhost:8000/public/listarCentros?${queryParams}`;
         const response = await axios.get(url);
 
         if (response.data.length === 0) {

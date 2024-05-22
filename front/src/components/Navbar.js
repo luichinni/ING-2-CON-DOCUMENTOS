@@ -55,7 +55,7 @@ export function NavBar(){
             <>
                 <li className='button-NavBar'>
                     <Link 
-                        to="/listarCentro"
+                        to="/Centros"
                         className="botonNavBar"> 
                         Centro  
                     </Link>
