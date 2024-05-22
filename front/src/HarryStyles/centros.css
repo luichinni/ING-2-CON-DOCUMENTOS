@@ -49,3 +49,39 @@
   .Publi-Div {
     margin: 10px;
   }
+
+  .boton_editar {
+    padding: 8px 16px; /* Menos padding para achicar el botón */
+    font-size: 14px; /* Tamaño de fuente más pequeño */
+    color: #fff;
+    background-color: #007bff; /* Color azul para el botón de editar */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none; /* Quita el subrayado */
+    margin-right: 10px; /* Espacio entre los botones */
+  }
+  
+  .boton_editar:hover {
+    background-color: #0056b3; /* Color azul más oscuro al pasar el cursor */
+  }
+  
+  .botonEliminar {
+    padding: 8px 16px; /* Menos padding para achicar el botón */
+    font-size: 14px; /* Tamaño de fuente más pequeño */
+    color: #fff;
+    background-color: #ff0000; /* Color rojo para el botón de eliminar */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none; /* Quita el subrayado */
+  }
+  
+  .botonEliminar:hover {
+    background-color: #cc0000; /* Color rojo más oscuro al pasar el cursor */
+  }
+  
+  
+  
