@@ -8,7 +8,6 @@ const Filtro = ({ onFiltroSubmit }) => {
     nombre: "",
     user: "",
     categoria_id: "",
-    estado: "",
     id: ""
   });
 
@@ -80,14 +79,6 @@ const Filtro = ({ onFiltroSubmit }) => {
           </option>
         ))}
       </select><br/><br/>
-      <input
-        className="filtro-input"
-        type="text"
-        name="estado"
-        value={filtro.estado}
-        onChange={handleChange}
-        placeholder="Estado"
-      /><br/><br/>
       <button className="filtro-button" type="submit">Filtrar</button>
     </form>
   );
