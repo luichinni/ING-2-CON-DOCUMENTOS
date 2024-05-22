@@ -16,6 +16,7 @@ import MisPublis from './pages/publicaciones/MisPublicaciones';
 import ListarCategoria from './pages/categorias/ListarCategoria';
 import DeleteCategoria from './pages/categorias/deleteCategoria';
 import PubliDetalle from './pages/publicaciones/PubliDetalle';
+import Explorar from './pages/publicaciones/Explorar';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
                 <Route path={"/"} element={<Dashboard />} />
                 <Route path={"/MisPublicaciones"} element={<MisPublis />} />
                 <Route path={"/PubliDetalle/:id"} element={<PubliDetalle/>} />
+                <Route path={"/Explorar"} element={<Explorar/>} />
 
                 <Route path={"/Registrarse"} element={<Registrarse />} />
                 <Route path={"/IniciarSesion"} element={<IniciarSesion />} />

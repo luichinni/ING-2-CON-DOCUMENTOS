@@ -31,6 +31,13 @@ export function NavBar(){
                 <Link 
                     to="/"
                     className="botonNavBar"> 
+                    Inicio
+                </Link>
+            </li>
+            <li className='button-NavBar'>
+                <Link 
+                    to="/Explorar"
+                    className="botonNavBar"> 
                     Explorar
                 </Link>
             </li>
