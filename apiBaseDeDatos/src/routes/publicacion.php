@@ -27,17 +27,24 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         $bodyParams = (array) $request->getParsedBody();
         $where = $publiDB->getWhereParams($bodyParams); // esto es para los values
 
+        //error_log(json_encode($bodyParams));
+
         $foto = false;
         for ($i = 1; $i <= 6; $i++){
-            $foto = $foto || array_key_exists('imagen'.$i,$bodyParams);
+            $foto = $foto || array_key_exists('foto'.$i,$bodyParams);
         }
+        error_log("hay fotos: " . json_encode($foto));
 
         if (empty($where) || count($camposPublicacion) < count($where) || !$foto) {
             $response->getBody()->write(json_encode($msgReturn));
             return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
 
+        error_log("Ahora intenta insertar");
+
         $pudo = $publiDB->insert($bodyParams);
+
+        error_log("Insertar: " . json_encode($pudo));
 
         $msgReturn['Mensaje'] = 'Ocurrió un error al cargar la publicación';
 
@@ -59,7 +66,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         }
 
         for ($j = 1; $j <= 6; $j++) {
-            $strImg = "imagen" . $j;
+            $strImg = "foto" . $j;
             if (array_key_exists($strImg, $bodyParams)) {
                 $bodyParams['archivo'] = $bodyParams[$strImg];
                 $pudo = $pudo && agregarImg($bodyParams, $pdo);
@@ -174,7 +181,8 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
             $publiCent = listarPubliCentros($where);
 
             for ($i = 0; $i < count($publiCent); $i++){
-                $wherCentro = ['id' => $publiCent[$i]['centro']];
+                $tempArr = (array) $publiCent[$i];
+                $wherCentro = ['id' => $tempArr['centro']];
                 $value['centros'][$i] = $centroDB->getFirst($wherCentro);
             }
             
