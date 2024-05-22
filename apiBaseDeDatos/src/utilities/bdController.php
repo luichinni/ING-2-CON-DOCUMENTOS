@@ -69,7 +69,7 @@ class bdController{
                 $contador++;
             }
         }
-
+        error_log("Campos necesarios:" . json_encode($contador >= $this->obligatorios));
         if ($contador >= $this->obligatorios){
             $queryInsert = $this->generarInsert($datosIn);
             $pudo = $this->pdo->prepare($queryInsert)->execute();
