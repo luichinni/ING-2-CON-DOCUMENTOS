@@ -10,7 +10,7 @@ const DeleteCategoria = () => {
     const deleteCategoria = async () => {
       try {
         if (window.confirm('¿Seguro que querés eliminar la categoría?')) {
-          await axios.delete(`http://localhost:8000/public/deleteCategoria/${id}`);
+          await axios.delete(`http://localhost:8000/public/deleteCategoria?id=${id}`);
           alert(`Categoría eliminada`);
           navigate(`../Categorias`);
         } else {
@@ -21,9 +21,11 @@ const DeleteCategoria = () => {
       }
     };
     deleteCategoria();
-  }, [id, navigate]);
+  }, []); // Pasamos un array vacío como segundo argumento
 
   return null; // No renderizamos nada en esta página
 };
 
 export default DeleteCategoria;
+
+

@@ -2,8 +2,9 @@ import "../HarryStyles/centros.css"
 import "../HarryStyles/styles.css"
 import React from "react";
 import {buttonEliminar} from "./buttonEliminar" 
+import {Link} from "react-router-dom";
 
-const Centro = (props) => {
+const Categoria = (props) => {
         return  <fieldset className="centro-fila">
                     <div className="div">
                         <p className="nombre">
@@ -12,11 +13,11 @@ const Centro = (props) => {
                         <button className="boton_editar">
                             Editar
                         </button>
-                        <buttonEliminar id={props.id} text={"Eliminar"}/>
+                        <Link to={"/deleteCategoria/" + props.Id} className="botonEliminar"> Eliminar </Link>
                         <br/>
                     </div>
                 </fieldset>
 
 }
 
-export default Centro
+export default Categoria

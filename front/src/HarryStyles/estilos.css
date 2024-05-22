@@ -18,7 +18,7 @@ body, p, input, select, textarea, button {
 
 div, p {
   color: var(--color-shadow);
-  text-shadow: 1px 1px 1px var(--color-white);
+
 }
 
 form {
@@ -39,7 +39,6 @@ button, input, textarea, select {
   border-radius: calc(var(--ruler) * 20);
   padding: var(--ruler);
   background-color: var(--color-bg);
-  text-shadow: 1px 1px 0 var(--color-white);
 }
 
 label {

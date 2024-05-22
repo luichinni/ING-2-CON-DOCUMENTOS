@@ -45,7 +45,7 @@ function App() {
 
                 <Route path={"/AgregarCategoria"} element={<AgregarCategoria />} />
                 <Route path={"/Categorias"} element={<ListarCategoria/> }/>
-                <Route path={"/DeleteCategoria"} element={<DeleteCategoria />} />
+                <Route path={"/deleteCategoria/:id"} element={<DeleteCategoria />} />
 
               </Routes>
             </div>
