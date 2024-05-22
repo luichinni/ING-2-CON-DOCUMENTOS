@@ -9,8 +9,6 @@ const Dashboard = () => {
       <banner className='banner'>
         <h1>Bienvenido a TrueCa</h1>
       </banner>
-      
-      <ListarPublis />
     </div>
   );
 }
