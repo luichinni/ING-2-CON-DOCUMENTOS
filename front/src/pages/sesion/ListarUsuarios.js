@@ -29,9 +29,9 @@ const ListarUsuario = () => {
 
         if (response.data.length === 0) {
           setError('No hay usuarios disponibles');
-          setCentros([]); 
+          setUsuarios([]); 
         } else {
-          setCentros(procesar(response.data));
+          setUsuarios(procesar(response.data));
         }
       } catch (error) {
         setError('Ocurrió un error al obtener los usuarios.');
@@ -49,13 +49,13 @@ const ListarUsuario = () => {
   };
 
   function procesar(usuarios) {
-    let centroCopy = [];
+    let usuarioCopy = [];
     Object.keys(usuarios).forEach(function (clave) {
       if (!isNaN(clave)) {
         usuarioCopy[clave] = usuarios[clave]
       }
     })
-    return centroCopy
+    return usuarioCopy
   }
 
   return (
@@ -68,7 +68,7 @@ const ListarUsuario = () => {
         ) : error ? (
           <h1 className='SinCentros'>{error}</h1>
         ) : (
-          usuarioss.map(usuarios => (
+          usuarios.map(usuarios => (
             <User
                 userName = {usuarios.userName}
                 nombre = {usuarios.nombre}
@@ -84,4 +84,4 @@ const ListarUsuario = () => {
   );
 }
 
-export default ListarUsuarios;
+export default ListarUsuario;
