@@ -11,7 +11,7 @@ const publicacion = (props) => {
     return  <fieldset className="publicacion">
                 <div className="div">
                     <br/>
-                    <img className="img" src={`data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCAMGAxMDASIAAhEB`} alt="imagen no encontrada"/>
+                    <img className="img" src={props.imagen} alt="imagen no encontrada"/>
                     <p className="descripcion">
                         {props.nombre}
                         <br/>
