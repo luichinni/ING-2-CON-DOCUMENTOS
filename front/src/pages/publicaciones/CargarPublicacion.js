@@ -1,6 +1,7 @@
 import { ButtonSubmit } from "../../components/ButtonSubmit";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import "../../HarryStyles/estilos.css";
 
 const fileToBase64 = (file) => {
         return new Promise((resolve, reject) => {
@@ -125,44 +126,32 @@ const AgregarPublicacion = () => {
         <div>
             <br /><br /><br /><br /><br /><br />
             <form onSubmit={handleSubmit}>
-                <label>
-                    Nombre del producto:
-                    <input type="text" value={nombre} onChange={handleNombreChange} />
-                </label>
-                <br />
-                <label>
-                    Descripción del producto:
-                    <textarea value={descripcion} onChange={handleDescripcionChange}></textarea>
-                </label>
-                <br />
+                    <input type="text" value={nombre} onChange={handleNombreChange} placeholder="Nombre del producto" requerid/>
+                <br /><br /><br />
+                    <textarea value={descripcion} onChange={handleDescripcionChange} maxlength="255" placeholder="Desripción del producto" requerid></textarea>
+                <br /><br /><br />
                 <label>
                     Seleccione las fotos, por lo menos una:
-                    <input type="file" accept="image/*" multiple onChange={handleFotosChange} />
+                    <input type="file" accept="image/*" multiple requerid onChange={handleFotosChange} />
                 </label>
                 <br />
-                <label>
-                    Categoría:
                     <select id="categoria" onChange={handleCategoriaChange}>
-                        <option value="">Categoria</option>
+                        <option value="">Seleccione una categoria</option>
                         {categorias.map((categoria) => (
                             <option key={categoria.id} value={categoria.id}>
                                 {categoria.nombre}
                             </option>
                         ))}
                     </select>
-                </label>
                 <br /><br />
-                <label>
-                    Centros:
                     <select id="centro" onChange={handleCentrosChange} multiple>
-                        <option value="">Centro</option>
+                        <option value="">Seleccione un centro</option>
                         {centros.map((centro) => (
                             <option key={centro.id} value={centro.id}>
                                 {centro.nombre}
                             </option>
                         ))}
                     </select>
-                </label>
                 <br />
                 <ButtonSubmit text="Subir producto!" />
             </form>
