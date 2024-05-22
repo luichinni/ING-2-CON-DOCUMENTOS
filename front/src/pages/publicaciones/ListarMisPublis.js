@@ -37,7 +37,6 @@ const ListarMisPublis = () => {
           setError('No hay publicaciones disponibles');
           setPublicaciones([]); 
         } else {
-          console.log(procesar(response.data));
           setPublicaciones(procesar(response.data));
         }
       } catch (error) {
@@ -66,26 +65,28 @@ const ListarMisPublis = () => {
   }
 
   return (
-    <div className='Content'>
-      <div className='Publi-Div'>
+    <div className='content'>
+      <div className='sidebar'>
         <Filtro onFiltroSubmit={handleParametrosChange} />
-        {loading ?(
-            <h1 className='Cargando'>Cargando...</h1>
-        ) :
-        error ? (
-          <h1 className='SinPubli'>{error}</h1>
-        ) : ( 
-              publicaciones.map(publicacion => (
-                <Publicacion
-                  id={publicacion.id}
-                  nombre={publicacion.nombre}
-                  descripcion={publicacion.descripcion}
-                  user={publicacion.user}
-                  categoria_id={publicacion.categoria_id}
-                  estado={publicacion.estado}
-                  imagen={publicacion.imagenes[0].archivo}
-                />
-              ))
+      </div>
+      <div className='publi-container'>
+        {loading ? (
+          <h1 className='cargando'>Cargando...</h1>
+        ) : error ? (
+          <h1 className='sin-publi'>{error}</h1>
+        ) : (
+          publicaciones.map(publicacion => (
+            <Publicacion
+              key={publicacion.id} // Agregar key prop para evitar advertencia
+              id={publicacion.id}
+              nombre={publicacion.nombre}
+              descripcion={publicacion.descripcion}
+              user={publicacion.user}
+              categoria_id={publicacion.categoria_id}
+              estado={publicacion.estado}
+              imagen={publicacion.imagenes[0].archivo}
+            />
+          ))
         )}
       </div>
     </div>
