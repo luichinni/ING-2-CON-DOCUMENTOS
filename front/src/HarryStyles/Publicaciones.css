@@ -78,3 +78,11 @@
     color: #333;
     grid-column: 1 / -1;
 }
+.banner {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    height: 100px; /* Establece la altura deseada */
+    background-color: #f0f0f0; /* Cambia el color de fondo según sea necesario */
+  }
+  
