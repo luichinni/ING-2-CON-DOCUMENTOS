@@ -14,6 +14,7 @@ import AgregarPublicacion from './pages/publicaciones/CargarPublicacion';
 import AgregarCentro from './pages/centros/AgregarCentro';
 import MisPublis from './pages/publicaciones/MisPublicaciones';
 import ListarCategoria from './pages/categorias/ListarCategoria';
+import DeleteCategoria from './pages/categorias/deleteCategoria';
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
 
                 <Route path={"/AgregarCategoria"} element={<AgregarCategoria />} />
                 <Route path={"/Categorias"} element={<ListarCategoria/> }/>
+                <Route path={"/DeleteCategoria"} element={<DeleteCategoria />} />
 
               </Routes>
             </div>

@@ -9,7 +9,7 @@ const ListarCategoria = () => {
   const [categorias, setCategorias] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [parametros, setParametros] = useState({
+  const [parametros] = useState({
     id: "",
     nombre: "",
   });
@@ -41,10 +41,6 @@ const ListarCategoria = () => {
 
     fetchData();
   }, [parametros]);
-
-  const handleParametrosChange = (newParametros) => {
-    setParametros(newParametros);
-  };
 
   function procesar(categorias) {
     let centroCopy = [];

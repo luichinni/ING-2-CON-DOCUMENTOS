@@ -1,6 +1,7 @@
 import "../HarryStyles/centros.css"
 import "../HarryStyles/styles.css"
 import React from "react";
+import {buttonEliminar} from "./buttonEliminar" 
 
 const Centro = (props) => {
         return  <fieldset className="centro-fila">
@@ -11,9 +12,7 @@ const Centro = (props) => {
                         <button className="boton_editar">
                             Editar
                         </button>
-                        <button className="boton_eliminar">
-                            Eliminar
-                        </button>
+                        <buttonEliminar id={props.id} text={"Eliminar"}/>
                         <br/>
                     </div>
                 </fieldset>
