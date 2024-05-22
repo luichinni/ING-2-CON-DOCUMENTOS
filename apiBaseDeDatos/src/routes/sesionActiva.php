@@ -24,7 +24,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo, $camposS
             'Mensaje' => 'user o clave invalido'
         ];
         $status = 404;
-        if (array_key_exists('username',$queryParams) && array_key_exists('clave', $queryParams) && $userDB->exists(array('username' => $queryParams['username']))){
+        if (array_key_exists('username',$queryParams) && array_key_exists('clave', $queryParams) && $userDB->exists(array('username' => $queryParams['username'],'clave'=>$queryParams['clave']))){
             $user = (array) json_decode($userDB->getFirst(array('username' => $queryParams['username'])));
             $userRol = (array) $user[0];
             $userRol = $userRol['rol'];
