@@ -8,10 +8,11 @@ const ListarMisPublis = () => {
   const [publicaciones, setPublicaciones] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const username = localStorage.getItem('username')
   const [parametros, setParametros] = useState({
     nombre: "",
-    user: localStorage.getItem(username),
-    categoria: "",
+    user: "",
+    categoria_id: "",
     estado: "",
     id: ""
   });
@@ -22,15 +23,21 @@ const ListarMisPublis = () => {
       setError('');
 
       try {
-        const queryParams = new URLSearchParams(parametros).toString();
-        const url = `https://localhost:8000/public/listarPublicaciones?${queryParams}`;
+        const queryParams = new URLSearchParams({
+            nombre: parametros.nombre,
+            user: username,
+            categoria_id: parametros.categoria_id,
+            estado: parametros.estado,
+            id: parametros.id
+        }).toString();
+        const url = `http://localhost:8000/public/listarPublicaciones?${queryParams}&token=${localStorage.getItem('token')}`;
         const response = await axios.get(url);
 
-        if (response.data.length === 0) {
+        if (response.data.length === 3) {
           setError('No hay publicaciones disponibles');
           setPublicaciones([]); 
         } else {
-          setPublicaciones(response.data);
+          setPublicaciones(procesar(response.data));
         }
       } catch (error) {
         setError('Ocurrió un error al obtener las publicaciones.');
@@ -41,31 +48,42 @@ const ListarMisPublis = () => {
     };
 
     fetchData();
-  }, [parametros]);
+  },[parametros]);
 
   const handleParametrosChange = (newParametros) => {
     setParametros(newParametros);
   };
 
+  function procesar(publicaciones) {
+    let publisCopy = [];
+    Object.keys(publicaciones).forEach(function (clave) {
+      if (!isNaN(clave)) {
+        publisCopy[clave] = publicaciones[clave]
+      }
+    })
+    return publisCopy
+  }
+
   return (
     <div className='Content'>
       <div className='Publi-Div'>
         <Filtro onFiltroSubmit={handleParametrosChange} />
-        {loading ? (
-          <h1 className='Cargando'>Cargando...</h1>
-        ) : error ? (
+        {loading ?(
+            <h1 className='Cargando'>Cargando...</h1>
+        ) :
+        error ? (
           <h1 className='SinPubli'>{error}</h1>
-        ) : (
-          publicaciones.map(publicacion => (
-            <Publicacion
-              key={publicacion.id}
-              nombre={publicacion.nombre}
-              descripcion={publicacion.descripcion}
-              user={publicacion.user}
-              categoria={publicacion.categoria}
-              estado={publicacion.estado}
-            />
-          ))
+        ) : ( 
+              publicaciones.map(publicacion => (
+                <Publicacion
+                  id={publicacion.id}
+                  nombre={publicacion.nombre}
+                  descripcion={publicacion.descripcion}
+                  user={publicacion.user}
+                  categoria_id={publicacion.categoria_id}
+                  estado={publicacion.estado}
+                />
+              ))
         )}
       </div>
     </div>

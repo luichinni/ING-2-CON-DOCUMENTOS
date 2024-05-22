@@ -1,5 +1,5 @@
 import React from 'react';
-import ListarMisPublis from './ListarPublis';
+import ListarMisPublis from './ListarMisPublis';
 import '../../HarryStyles/Publicaciones.css';
 import '../../HarryStyles/styles.css';
 

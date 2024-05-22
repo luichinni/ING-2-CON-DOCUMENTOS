@@ -50,12 +50,12 @@ const AgregarPublicacion = () => {
 		const fetchData = async () => {
 		  try {
 			const respon = await axios.get(`http://localhost:8000/public/listarCategorias`);
-			setCategorias(respon.data);
+			setCategorias(procesarcat(respon.data));
 			console.log(respon.data);
 		  } catch (error) {
 			console.error(error);
 		  }
-		};	
+		};
 		fetchData();
 	  }, []);
 
@@ -63,7 +63,7 @@ const AgregarPublicacion = () => {
 		const fetchData = async () => {
 		  try {
 			const res = await axios.get(`http://localhost:8000/public/listarCentros`);
-			setCentros(res.data);
+			setCentros(procesarcen(res.data));
 			console.log(res.data);
 		  } catch (error) {
 			console.error(error);
@@ -71,6 +71,25 @@ const AgregarPublicacion = () => {
 		};	
 		fetchData();
 	  }, []);
+
+	  function procesarcat(categorias) {
+		let cateCopy = [];
+		Object.keys(categorias).forEach(function (clave) {
+		  if (!isNaN(clave)) {
+			cateCopy[clave] = categorias[clave]
+		  }
+		})
+		return cateCopy
+	  }
+	  function procesarcen(centros) {
+		let cenCopy = [];
+		Object.keys(centros).forEach(function (clave) {
+		  if (!isNaN(clave)) {
+			cenCopy[clave] = centros[clave]
+		  }
+		})
+		return cenCopy
+	  }
 
     return (
 		<div>

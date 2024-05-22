@@ -15,6 +15,7 @@ import AgregarCentro from './pages/centros/AgregarCentro';
 import MisPublis from './pages/publicaciones/MisPublicaciones';
 import ListarCategoria from './pages/categorias/ListarCategoria';
 import DeleteCategoria from './pages/categorias/deleteCategoria';
+import PubliDetalle from './pages/publicaciones/PubliDetalle';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
               <Routes>
                 <Route path={"/"} element={<Dashboard />} />
                 <Route path={"/MisPublicaciones"} element={<MisPublis />} />
+                <Route path={"/PubliDetalle/:id"} element={<PubliDetalle/>} />
 
                 <Route path={"/Registrarse"} element={<Registrarse />} />
                 <Route path={"/IniciarSesion"} element={<IniciarSesion />} />

@@ -1,0 +1,35 @@
+.publi-detalle {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .imagen-principal {
+    flex: 1;
+    margin-right: 20px;
+  }
+  
+  .imagen-principal img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .detalles-publicacion {
+    flex: 1;
+  }
+  
+  .imagenes-adicionales {
+    flex: 1;
+  }
+  
+  .lista-imagenes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .lista-imagenes img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+  }
+  
