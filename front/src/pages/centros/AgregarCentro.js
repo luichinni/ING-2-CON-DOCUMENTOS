@@ -9,6 +9,8 @@ const AgregarCentro = () => {
 	const [direccion, setDireccion] = useState('');
 	const [hora_abre,setHora_abre] = useState('');
 	const [hora_cierra,setHora_cierra] = useState('');
+	const [myError, setMyError] = useState(false);
+	const [msgError, setMsgError] = useState('No deberías estar viendo este mensaje');
 
     const handleNombreChange = (e) => setNombre(e.target.value);
     const handleDireccionChange = (e) => setDireccion(e.target.value);
@@ -37,6 +39,8 @@ const AgregarCentro = () => {
             window.location.reload();
         } catch (error) {
             console.error('Error:', error);
+			setMyError(true);
+			setMsgError(error.response.data.Mensaje);
         }
     };
 
@@ -66,6 +70,9 @@ const AgregarCentro = () => {
 				<br />
 				<ButtonSubmit text="Agregar Centro!" />
 			</form>
+			{myError &&
+				<p style={{ backgroundColor: "red", color: "white", textAlign: "center" }}>{msgError}</p>
+			}
 		</div>
     );
 };

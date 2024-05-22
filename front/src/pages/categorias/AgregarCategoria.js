@@ -6,6 +6,8 @@ import axios from 'axios';
 const AgregarCategoria = () => {
     const navigate = useNavigate();
     const [nombre, setNombre] = useState('');
+    const [myError, setMyError] = useState(false);
+    const [msgError, setMsgError] = useState('No deberías estar viendo este mensaje');
 
     const handleNombreChange = (e) => setNombre(e.target.value);
 
@@ -29,6 +31,8 @@ const AgregarCategoria = () => {
             window.location.reload();
         } catch (error) {
             console.error('Error:', error);
+            setMyError(true);
+            setMsgError(error.response.data.Mensaje);
         }
 
     };
@@ -44,6 +48,9 @@ const AgregarCategoria = () => {
 				<br />
 				<ButtonSubmit text="Agregar Categoria!" />
 			</form>
+            {myError &&
+                <p style={{ backgroundColor: "red", color: "white", textAlign: "center" }}>{msgError}</p>
+            }
 		</div>
     );
 };

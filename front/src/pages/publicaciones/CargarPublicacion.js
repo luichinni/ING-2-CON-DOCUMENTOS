@@ -28,9 +28,10 @@ const AgregarPublicacion = () => {
     const [centros, setCentros] = useState([]);
     const [centrosSeleccionados, setCentrosSeleccionados] = useState([]);
     const [base64Fotos, setFotosBase64] = useState([]);
-    const [errorMessage, setErrorMessage] = useState('');
-    const navigate = useNavigate(); 
+    const [myError, setMyError] = useState(false);
+    const [msgError, setMsgError] = useState('No deberías estar viendo este mensaje');
 
+    const navigate = useNavigate();    
     const handleNombreChange = (e) => setNombre(e.target.value);
     const handleDescripcionChange = (e) => setDescripcion(e.target.value);
     const handleFotosChange = async (e) => {
@@ -77,8 +78,8 @@ const AgregarPublicacion = () => {
             navigate("../Explorar");
             window.location.reload();
         } catch (error) {
-            setErrorMessage(error.response.data.message);
-            console.error('Error:', error);
+            setMyError(true);
+            setMsgError(error.response.data.Mensaje);
         }
     };
 
@@ -155,9 +156,11 @@ const AgregarPublicacion = () => {
                     ))}
                 </select>
                 <br /> <br />
-                <ButtonSubmit text="Subir producto!"  />
-                {errorMessage && <p className="error-message">{errorMessage}</p>}
+                <ButtonSubmit text="Subir producto!" />
             </form>
+            {myError &&
+                <p style={{ backgroundColor: "red", color: "white", textAlign: "center" }}>{msgError}</p>
+            }
         </div>
     );
 };

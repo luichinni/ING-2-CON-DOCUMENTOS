@@ -47,9 +47,6 @@ const IniciarSesion = () => {
         return (
             <div>
                 <br /><br /><br /><br /><br /><br />
-                {myError &&
-                    <p style={{ backgroundColor: "red", color: "white", textAlign: "center" }}>{msgError}</p>
-                }
                 <form onSubmit={handleSubmit}>
                     <input placeholder="Ingrese su usuario" type="text" value={username} onChange={handleUsernameChange} required />
                     <br/> <br />
@@ -62,6 +59,9 @@ const IniciarSesion = () => {
                     <Link to="/Registrarse" className='botonRegistrarse'> Regístrate </Link>
                 </p>
                 </form>
+                {myError &&
+                    <p style={{ backgroundColor: "red", color: "white", textAlign: "center" }}>{msgError}</p>
+                }
             </div>
         );
     };

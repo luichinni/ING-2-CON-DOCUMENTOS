@@ -71,9 +71,6 @@ const Registrarse = () => {
 	<div id="registrarse">
 		<br/>
 		<p> Registrate para poder ofertar intercambios con los demás usuarios! </p>
-				{myError &&
-					<p style={{ backgroundColor: "red", color: "white", textAlign:"center" }}>{msgError}</p>
-				}
 		<form onSubmit={handleSubmit}>
 			<label id="formtext" >Nombre de Usuario </label> <br/>
 			<input placeholder='Nombre de usuario' type="text" value={username} onChange={handleUsernameChange} required /> <br/>
@@ -101,6 +98,9 @@ const Registrarse = () => {
 			
 			<ButtonSubmit text="Registrarse" />
 		</form>
+				{myError &&
+					<p style={{ backgroundColor: "red", color: "white", textAlign: "center" }}>{msgError}</p>
+				}
 	</div>
 	</>
 	
