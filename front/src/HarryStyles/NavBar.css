@@ -1,56 +1,65 @@
 .navbar {
     width: 100%;
     height: 15vh; 
-    background-color: #333;
+    background-color: white; /* Cambia el color de fondo a blanco */
     position: fixed;
     top: 0;
     left: 0;
-    display: flex;
+    display: flex-end;
     flex-direction: column;
     justify-content: center;
+    align-items: center; /* Centra horizontalmente */
     padding: 0 5px;
-}
-.navbar-items {
+  }
+  
+  .navbar-items {
     list-style-type: none; 
     margin: 0;
     padding: 0;
     display: flex; 
     justify-content: flex-end;
-}
-
-.navbar-items li {
+    align-items: center; /* Centra verticalmente */
+    height: 100%; /* Ajusta la altura para centrar verticalmente */
+  }
+  
+  .navbar-items li {
     display: inline; 
-}
-
-.botonNavBar{
-    background-color: #8b0000;
-    border: 2px solid #6D071A;
-    color: #FFFF;
-    align-items: right;
-    padding-right: 50px;
+  }
+  
+  .botonNavBar {
+    background-color: transparent; /* Elimina el color de fondo */
+    border: none; /* Elimina el borde */
+    color: #8b0000; /* Color de texto */
     margin-right: 20px;
     margin-left: 20px;
     margin-top: 20px;
     margin-bottom: 20px;
     padding: 14px 20px;
     text-decoration: none;
-}
-
-.botonNavBar:hover{
-    background-color: #ffffff;
-    border: 2px solid #6D071A;
-    color: #8b0000;
-    align-items: right;
-    padding-right: 50px;
-    margin-right: 20px;
-    margin-left: 20px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    padding: 14px 20px;
-}
-
-/* NavBar.css */
-.dropdown-menu {
+    position: relative; /* Agrega posición relativa para el subrayado */
+  }
+  
+  .botonNavBar:hover {
+    text-decoration: none; /* Elimina el subrayado predeterminado */
+  }
+  
+  .botonNavBar:hover::after {
+    content: ""; /* Agrega contenido pseudo-elemento */
+    position: absolute; /* Posición absoluta */
+    left: 0; /* Posición desde el borde izquierdo del botón */
+    right: 0; /* Posición desde el borde derecho del botón */
+    bottom: -5px; /* Ajusta la posición vertical */
+    height: 2px; /* Altura del subrayado */
+    background-color: #8b0000; /* Color del subrayado */
+  }
+  
+  /* Estilos para la página actual */
+  .current-page {
+    text-decoration: underline; /* Subraya el texto */
+  }
+  
+  /* NavBar.css */
+  .dropdown-menu {
     position: absolute;
     top: calc(100% + 5px); /* Colocamos el menú justo debajo del botón "Menú" */
     right: 0; /* Alineamos el menú a la derecha */
@@ -62,26 +71,26 @@
     display: none; /* Ocultamos inicialmente el menú */
     max-height: 50vh; /* Limitamos la altura máxima del menú */
     overflow-y: auto; /* Agregamos desplazamiento vertical si el contenido es demasiado largo */
-}
-
-.dropdown-menu.show {
+  }
+  
+  .dropdown-menu.show {
     display: block; /* Mostramos el menú cuando está abierto */
-}
-
-.dropdown-menu ul {
+  }
+  
+  .dropdown-menu ul {
     list-style: none;
     padding: 0;
     margin: 0;
-}
-
-.dropdown-menu ul li {
+  }
+  
+  .dropdown-menu ul li {
     padding: 10px;
     text-align: right; /* Alineamos el texto a la derecha */
     display: block; /* Hacemos que cada elemento sea un bloque para que aparezcan uno debajo del otro */
     width: 100%; /* Aseguramos que ocupen todo el ancho del menú */
-}
-
-.dropdown-menu ul li:hover {
+  }
+  
+  .dropdown-menu ul li:hover {
     background-color: #f5f5f5;
-}
-
+  }
+  
