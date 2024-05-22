@@ -13,6 +13,7 @@ import IniciarSesion from './pages/sesion/IniciarSesion';
 import AgregarPublicacion from './pages/publicaciones/CargarPublicacion';
 import AgregarCentro from './pages/centros/AgregarCentro';
 import MisPublis from './pages/publicaciones/MisPublicaciones';
+import ListarCategoria from './pages/categorias/ListarCategoria';
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
                 <Route path={"/Centros"} element={<ListarCentro />} />
 
                 <Route path={"/AgregarCategoria"} element={<AgregarCategoria />} />
+                <Route path={"/listarCategorias"} element={<ListarCategoria/> }/>
 
               </Routes>
             </div>
