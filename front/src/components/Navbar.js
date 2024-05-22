@@ -27,6 +27,7 @@ export function NavBar(){
     return (
     <div className='navbar'>
         <div className='navbar-items'>
+                <img style={{ position: "absolute", left: "0","max-height":"95px",width: "auto"}} src='./truecaLogo.webp'></img>
             <li className='button-NavBar'>
                 <Link 
                     to="/"

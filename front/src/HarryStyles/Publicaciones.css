@@ -50,8 +50,10 @@
 
  .publicacion-img {
     flex: 1;
+    max-height: 150px;
+    max-width: 150px;
     height: 150px;
-    width: 150px; /* Altura fija para todas las imágenes */
+    width: auto; /* Altura fija para todas las imágenes */
     overflow: hidden; /* Oculta cualquier parte de la imagen que exceda la altura fija */
   }
   
