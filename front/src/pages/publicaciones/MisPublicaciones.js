@@ -7,7 +7,7 @@ import '../../HarryStyles/styles.css';
 const MisPublis = () => {
   return (
     <div className='dashboard'>
-      <br /><br /><br /><br />
+      <br /><br /><br /><br /><br /><br />
       <banner className='banner'>
         <h1>Mis publicaciones</h1>
       </banner>
