@@ -3,7 +3,7 @@ import axios from 'axios';
 import '../HarryStyles/Filtro.css';
 
 const Filtro = ({ onFiltroSubmit }) => {
-  const [categorias, setCategorias] = useState('');
+  const [categorias, setCategorias] = useState([]);
   const [filtro, setFiltro] = useState({
     nombre: "",
     user: "",
@@ -11,8 +11,6 @@ const Filtro = ({ onFiltroSubmit }) => {
     estado: "",
     id: ""
   });
-
-  const handleCategoriaChange = (e) => setCategorias(e.target.value);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -76,7 +74,7 @@ const Filtro = ({ onFiltroSubmit }) => {
         onChange={handleChange}
       >
         <option value="">Categorías</option>
-        {categorias.map((categoria) => (
+        {Array.isArray(categorias) && categorias.map((categoria) => (
           <option key={categoria.id} value={categoria.id}>
             {categoria.nombre}
           </option>
@@ -96,3 +94,4 @@ const Filtro = ({ onFiltroSubmit }) => {
 }
 
 export default Filtro;
+

@@ -61,25 +61,6 @@ const ListarPublis = () => {
     <div className='content'>
       <div className='sidebar'>
         <Filtro onFiltroSubmit={handleParametrosChange} />
-<<<<<<< Updated upstream
-        {loading ?(
-            <h1 className='Cargando'>Cargando...</h1>
-        ) :
-        error ? (
-          <h1 className='SinPubli'>{error}</h1>
-        ) : ( 
-              publicaciones.map(publicacion => (
-                <Publicacion
-                  id={publicacion.id}
-                  nombre={publicacion.nombre}
-                  descripcion={publicacion.descripcion}
-                  user={publicacion.user}
-                  categoria_id={publicacion.categoria_id}
-                  estado={publicacion.estado}
-                  imagen={publicacion.imagenes[0].archivo}
-                />
-              ))
-=======
       </div>
       <div className='publi-container'>
         {loading ? (
@@ -89,16 +70,15 @@ const ListarPublis = () => {
         ) : (
           publicaciones.map(publicacion => (
             <Publicacion
-              key={publicacion.id}
-              id={publicacion.id}
-              nombre={publicacion.nombre}
-              descripcion={publicacion.descripcion}
-              user={publicacion.user}
-              categoria_id={publicacion.categoria_id}
-              estado={publicacion.estado}
+                  id={publicacion.id}
+                  nombre={publicacion.nombre}
+                  descripcion={publicacion.descripcion}
+                  user={publicacion.user}
+                  categoria_id={publicacion.categoria_id}
+                  estado={publicacion.estado}
+                  imagen={publicacion.imagenes[0].archivo}
             />
           ))
->>>>>>> Stashed changes
         )}
       </div>
     </div>
