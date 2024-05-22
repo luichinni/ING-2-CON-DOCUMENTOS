@@ -23,6 +23,7 @@ const publicacion = (props) => {
                         <br />
                         categoria: {props.categoria_id}
                     </p>
+                    
                 </div>
             </fieldset>
 }
