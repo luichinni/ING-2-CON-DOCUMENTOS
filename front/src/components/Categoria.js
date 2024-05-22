@@ -8,14 +8,13 @@ const Centro = (props) => {
                         <p className="nombre">
                             categoria {props.Id}:  {props.Nombre}
                         </p>
-                            <button className="boton_editar">
-                                Editar
-                            </button>
-                            <button className="boton_eliminar">
-                                Eliminar
-                            </button>
-                        <br />
-                        </p>
+                        <button className="boton_editar">
+                            Editar
+                        </button>
+                        <button className="boton_eliminar">
+                            Eliminar
+                        </button>
+                        <br/>
                     </div>
                 </fieldset>
 

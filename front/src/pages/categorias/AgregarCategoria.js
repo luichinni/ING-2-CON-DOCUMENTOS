@@ -1,8 +1,10 @@
 import { ButtonSubmit } from "../../components/ButtonSubmit";
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 const AgregarCategoria = () => {
+    const navigate = useNavigate();
     const [nombre, setNombre] = useState('');
 
     const handleNombreChange = (e) => setNombre(e.target.value);
@@ -23,9 +25,12 @@ const AgregarCategoria = () => {
                     },
                 });
             console.log('Success:', response);
+            navigate ("../Categorias");
+            window.location.reload();
         } catch (error) {
             console.error('Error:', error);
         }
+
     };
 
     return (

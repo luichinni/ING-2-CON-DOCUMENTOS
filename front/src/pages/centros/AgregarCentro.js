@@ -1,8 +1,10 @@
 import { ButtonSubmit } from "../../components/ButtonSubmit";
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 const AgregarCentro = () => {
+	const navigate = useNavigate();
     const [nombre, setNombre] = useState('');
 	const [direccion, setDireccion] = useState('');
 	const [hora_abre,setHora_abre] = useState('');
@@ -31,6 +33,8 @@ const AgregarCentro = () => {
                     },
                 });
             console.log('Success:', response);
+			navigate ("../Centros");
+            window.location.reload();
         } catch (error) {
             console.error('Error:', error);
         }

@@ -39,7 +39,7 @@ function App() {
                 <Route path={"/Centros"} element={<ListarCentro />} />
 
                 <Route path={"/AgregarCategoria"} element={<AgregarCategoria />} />
-                <Route path={"/listarCategorias"} element={<ListarCategoria/> }/>
+                <Route path={"/Categorias"} element={<ListarCategoria/> }/>
 
               </Routes>
             </div>

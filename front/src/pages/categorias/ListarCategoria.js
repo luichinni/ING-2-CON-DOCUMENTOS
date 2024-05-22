@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {Link} from 'react-router-dom';
 import Categoria from '../../components/Categoria';
 import '../../HarryStyles/categorias.css';
 import '../../HarryStyles/styles.css'
@@ -59,6 +60,13 @@ const ListarCategoria = () => {
     <div className='Content'>
       <br /><br /><br /><br /><br /><br /><br />
       <div className='Publi-Div'>
+        <div className='botonAgregar'>
+            <Link 
+              to="/AgregarCategoria"
+              className="agregarBoton"> 
+              Agregar Categoria
+            </Link>
+        </div>
         {loading ? (
           <h1 className='Cargando'>Cargando...</h1>
         ) : error ? (

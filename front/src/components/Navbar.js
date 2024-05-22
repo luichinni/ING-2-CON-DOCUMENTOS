@@ -62,7 +62,7 @@ export function NavBar(){
                 </li>
                 <li className='button-NavBar'>
                     <Link 
-                        to="/ListarCategorias"
+                        to="/Categorias"
                         className="botonNavBar"> 
                         Categoria
                     </Link>
