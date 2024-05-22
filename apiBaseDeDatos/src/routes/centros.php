@@ -163,13 +163,13 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         $centros = json_decode($centroDB->getAll($queryParams));
 
         if (empty($centros)){
-            $response->getBody()->write($centros);
+            $response->getBody()->write(json_encode($msgReturn));
             return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
         }
 
         $centros['Mensaje'] = 'Centros listados con éxito';
 
-        $response->getBody()->write($centros);
+        $response->getBody()->write(json_encode($centros));
         return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
     });
 });

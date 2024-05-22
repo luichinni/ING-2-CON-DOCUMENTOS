@@ -144,7 +144,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
     });
 
     $group->GET('/listarPublicaciones', function ($request, Response $response, $args) use ($pdo) {
-        global $publiDB, $centroDB, $publiCentroDB, $imgDB, $categoriaDB;
+        global $publiDB, $centroDB, $categoriaDB;
         $status = 404;
         $msgReturn = ['Mensaje'=>'No se encontraron coincidencias'];
         // obtener los parametros de la query
@@ -152,14 +152,14 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
 
         $where = $publiDB->getWhereParams($queryParams);
 
-        if (empty($where) || !$publiDB->exists($where)) {
+        if (empty($where) || !$publiDB->exists($where,true)) {
             $response->getBody()->write(json_encode($msgReturn));
             return $response->withHeader('Content-Type', 'application/json')->withStatus($status);
         }
 
         $offset = (array_key_exists('pag', $queryParams)) ? $queryParams['pag'] : 0;
 
-        $publis = json_decode($publiDB->getFirst($where, false, 20,$offset));
+        $publis = json_decode($publiDB->getFirst($where, true, 20,$offset));
 
         foreach($publis as $key => $value){
             $value = (array) $value;

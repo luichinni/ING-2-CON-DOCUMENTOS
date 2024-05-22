@@ -62,14 +62,14 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
             return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
         } 
 
-        $existe = $userDB->exists($where);
+        $existe = $userDB->exists($where,true);
 
         if (!$existe) {
             $res->getBody()->write(json_encode($msgReturn));
             return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
         } 
 
-        $user = (array) json_decode($userDB->getFirst($where));
+        $user = (array) json_decode($userDB->getFirst($where,true));
         $user['Mensaje'] = 'Usuario encontrado';
 
         $res->getBody()->write(json_encode($user));
@@ -90,14 +90,14 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
 
         $where = $userDB->getWhereParams($queryParams);
 
-        if (!$userDB->exists($where)) {
+        if (!$userDB->exists($where,true)) {
             $res->getBody()->write(json_encode($msgReturn));
             return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
         }
 
         $offset = (array_key_exists('pag',$queryParams)) ? $queryParams['pag'] : 0;
 
-        $user = json_decode($userDB->getFirst($where,false,20, $offset));
+        $user = json_decode($userDB->getFirst($where,true,20, $offset));
 
         $user['Mensaje'] = 'Usuarios encontrados con éxito';
 
