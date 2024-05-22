@@ -21,7 +21,7 @@ div, p {
   text-shadow: 1px 1px 1px var(--color-white);
 }
 
-form, .registrarse {
+form {
   padding: var(--ruler);
   width: calc(var(--ruler) * 20);
   margin: 0 auto;
