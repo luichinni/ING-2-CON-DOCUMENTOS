@@ -15,26 +15,30 @@
   }
   
 
+/* Publicaciones.css */
+
 .publi-container {
     flex: 1;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 300px)); /* Ancho fijo de 300px */
-    gap: 10px; /* Reducir el espacio entre las publicaciones */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 300px)); /* Columnas dinámicas */
+    gap: 50px; /* Espacio entre las publicaciones */
     padding: 20px;
-    max-height: 80vh; /* Limitar la altura */
-    overflow-y: auto; /* Agregar desplazamiento vertical si el contenido es demasiado largo */
+    max-height: 60vh; /* Altura máxima */
+    overflow-y: auto; /* Desplazamiento vertical si es necesario */
   }
   
-  
+    
   
   
   .publicacion {
-    display: flex;
+    width: 300px; /* Ancho fijo para cada publicación */
     background-color: #ffffff;
     border: 1px solid #ddd;
     border-radius: 8px;
     overflow: hidden;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
+    display: flex; /* Añadido */
+    align-items: center; /* Añadido */
   }
   
   .publicacion:hover {
@@ -42,14 +46,21 @@
     transform: scale(1.05);
   }
   
-  .publicacion-img {
+/* Publicaciones.css */
+
+ .publicacion-img {
     flex: 1;
+    height: 150px;
+    width: 150px; /* Altura fija para todas las imágenes */
+    overflow: hidden; /* Oculta cualquier parte de la imagen que exceda la altura fija */
   }
   
   .publicacion-img img {
-    width: 100%;
-    height: auto;
+    width: 150px; /* La imagen ocupará todo el ancho del contenedor */
+    height: 150px; /* La imagen ocupará toda la altura del contenedor */
+    object-fit: cover; /* La imagen se ajustará para cubrir el contenedor manteniendo su relación de aspecto */
   }
+  
   
   .publicacion-info {
     flex: 1;
