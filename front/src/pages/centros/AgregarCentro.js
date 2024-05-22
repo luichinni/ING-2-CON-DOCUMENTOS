@@ -5,9 +5,13 @@ import axios from 'axios';
 const AgregarCentro = () => {
     const [nombre, setNombre] = useState('');
 	const [direccion, setDireccion] = useState('');
+	const [hora_abre,setHora_abre] = useState('');
+	const [hora_cierra,setHora_cierra] = useState('');
 
     const handleNombreChange = (e) => setNombre(e.target.value);
     const handleDireccionChange = (e) => setDireccion(e.target.value);
+	const handleHora_AbreChange = (e) => setHora_abre (e.target.value);
+	const handleHora_CierraChange = (e) => setHora_cierra (e.target.value);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -16,6 +20,8 @@ const AgregarCentro = () => {
         const formData = new FormData();
         formData.append('nombre', nombre);
 		formData.append('direccion', direccion);
+		formData.append('hora_abre',hora_abre)
+		formData.append('hora_cierra',hora_cierra)
 
         try {
             const response = await axios.post("http://localhost:8000/public/newCentro", formData,
@@ -35,23 +41,23 @@ const AgregarCentro = () => {
 			<br /><br /><br /><br /><br /><br />
 			<form onSubmit={handleSubmit}>
 				<label>
-					Ingrese el nombre del centro a agregar: 
+					Ingrese el nombre del centro a agregar: <br/>
 					<input type="text" value={nombre} onChange={handleNombreChange} required />
 				</label>
 				<br />
 				<label>
-					Ingrese la dirección del centro: 
+					Ingrese la dirección del centro: <br/>
 					<input type="text" value={direccion} onChange={handleDireccionChange} required />
 				</label>
 				<br />
                 <label>
-					Ingrese el horario de apertura del centro: 
-					<input type="text" value={nombre} onChange={handleNombreChange} required />
+					Ingrese el horario de apertura del centro: <br/>
+					<input type="text" value={hora_abre} onChange={handleHora_AbreChange} required />
 				</label>
 				<br />
                 <label>
-					Ingrese el horario de cierre del centro: 
-					<input type="text" value={nombre} onChange={handleNombreChange} required />
+					Ingrese el horario de cierre del centro: <br/>
+					<input type="text" value={hora_cierra} onChange={handleHora_CierraChange} required />
 				</label>
 				<br />
 				<ButtonSubmit text="Agregar Centro!" />

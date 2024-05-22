@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {Link} from 'react-router-dom';
 import Centro from '../../components/Centro';
 import FiltroCentro from '../../components/FiltroCentro';
 import '../../HarryStyles/centros.css';
@@ -63,6 +64,14 @@ const ListarCentro = () => {
       <br /><br /><br /><br /><br /><br /><br />
       <div className='Publi-Div'>
         <FiltroCentro onFiltroSubmit={handleParametrosChange} />
+        <br />
+        <div className='botonAgregar'>
+            <Link 
+              to="/AgregarCentro"
+              className="agregarBoton"> 
+              Agregar Centro
+            </Link>
+        </div>
         {loading ? (
           <h1 className='Cargando'>Cargando...</h1>
         ) : error ? (

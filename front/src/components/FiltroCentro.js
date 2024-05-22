@@ -25,8 +25,8 @@ const Filtro = ({ onFiltroSubmit }) => {
   
   return (
     <form onSubmit={handleSubmit}>
-      <input type="text" name="key" value={filtro.key} onChange={handleChange} placeholder="Numero de centro" />
-      <input type="text" name="nombre" value={filtro.nombre} onChange={handleChange} placeholder="Nombre" />
+      <input type="text" name="key" value={filtro.key} onChange={handleChange} placeholder="Numero de centro" /> 
+      <input type="text" name="nombre" value={filtro.nombre} onChange={handleChange} placeholder="Nombre" /> 
       <input type="text" name="direccion" value={filtro.categoria} onChange={handleChange} placeholder="Direccion" />
       <ButtonSubmit text="Filtrar" />
     </form>
