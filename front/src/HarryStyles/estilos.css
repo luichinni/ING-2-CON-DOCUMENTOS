@@ -2,7 +2,7 @@
   --ruler: 16px;
   --color-red: #AE1100;
   --color-bg: #EBECF0;
-  --color-shadow: #BABECC;
+  --color-shadow: #151618;
   --color-white: #FFF;
 }
 
@@ -21,7 +21,7 @@ div, p {
   text-shadow: 1px 1px 1px var(--color-white);
 }
 
-form {
+form, .registrarse {
   padding: var(--ruler);
   width: calc(var(--ruler) * 20);
   margin: 0 auto;

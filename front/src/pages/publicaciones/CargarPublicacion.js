@@ -127,14 +127,13 @@ const AgregarPublicacion = () => {
             <br /><br /><br /><br /><br /><br />
             <form onSubmit={handleSubmit}>
                     <input type="text" value={nombre} onChange={handleNombreChange} placeholder="Nombre del producto" requerid/>
-                <br /><br /><br />
+                <br /><br />
                     <textarea value={descripcion} onChange={handleDescripcionChange} maxlength="255" placeholder="Desripción del producto" requerid></textarea>
-                <br /><br /><br />
+                <br /><br />
                 <label>
                     Seleccione las fotos, por lo menos una:
                     <input type="file" accept="image/*" multiple requerid onChange={handleFotosChange} />
                 </label>
-                <br />
                     <select id="categoria" onChange={handleCategoriaChange}>
                         <option value="">Seleccione una categoria</option>
                         {categorias.map((categoria) => (
@@ -152,7 +151,7 @@ const AgregarPublicacion = () => {
                             </option>
                         ))}
                     </select>
-                <br />
+                <br /> <br />
                 <ButtonSubmit text="Subir producto!" />
             </form>
         </div>

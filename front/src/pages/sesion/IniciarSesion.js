@@ -44,18 +44,19 @@ const IniciarSesion = () => {
             <div>
                 <br /><br /><br /><br /><br /><br />
                 <form onSubmit={handleSubmit}>
-                    <label id="formtext" >Nombre de Usuario </label> <br/>
-                    <input placeholder="Ingrese su usuario" type="text" value={username} onChange={handleUsernameChange} required /> <br/>
-                    
-                    <label id="formtext" >Contraseña </label> <br/>
-                    <input placeholder="Ingrese su contraseña" type="password" value={clave} onChange={handleClaveChange} required /> <br/>
+                    <input placeholder="Ingrese su usuario" type="text" value={username} onChange={handleUsernameChange} required />
+                    <br/> <br />
+                    <input placeholder="Ingrese su contraseña" type="password" value={clave} onChange={handleClaveChange} required /> 
+                    <br/> <br/>
                     <button type="submit" className="botonSubmit"> Iniciar sesión</button>
                 </form>
                 <br/><br/>
+                <label calssName="registrarse"> 
                 <p className='textRegistrarse'>
                     ¿No tienes un usuario?
                     <Link to="/Registrarse" className='botonRegistrarse'> Regístrate </Link>
                 </p>
+                </label>
             </div>
         );
     };
