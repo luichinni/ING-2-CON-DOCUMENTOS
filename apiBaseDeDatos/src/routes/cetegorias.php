@@ -120,12 +120,12 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
             return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
 
-        $retCat = $categoriaDB->getAll($data,true);
+        $retCat = json_decode($categoriaDB->getAll($data,true));
         $status = 200;
 
         $retCat['Mensaje'] = 'Categorias listadas con éxito';
 
-        $response->getBody()->write($retCat);
+        $response->getBody()->write(json_encode($retCat));
         return $response->withStatus($status)->withHeader('Content-Type','application/json');
     });
 });
