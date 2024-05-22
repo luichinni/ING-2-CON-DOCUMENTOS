@@ -1,5 +1,6 @@
 import { ButtonSubmit } from "../../components/ButtonSubmit";
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import "../../HarryStyles/estilos.css";
 
@@ -28,6 +29,7 @@ const AgregarPublicacion = () => {
     const [centrosSeleccionados, setCentrosSeleccionados] = useState([]);
     const [base64Fotos, setFotosBase64] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate(); 
 
     const handleNombreChange = (e) => setNombre(e.target.value);
     const handleDescripcionChange = (e) => setDescripcion(e.target.value);
@@ -72,6 +74,8 @@ const AgregarPublicacion = () => {
                     },
                 });
             console.log('Success:', response);
+            navigate("../Explorar");
+            window.location.reload();
         } catch (error) {
             setErrorMessage(error.response.data.message);
             console.error('Error:', error);
@@ -151,7 +155,7 @@ const AgregarPublicacion = () => {
                     ))}
                 </select>
                 <br /> <br />
-                <ButtonSubmit text="Subir producto!" />
+                <ButtonSubmit text="Subir producto!"  />
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
             </form>
         </div>
