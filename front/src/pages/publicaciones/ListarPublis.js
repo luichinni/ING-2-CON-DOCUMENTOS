@@ -41,7 +41,7 @@ const ListarPublis = () => {
     };
 
     fetchData();
-  },[parametros]);
+  }, [parametros]);
 
   const handleParametrosChange = (newParametros) => {
     setParametros(newParametros);
@@ -53,14 +53,15 @@ const ListarPublis = () => {
       if (!isNaN(clave)) {
         publisCopy[clave] = publicaciones[clave]
       }
-    })
-    return publisCopy
+    });
+    return publisCopy;
   }
 
   return (
-    <div className='Content'>
-      <div className='Publi-Div'>
+    <div className='content'>
+      <div className='sidebar'>
         <Filtro onFiltroSubmit={handleParametrosChange} />
+<<<<<<< Updated upstream
         {loading ?(
             <h1 className='Cargando'>Cargando...</h1>
         ) :
@@ -78,6 +79,26 @@ const ListarPublis = () => {
                   imagen={publicacion.imagenes[0].archivo}
                 />
               ))
+=======
+      </div>
+      <div className='publi-container'>
+        {loading ? (
+          <h1 className='cargando'>Cargando...</h1>
+        ) : error ? (
+          <h1 className='sin-publi'>{error}</h1>
+        ) : (
+          publicaciones.map(publicacion => (
+            <Publicacion
+              key={publicacion.id}
+              id={publicacion.id}
+              nombre={publicacion.nombre}
+              descripcion={publicacion.descripcion}
+              user={publicacion.user}
+              categoria_id={publicacion.categoria_id}
+              estado={publicacion.estado}
+            />
+          ))
+>>>>>>> Stashed changes
         )}
       </div>
     </div>
