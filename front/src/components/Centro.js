@@ -6,8 +6,7 @@ const Centro = (props) => {
         return  <fieldset className="centro-fila">
                     <div className="div">
                         <p className="nombre">
-                            {props.key}
-                            {props.nombre}
+                            centro {props.Id}: {props.Nombre}
                         </p>
                         <p className="informacion">
                             <br />

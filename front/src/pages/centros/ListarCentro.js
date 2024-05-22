@@ -70,8 +70,8 @@ const ListarCentro = () => {
         ) : (
           centros.map(centro => (
             <Centro
-                key = {centro.id}
-                nombre = {centro.nombre}
+                Id = {centro.id}
+                Nombre = {centro.Nombre}
                 direccion = {centro.direccion}
                 hora_abre = {centro.hora_abre}
                 hora_cierra = {centro.hora_cierra}
