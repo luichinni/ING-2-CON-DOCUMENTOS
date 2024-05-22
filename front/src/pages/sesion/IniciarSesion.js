@@ -7,8 +7,10 @@ const IniciarSesion = () => {
 
     const navigate = useNavigate();    
     const [username, setUsername] = useState('');
-        const [clave, setClave] = useState('');
-    
+    const [clave, setClave] = useState('');
+    const [myError, setMyError] = useState(false);
+    const [msgError, setMsgError] = useState('No deberías estar viendo este mensaje');
+
         const handleUsernameChange = (e) => setUsername(e.target.value);
         const handleClaveChange = (e) => setClave(e.target.value);
     
@@ -37,12 +39,17 @@ const IniciarSesion = () => {
                 
             } catch (error) {
                 console.error('Error:', error);
+                setMyError(true);
+                setMsgError(error.response.data.Mensaje);
             }
         };
     
         return (
             <div>
                 <br /><br /><br /><br /><br /><br />
+                {myError &&
+                    <p style={{ backgroundColor: "red", color: "white", textAlign: "center" }}>{msgError}</p>
+                }
                 <form onSubmit={handleSubmit}>
                     <input placeholder="Ingrese su usuario" type="text" value={username} onChange={handleUsernameChange} required />
                     <br/> <br />
