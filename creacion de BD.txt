@@ -43,7 +43,6 @@ CREATE TABLE publi_centro (
 
 CREATE TABLE imagen (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    tipo_imagen varchar(5),
     archivo TEXT,
     publicacion int,
     FOREIGN KEY (publicacion) REFERENCES publicacion (id)
