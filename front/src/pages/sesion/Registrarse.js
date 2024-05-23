@@ -70,31 +70,29 @@ const Registrarse = () => {
 	<h1>Trueca </h1>
 	<div id="registrarse">
 		<br/>
-		<p> Registrate para poder ofertar intercambios con los demás usuarios! </p>
 		<form onSubmit={handleSubmit}>
-			<label id="formtext" >Nombre de Usuario </label> <br/>
-			<input placeholder='Nombre de usuario' type="text" value={username} onChange={handleUsernameChange} required /> <br/>
+			<h3> Registrate para poder ofertar intercambios con los demás usuarios! </h3>  <br /> <br />
+			<input placeholder='Nombre de usuario' type="text" value={username} onChange={handleUsernameChange} required /> <br/><br/> 
 
-			<label id="formtext" >Nombre </label> <br/>
-			<input placeholder='Nombre' type="text" value={nombre} onChange={handleNombreChange} required /> <br/> 
+			<input placeholder='Nombre' type="text" value={nombre} onChange={handleNombreChange} required /> <br/><br/>  
 
-			<label id="formtext" >Apellido </label> <br/>
-			<input placeholder='Apellido' type="text" value={apellido} onChange={handleApellidoChange} required />  <br/> 
 
-			<label id="formtext" >Edad </label> <br/>
-			<input placeholder='Edad' type="text" value={edad} onChange={handleEdadChange} required />  <br/> 
+			<input placeholder='Apellido' type="text" value={apellido} onChange={handleApellidoChange} required />  <br/><br/>  
 
-			<label id="formtext" >N° de DNI </label> <br/>
-			<input placeholder='N° de DNI' type="text" value={numeroDocumento} onChange={handleNumeroDocumentoChange} required />  <br/> 
 
-			<label id="formtext" >Email </label> <br/>
-			<input placeholder='Email' type="text"  value={mail} onChange={handleMailChange} required /> <br/> 
+			<input placeholder='Edad' type="text" value={edad} onChange={handleEdadChange} required />  <br/><br/>  
+
+
+			<input placeholder='N° de DNI' type="text" value={numeroDocumento} onChange={handleNumeroDocumentoChange} required />  <br/><br/>  
+
+	
+			<input placeholder='Email' type="text"  value={mail} onChange={handleMailChange} required /> <br/> <br/> 
 			
-			<label id="formtext" >Telefono </label> <br/>
-			<input placeholder='Telefono' type="text" value={telefono} onChange={handleTelefonoChange} />  <br/>
+
+			<input placeholder='Telefono' type="text" value={telefono} onChange={handleTelefonoChange} />  <br/><br/> 
 			
-			<label id="formtext" >Contraseña </label> <br/>
-			<input placeholder='Contraseña' type="text" value={contraseña} onChange={handleContraseñaChange} required />  <br/>
+
+			<input placeholder='Contraseña' type="password" value={contraseña} onChange={handleContraseñaChange} required />  <br/><br/> 
 			
 			<ButtonSubmit text="Registrarse" />
 		</form>
