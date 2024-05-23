@@ -23,14 +23,14 @@
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); /* Columnas dinámicas */
   gap: 50px; /* Espacio entre las publicaciones */
   padding: 20px;
-  max-height: 350px; /* Altura máxima */
+  /*max-height: 350px; /* Altura máxima */
   overflow-y: auto; /* Desplazamiento vertical si es necesario */
 }
 
   
   
   .publicacion {
-    width: 400px; /* Ancho fijo para cada publicación */
+    /*width: 400px; /* Ancho fijo para cada publicación */
     background-color: #ffffff;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -123,3 +123,12 @@
 .detalle-button:hover {
   background-color: #0056b3;
 }
+.background-image {
+  background-image: url('../../public/fondoDashboard.jpeg');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 400px; /* Ajusta la altura según sea necesario */
+}
+

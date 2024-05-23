@@ -9,11 +9,15 @@ const Dashboard = () => {
       <banner className='banner'>
         <h1>Bienvenido a TrueCa</h1>
       </banner>
+      <br/><br/><br/>
+      <div className="background-image"></div>
     </div>
   );
 }
 
 export default Dashboard;
+
+
 
 
 
