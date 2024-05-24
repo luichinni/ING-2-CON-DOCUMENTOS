@@ -36,11 +36,13 @@ const ListarMisPublis = () => {
         if (response.data.length === 3) {
           setError('No hay publicaciones disponibles');
           setPublicaciones([]); 
+          console.log('disponibles')
         } else {
           setPublicaciones(procesar(response.data));
         }
       } catch (error) {
-        setError('Ocurrió un error al obtener las publicaciones.');
+        setError('No hay publicaciones disponibles.');
+        console.log('encontradas')
         console.error(error);
       } finally {
         setLoading(false);

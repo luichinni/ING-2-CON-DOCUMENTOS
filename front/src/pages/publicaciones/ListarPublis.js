@@ -27,13 +27,13 @@ const ListarPublis = () => {
         const response = await axios.get(url);
 
         if (response.data.length === 3) {
-          setError('No hay publicaciones disponibles');
+          setError('No hay publicaciones disponibles.');
           setPublicaciones([]); 
         } else {
           setPublicaciones(procesar(response.data));
         }
       } catch (error) {
-        setError('Ocurrió un error al obtener las publicaciones.');
+        setError('No hay publicaciones disponibles.');
         console.error(error);
       } finally {
         setLoading(false);
