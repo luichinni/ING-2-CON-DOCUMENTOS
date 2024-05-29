@@ -74,6 +74,13 @@ export function NavBar(){
                         className="botonNavBar"> 
                         Centros
                     </Link>
+                </li>
+                <li className='button-NavBar'>
+                    <Link 
+                        to="/Usuarios"
+                        className="botonNavBar"> 
+                        Usuarios
+                    </Link>
                 </li> 
             </>
             ):(<></>)}

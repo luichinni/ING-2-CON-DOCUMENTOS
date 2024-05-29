@@ -1,0 +1,24 @@
+.centro-fila {
+        padding: 10px;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+        position: relative;
+      }
+      
+      .user-details-scroll {
+        max-height: 0;
+        overflow-y: hidden;
+        transition: max-height 0.3s ease-out;
+      }
+      
+      .user-details-scroll.expanded {
+        max-height: 150px; /* Ajusta esta altura según tus necesidades */
+        overflow-y: auto;
+      }
+      
+      .toggle-button {
+        margin-left: 10px;
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+      

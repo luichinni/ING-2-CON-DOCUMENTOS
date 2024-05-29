@@ -17,6 +17,9 @@ import ListarCategoria from './pages/categorias/ListarCategoria';
 import DeleteCategoria from './pages/categorias/deleteCategoria';
 import PubliDetalle from './pages/publicaciones/PubliDetalle';
 import Explorar from './pages/publicaciones/Explorar';
+import InterPublicacion from './pages/Intercambios/InterPublicacion';
+import InterCentroHorario from './pages/Intercambios/InterCentroHorario';
+import ListarUsuario from './pages/sesion/ListarUsuarios';
 
 function App() {
   return (
@@ -37,6 +40,7 @@ function App() {
 
                 <Route path={"/Registrarse"} element={<Registrarse />} />
                 <Route path={"/IniciarSesion"} element={<IniciarSesion />} />
+                <Route path={"/Usuarios"} element={<ListarUsuario/>} />
 
                 <Route path={"/agregarPublicacion"} element={<AgregarPublicacion />} />
                 
@@ -46,6 +50,9 @@ function App() {
                 <Route path={"/AgregarCategoria"} element={<AgregarCategoria />} />
                 <Route path={"/Categorias"} element={<ListarCategoria/> }/>
                 <Route path={"/deleteCategoria/:id"} element={<DeleteCategoria />} />
+
+                <Route path={"/InterSelePubli"} element={<InterPublicacion />} />
+                <Route path={"/InterSeleCentHor"} element={<InterCentroHorario />} />
 
               </Routes>
             </div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../../HarryStyles/PubliDetalle.css"; 
+import { Link } from "react-router-dom";
 
 const PubliDetalle = () => {
     const { id } = useParams(); 
@@ -27,6 +28,10 @@ const PubliDetalle = () => {
         return <div>Cargando...</div>;
     }
 
+    const handleDetalleClick = () => {
+        localStorage.setItem("publicacion", JSON.stringify({ id }));
+    };
+
     return (
         <div className="detalle-container">
             <div className="detalle-imagen">
@@ -40,7 +45,9 @@ const PubliDetalle = () => {
                 <p><strong>Centros:</strong> {publicacion.centros}</p>
                 <p><strong>Descripción:</strong> {publicacion.descripcion}</p>
                 <p><strong>Categoría:</strong> {publicacion.categoria_id}</p>
-                {/* Agrega aquí cualquier otro detalle que desees mostrar */}
+                <Link to={`/InterSelePubli`} onClick={handleDetalleClick}>
+                    <button className="detalle-button"> Ofrecer intercambio </button>
+                </Link>
             </div>
         </div>
     );

@@ -2,13 +2,15 @@ import axios from 'axios';
 import '../../HarryStyles/centros.css';
 import '../../HarryStyles/styles.css'
 import { useEffect, useState } from 'react';
+import FiltroUsuario from '../../components/FiltroUsuario';
+import User from '../../components/User'
 
 const ListarUsuario = () => {
   const [usuarios, setUsuarios] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [parametros, setParametros] = useState({
-    userName:"",
+    username:"",
     nombre: "",
     apellido:"",
     dni:"",
@@ -70,7 +72,7 @@ const ListarUsuario = () => {
         ) : (
           usuarios.map(usuarios => (
             <User
-                userName = {usuarios.userName}
+                username = {usuarios.username}
                 nombre = {usuarios.nombre}
                 apellido = {usuarios.apellido}
                 dni = {usuarios.dni}

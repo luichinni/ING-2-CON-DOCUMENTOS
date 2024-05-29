@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { ButtonSubmit } from '../components/ButtonSubmit'
+import { ButtonSubmit } from '../components/ButtonSubmit';
+import "../HarryStyles/centros.css";
+import "../HarryStyles/styles.css";
 
 const FiltroUsuario = ({ onFiltroSubmit }) => {
   const [filtro, setFiltro] = useState({
     userName: "",
     nombre: "",
     apellido: "",
-    dni:""
+    dni: "",
+    role: "user"
   });
 
   const handleChange = (e) => {
@@ -21,22 +24,22 @@ const FiltroUsuario = ({ onFiltroSubmit }) => {
     e.preventDefault();
     onFiltroSubmit(filtro);
   };
-  
+
   return (
     <form onSubmit={handleSubmit}>
-        <label> Filtrar por: </label>
-        <input type="text" name="userName" value={filtro.userName} onChange={handleChange} placeholder="Nombre de usuario" />
-        <input type="text" name="nombre" value={filtro.nombre} onChange={handleChange} placeholder="Nombre" />
-        <input type="text" name="apellido" value={filtro.apellido} onChange={handleChange} placeholder="Apellido" />
-        <input type="text" name="dni" value={filtro.dni} onChange={handleChange} placeholder="DNI" />
-        <select onChange={handleCentrosChange}>
-            <option value="user">Usuario</option>
-            <option value="volunt">Voluntario</option>
-            <option value="admin">Administrador</option>
-        </select>
+      <label> Filtrar por: </label>
+      <input type="text" name="userName" value={filtro.userName} onChange={handleChange} placeholder="Nombre de usuario"/>
+      <input type="text" name="nombre" value={filtro.nombre} onChange={handleChange} placeholder="Nombre"/>
+      <input type="text" name="apellido" value={filtro.apellido} onChange={handleChange} placeholder="Apellido"/>
+      <input type="text" name="dni" value={filtro.dni} onChange={handleChange} placeholder="DNI" />
+      <select name="role" value={filtro.role} onChange={handleChange}>
+        <option value="user">Usuario</option>
+        <option value="volunt">Voluntario</option>
+        <option value="admin">Administrador</option>
+      </select>
       <ButtonSubmit text="Filtrar" />
     </form>
   );
-}
+};
 
 export default FiltroUsuario;
