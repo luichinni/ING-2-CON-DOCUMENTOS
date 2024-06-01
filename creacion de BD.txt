@@ -6,6 +6,7 @@ CREATE TABLE Usuarios (
     dni int(8),
     mail varchar (255),
     telefono int NULL,
+    fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
     rol ENUM('user', 'volunt', 'admin')
 )
 
@@ -21,6 +22,7 @@ CREATE TABLE Publicacion (
     user varchar (50),
     categoria_id INT,
     estado VARCHAR(50),
+    fecha_carga DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user) REFERENCES Usuarios(username),
     FOREIGN KEY (categoria_id) REFERENCES Categoria(id)
 );
@@ -69,6 +71,8 @@ CREATE TABLE Comentario (
     publicacion int,
     user varchar (50),
     respondeA int NULL,
+    fecha_publicacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+    fecha_modificado DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user) REFERENCES Usuarios(username),
     FOREIGN KEY (respondeA) REFERENCES Comentario(id)
 )
@@ -78,26 +82,24 @@ CREATE TABLE Intercambio (
     voluntario varchar (50),
     publicacion1 int,
     publicacion2 int,
-    horario TIME,
+    horario DATETIME,
     estado ENUM('pendiente','cancelado','rechazado','aceptado','concretado'),
     descripcion TEXT,
     donacion BOOLEAN,
+    centro int,
+    fecha_propuesta DATETIME DEFAULT CURRENT_TIMESTAMP,
+    fecha_modificado DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (voluntario) REFERENCES Usuarios(username),
     FOREIGN KEY (publicacion1) REFERENCES Publicacion(id),
-    FOREIGN KEY (publicacion2) REFERENCES Publicacion(id)
-)
-
-CREATE TABLE Publi_Inter (
-    publicacion int,
-    intercambio int,
-    FOREIGN KEY (publicacion) REFERENCES Publicacion(id),
-    FOREIGN KEY (intercambio) REFERENCES Intercambio(id),
-    PRIMARY KEY (publicacion, intercambio)
+    FOREIGN KEY (publicacion2) REFERENCES Publicacion(id),
+    FOREIGN KEY (centro) REFERENCES Centros(id)
 )
 
 CREATE TABLE Notificacion (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user varchar(50),
     texto TEXT,
+    visto BOOLEAN DEFAULT FALSE,
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user) REFERENCES Usuarios(username)
 )
