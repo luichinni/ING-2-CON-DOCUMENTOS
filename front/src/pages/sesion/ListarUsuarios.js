@@ -78,6 +78,7 @@ const ListarUsuario = () => {
                 dni = {usuarios.dni}
                 mail = {usuarios.mail}
                 telefono = {usuarios.telefono}
+                rol = {usuarios.rol}
             />
           ))
         )}
