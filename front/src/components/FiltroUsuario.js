@@ -9,7 +9,7 @@ const FiltroUsuario = ({ onFiltroSubmit }) => {
     nombre: "",
     apellido: "",
     dni: "",
-    rol: "user"
+    rol: ""
   });
 
   const handleChange = (e) => {

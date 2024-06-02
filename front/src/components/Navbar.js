@@ -26,16 +26,16 @@ export function NavBar(){
 
     return (
     <div className='navbar'>
-        <div className='navbar-items'>
-                <img style={{ position: "absolute", left: "0","max-height":"95px",width: "auto"}} src='./truecaLogo.webp'></img>
-            <li className='button-NavBar'>
+        <div className='navbarItems'>
+                <img style={{ position: "absolute", left: "0","maxHeight":"95px",width: "auto"}} src='./truecaLogo.webp'></img>
+            <li className='buttonNavBar'>
                 <Link 
                     to="/"
                     className="botonNavBar"> 
                     Inicio
                 </Link>
             </li>
-            <li className='button-NavBar'>
+            <li className='buttonNavBar'>
                 <Link 
                     to="/Explorar"
                     className="botonNavBar"> 
@@ -44,14 +44,14 @@ export function NavBar(){
             </li>
             {(Token == 'tokenUser') ?(
             <>
-                <li className='button-NavBar'>
+                <li className='buttonNavBar'>
                     <Link 
                         to="/agregarPublicacion"
                         className="botonNavBar"> 
                         Subir Publicacion
                     </Link>
                 </li>
-                <li className='button-NavBar'>
+                <li className='buttonNavBar'>
                     <Link 
                         to="/MisPublicaciones"
                         className="botonNavBar"> 
@@ -62,21 +62,21 @@ export function NavBar(){
             </>
             ):(Token == 'tokenAdmin')?(
             <>
-                <li className='button-NavBar'>
+                <li className='buttonNavBar'>
                     <Link 
                         to="/Categorias"
                         className="botonNavBar"> 
                         Categorias
                     </Link>
                 </li>
-                <li className='button-NavBar'>
+                <li className='buttonNavBar'>
                     <Link 
                         to="/Centros"
                         className="botonNavBar"> 
                         Centros
                     </Link>
                 </li>
-                <li className='button-NavBar'>
+                <li className='buttonNavBar'>
                     <Link 
                         to="/Usuarios"
                         className="botonNavBar"> 
@@ -85,11 +85,11 @@ export function NavBar(){
                 </li> 
             </>
             ):(<></>)}
-            <li className='button-NavBar'>
+            <li className='buttonNavBar'>
                 <a href="https://caritas.org.ar/quienes-somos/" className="botonNavBar">¿Quiénes somos?</a>
             </li>
             {(Token == null) ? 
-            (<li className='button-NavBar'>
+            (<li className='buttonNavBar'>
                 <Link 
                     to="/IniciarSesion"
                     className="botonNavBar"> 
@@ -97,11 +97,11 @@ export function NavBar(){
                 </Link>
             </li>) :
             (
-            <li className='button-NavBar'>
+            <li className='buttonNavBar'>
                 <button className="botonNavBar" onClick={toggleMenu}>Menú</button>
             </li>)}
             {menuOpen && (
-                <div className={`dropdown-menu ${menuOpen ? 'show' : ''}`}>
+                <div className={`dropdownmenu ${menuOpen ? 'show' : ''}`}>
                 <ul>
                     <li><button onClick={() => console.log("Ver mi Perfil")}>Ver mi Perfil</button></li>
                     <li><button onClick={() => console.log("Configuraciones")}>Configuraciones</button></li>

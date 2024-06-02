@@ -72,6 +72,7 @@ const ListarUsuario = () => {
         ) : (
           usuarios.map(usuarios => (
             <User
+                key = {usuarios.username}
                 username = {usuarios.username}
                 nombre = {usuarios.nombre}
                 apellido = {usuarios.apellido}
