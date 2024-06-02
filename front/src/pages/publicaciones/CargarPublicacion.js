@@ -144,7 +144,7 @@ const AgregarPublicacion = () => {
                         <option key={categoria.id} value={categoria.id}>
                             {categoria.nombre}
                         </option>
-                    ))}
+                    ))} 
                 </select>
                 <br /><br />
                 <select id="centro" onChange={handleCentrosChange} multiple>

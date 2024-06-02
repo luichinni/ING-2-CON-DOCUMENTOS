@@ -10,9 +10,10 @@
     justify-content: center;
     align-items: center; /* Centra horizontalmente */
     padding: 0 5px;
+    z-index: 1000;
   }
   
-  .navbar-items {
+  .navbarItems {
     list-style-type: none; 
     margin: 0;
     padding: 0;

@@ -9,7 +9,7 @@ const FiltroUsuario = ({ onFiltroSubmit }) => {
     nombre: "",
     apellido: "",
     dni: "",
-    role: "user"
+    rol: ""
   });
 
   const handleChange = (e) => {
@@ -32,7 +32,7 @@ const FiltroUsuario = ({ onFiltroSubmit }) => {
       <input type="text" name="nombre" value={filtro.nombre} onChange={handleChange} placeholder="Nombre"/>
       <input type="text" name="apellido" value={filtro.apellido} onChange={handleChange} placeholder="Apellido"/>
       <input type="text" name="dni" value={filtro.dni} onChange={handleChange} placeholder="DNI" />
-      <select name="role" value={filtro.role} onChange={handleChange}>
+      <select name="rol" value={filtro.rol} onChange={handleChange}>
         <option value="user">Usuario</option>
         <option value="volunt">Voluntario</option>
         <option value="admin">Administrador</option>

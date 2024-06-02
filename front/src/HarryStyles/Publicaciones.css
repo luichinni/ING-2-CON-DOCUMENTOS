@@ -4,6 +4,7 @@
     display: flex;
     min-height: 100vh;
     background-color: #f9f9f9;
+    z-index: 1;
   }
   
   .sidebar {
@@ -12,6 +13,7 @@
     background-color: #ffffff;
     border-right: 1px solid #ddd;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1;
   }
   
 
@@ -25,6 +27,7 @@
   padding: 20px;
   /*max-height: 350px; /* Altura máxima */
   overflow-y: auto; /* Desplazamiento vertical si es necesario */
+  z-index: 1;
 }
 
   
@@ -38,11 +41,13 @@
     transition: box-shadow 0.3s ease, transform 0.3s ease;
     display: flex; /* Añadido */
     align-items: center; /* Añadido */
+    z-index: 1;
   }
   
   .publicacion:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transform: scale(1.05);
+    z-index: 1;
   }
   
 /* Publicaciones.css */
@@ -52,6 +57,7 @@
     height: 300px;
     width: 300px; /* Altura fija para todas las imágenes */
     overflow: hidden; /* Oculta cualquier parte de la imagen que exceda la altura fija */
+    z-index: 1;
   }
   
   .publicacion-img img {

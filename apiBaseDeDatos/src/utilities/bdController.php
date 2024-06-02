@@ -11,6 +11,16 @@ class bdController{
                 $this->obligatorios++;
             }
         }
+        $camposTabla = $this->arrayToLower($camposTabla);
+    }
+
+    private function arrayToLower(array $arr)
+    {
+        $newArr = [];
+        foreach ($arr as $key => $value) {
+            $newArr[strtolower($key)] = strtolower($value);
+        }
+        return $newArr;
     }
 
     public function exists(array $whereParams, bool $like = false){
@@ -164,10 +174,19 @@ class bdController{
                 } else {
                     switch ($this->camposTabla[$key]) {
                         case '?int': // se acumula con int
-                        case 'time':
-                        case 'timestamp':
                         case 'int': // si es numero
                             $queryWhere .= "`$key`=$value ";
+                            break;
+                        case 'time':
+                        case 'timestamp':
+                        case '?timestamp':
+                        case '?datetime':
+                        case 'datetime':
+                            if ($like) {
+                                $queryWhere .= "`$key` LIKE '%$value%' ";
+                            } else {
+                                $queryWhere .= "`$key`=$value ";
+                            }
                             break;
                         default: // si es otra cosa
                             if ($like) {

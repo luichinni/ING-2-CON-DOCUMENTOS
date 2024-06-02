@@ -14,6 +14,7 @@ $camposUser = [
     "dni" => "int",
     "mail" => "varchar",
     "telefono" => "?int",
+    "fecha_registro"=>'?datetime',
     "rol" => "enum",
 ];
 

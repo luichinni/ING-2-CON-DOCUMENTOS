@@ -12,7 +12,8 @@ $camposPublicacion = [
     'descripcion' => 'text',
     'user' => 'varchar',
     'categoria_id' => 'int',
-    'estado' => 'varchar'
+    'estado' => 'varchar',
+    'fecha_carga' => '?datetime'
 ];
 
 $publiDB = new bdController('publicacion',$pdo,$camposPublicacion);
@@ -156,17 +157,23 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         $msgReturn = ['Mensaje'=>'No se encontraron coincidencias'];
         // obtener los parametros de la query
         $queryParams = $request->getQueryParams();
+        
+        if (array_key_exists('like', $queryParams)){
+            $queryParams['like'] = $queryParams['like']=="true" ? true : false;
+        }else{
+            $queryParams['like'] = true;
+        }
 
         $where = $publiDB->getWhereParams($queryParams);
 
-        if (empty($where) || !$publiDB->exists($where,true)) {
+        if (empty($where) || !$publiDB->exists($where, $queryParams['like'])) {
             $response->getBody()->write(json_encode($msgReturn));
             return $response->withHeader('Content-Type', 'application/json')->withStatus($status);
         }
 
         $offset = (array_key_exists('pag', $queryParams)) ? $queryParams['pag'] : 0;
 
-        $publis = json_decode($publiDB->getFirst($where, true, 20,$offset));
+        $publis = json_decode($publiDB->getFirst($where, $queryParams['like'], 20,$offset));
 
         foreach($publis as $key => $value){
             $value = (array) $value;
