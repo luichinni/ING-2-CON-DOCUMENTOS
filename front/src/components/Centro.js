@@ -1,23 +1,32 @@
 import "../HarryStyles/centros.css"
 import "../HarryStyles/styles.css"
-import React from "react";
+import React, { useState } from "react";
 
 const Centro = (props) => {
+        const [isExpanded, setIsExpanded]= useState(false);
+
+        const handleToggle =()=>{
+            setIsExpanded(!isExpanded);
+        }
+
+
         return  <fieldset className="centro-fila">
                     <div className="div">
                         <p className="nombre">
                             centro {props.Id}:  {props.Nombre}
+                            <button onClick={handleToggle} className="toggle-button">
+                                {isExpanded ? "ocultar Detalles" : "Mostrar Detalles" }
+                            </button>
                         </p>
+                        {isExpanded && (
+                        <div className="detalleUsuario">
                         <p className="informacion">
-                            <br />
                             direccion: {props.direccion}
-                            <br />
-                        </p>
-                        <p className="info-Dezplazable">
+                            <br/>
                             hora de apertura: {props.hora_abre}
-                            <br />
+                            <br/>
                             hora de cierre: {props.hora_cierra}
-                            <br />
+                            <br /><br />
                             <button className="boton_editar">
                                 Editar
                             </button>
@@ -26,6 +35,8 @@ const Centro = (props) => {
                             </button>
                             <br />
                         </p>
+                        </div>
+                        )}
                     </div>
                 </fieldset>
 

@@ -32,7 +32,7 @@ const ListarCategoria = () => {
         }
       
       } catch (error) {
-        setError('Ocurrió un error al obtener las categorias.');
+        setError('No hay categorias disponibles.');
         console.error(error);
       } finally {
         setLoading(false);
