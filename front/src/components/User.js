@@ -28,23 +28,62 @@ const User = (props) => {
 		console.log('entro');
 		const formData = new FormData();
 		formData.append('setrol',rol);
-        formData.append('setCentro',centrosSeleccionados)
-        formData.append('username',props.username)
 
-		try {
-			const response = await axios.put("http://localhost:8000/public/updateUsuario", formData,
-				{
-					headers: {
-						"Content-Type": "application/json",
-					},
-				});
-			console.log('Success:', response);
-            alert(`Rol cambiado con Exito`);
-		} catch (error) {
-			console.error('Error:', error.response.data.Mensaje);
-			setMsgError(error.response.data.Mensaje);
-            alert (msgError);
-		}
+        if (rol == "volunt"){
+            formData.append('setCentro',centrosSeleccionados)
+            formData.append('username',props.username)
+            
+            try {
+                const response = await axios.put("http://localhost:8000/public/updateUsuario", formData,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+                console.log('Success:', response);
+                alert(`Rol cambiado con Exito`);
+            } catch (error) {
+                console.error('Error:', error.response.data.Mensaje);
+                setMsgError(error.response.data.Mensaje);
+                alert (msgError);
+            }
+        } else if (rol == "volunt"){
+            formData.append('setCentro',centrosSeleccionados)
+            formData.append('username',props.username)
+            
+            try {
+                const response = await axios.put("http://localhost:8000/public/updateUsuario", formData,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+                console.log('Success:', response);
+                alert(`Rol cambiado con Exito`);
+            } catch (error) {
+                console.error('Error:', error.response.data.Mensaje);
+                setMsgError(error.response.data.Mensaje);
+                alert (msgError);
+            }
+        } else {
+                formData.append('setCentro',centrosSeleccionados)
+                formData.append('username',props.username)
+                
+                try {
+                    const response = await axios.put("http://localhost:8000/public/updateUsuario", formData,
+                        {
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                        });
+                    console.log('Success:', response);
+                    alert(`Rol cambiado con Exito`);
+                } catch (error) {
+                    console.error('Error:', error.response.data.Mensaje);
+                    setMsgError(error.response.data.Mensaje);
+                    alert (msgError);
+                }
+        }
     };
     const handleToggle = () => {
         setIsExpanded(!isExpanded);

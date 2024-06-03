@@ -93,7 +93,17 @@ export function NavBar(){
                     </Link>
                 </li> 
             </>
-            ):(<></>)}
+            ):(Token == 'tokenVolunt')?(
+                <>
+                    <li className='buttonNavBar'>
+                        <Link 
+                            to="/ValidarIntercambios"
+                            className="botonNavBar"> 
+                            Validar intercambio
+                        </Link>
+                    </li>
+                </>
+                ):(<></>)}
             <li className='buttonNavBar'>
                 <a href="https://caritas.org.ar/quienes-somos/" className="botonNavBar">¿Quiénes somos?</a>
             </li>
