@@ -60,7 +60,7 @@
   }
   
   /* NavBar.css */
-  .dropdown-menu {
+  .dropdownmenu {
     position: absolute;
     top: calc(100% + 5px); /* Colocamos el menú justo debajo del botón "Menú" */
     right: 0; /* Alineamos el menú a la derecha */
@@ -74,24 +74,24 @@
     overflow-y: auto; /* Agregamos desplazamiento vertical si el contenido es demasiado largo */
   }
   
-  .dropdown-menu.show {
+  .dropdownmenu.show {
     display: block; /* Mostramos el menú cuando está abierto */
   }
   
-  .dropdown-menu ul {
+  .dropdownmenu ul {
     list-style: none;
     padding: 0;
     margin: 0;
   }
   
-  .dropdown-menu ul li {
+  .dropdownmenu ul li {
     padding: 10px;
     text-align: right; /* Alineamos el texto a la derecha */
     display: block; /* Hacemos que cada elemento sea un bloque para que aparezcan uno debajo del otro */
     width: 100%; /* Aseguramos que ocupen todo el ancho del menú */
   }
   
-  .dropdown-menu ul li:hover {
+  .dropdownmenu ul li:hover {
     background-color: #f5f5f5;
   }
   
