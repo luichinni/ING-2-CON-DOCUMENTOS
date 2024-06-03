@@ -2,6 +2,7 @@ import {Link} from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import '../HarryStyles/NavBar.css';
 import {ButtonCerrarSesion} from './ButttonCerrarSesion';
+import { CiBellOn } from "react-icons/ci";
 
 
 export function NavBar(){
@@ -16,9 +17,7 @@ export function NavBar(){
             setMenuOpen(true);
         }
     };
-
-    /* setToken(localStorage.getItem('token')); */
-    
+    /* setToken(localStorage.getItem('token')); */   
     const Token = localStorage.getItem('token');
 
     useEffect(() => {
@@ -58,6 +57,9 @@ export function NavBar(){
                         Mis Publicaciones
                     </Link>
                 </li>
+                <li>
+                <CiBellOn />
+                </li>
                 
             </>
             ):(Token == 'tokenAdmin')?(
@@ -74,6 +76,13 @@ export function NavBar(){
                         to="/Centros"
                         className="botonNavBar"> 
                         Centros
+                    </Link>
+                </li>
+                <li className='buttonNavBar'>
+                    <Link 
+                        to="/ValidarIntercambios"
+                        className="botonNavBar"> 
+                        Validar intercambio
                     </Link>
                 </li>
                 <li className='buttonNavBar'>

@@ -13,7 +13,8 @@ const ListarPublis = () => {
     user: "",
     categoria_id: "",
     estado: "",
-    id: ""
+    id: "",
+    like: "false"
   });
 
   useEffect(() => {
@@ -22,9 +23,10 @@ const ListarPublis = () => {
       setError('');
 
       try {
-        const queryParams = new URLSearchParams(parametros).toString();
-        const url = `http://localhost:8000/public/listarPublicaciones?${queryParams}&token=${localStorage.getItem('token')}`;
-        const response = await axios.get(url);
+
+       const queryParams = new URLSearchParams(parametros).toString();
+       const url = `http://localhost:8000/public/listarPublicaciones?${queryParams}&token=${localStorage.getItem('token')}`;
+      const response = await axios.get(url);
 
         if (response.data.length === 3) {
           setError('No hay publicaciones disponibles.');

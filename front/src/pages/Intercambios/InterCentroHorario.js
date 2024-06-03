@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import "../../HarryStyles/estilos.css";
-import {TimeClock} from '@mui/x-date-pickers/TimeClock';
 
 
 const AgregarPublicacion = () => {
@@ -93,8 +92,6 @@ const AgregarPublicacion = () => {
                 //          NO TIENE FUNCIONALIDAD, ESTA HARDCODEADO
                 //
                 */}
-
-                <TimeClock />
 
                 <select id="Horario">
                     <option value="">Seleccione un horario</option>

@@ -155,6 +155,27 @@ const AgregarPublicacion = () => {
                         </option>
                     ))}
                 </select>
+                <br /> <br/>
+
+                { /*
+                <select id="horarioInicio" onChange={handleHorariosChange} multiple>
+                    <option value="">Seleccione el horario de inicio</option>
+                    {centros.map((horario) => (
+                        <option key={centro.id} value={centro.id}>
+                            {centro.Nombre}
+                        </option>
+                    ))}
+                </select>
+                <br /> <br />
+                <select id="horarioFin" onChange={handleHorariosChange} multiple>
+                    <option value="">Seleccione el horario de fin </option>
+                    {centros.map((horario) => (
+                        <option key={centro.id} value={centro.id}>
+                            {centro.Nombre}
+                        </option>
+                    ))}
+                </select>
+                */ }
                 <br /> <br />
                 <ButtonSubmit text="Subir producto!" />
             </form>
