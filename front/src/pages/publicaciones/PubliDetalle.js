@@ -4,6 +4,8 @@ import "../../HarryStyles/PubliDetalle.css";
 import { Link } from "react-router-dom";
 
 const PubliDetalle = () => {
+    const Token = localStorage.getItem('token');
+    const username = localStorage.getItem('username')
     const { id } = useParams(); 
     const [publicacion, setPublicacion] = useState(null);
 
@@ -45,9 +47,13 @@ const PubliDetalle = () => {
                 <p><strong>Centros:</strong> {publicacion.centros}</p>
                 <p><strong>Descripción:</strong> {publicacion.descripcion}</p>
                 <p><strong>Categoría:</strong> {publicacion.categoria_id}</p>
-                <Link to={`/InterSelePubli`} onClick={handleDetalleClick}>
-                    <button className="detalle-button"> Ofrecer intercambio </button>
-                </Link>
+                {((Token === 'tokenUser')&&(username !== publicacion.user))?(
+                <>
+                    <Link to={`/InterSelePubli`} onClick={handleDetalleClick}>
+                        <button className="detalle-button"> Ofrecer intercambio </button>
+                    </Link>
+                </>
+                ):(<></>)}
             </div>
         </div>
     );
