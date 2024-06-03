@@ -152,10 +152,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
 
         return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
     });
-    $group->post('/probarIntercambio', function (Request $req, Response $res, $args) use ($pdo, $camposUser) {
-        cancelarIntercambios('user2');
-        return $res->withStatus(200)->withHeader('Content-Type', 'application/json');
-    });
+
     $group->post('/newVoluntario', function (Request $req, Response $res, $args) use ($pdo, $camposUser) {
         global $userDB, $centroDB, $publiDB, $centroVolunDB;
         $pudo = false;
@@ -192,7 +189,11 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
 
         $pudo = $pudo && $userDB->update(['setrol'=>'volunt','username'=>$bodyParams['username']]);
 
-        $status = ($pudo) ? 200 : $status;
+        if ($pudo){
+            $status = 200;
+            $centro = json_decode($centroDB->getFirst(['id'=>$bodyParams['centro']]));
+            enviarNotificacion($bodyParams['username'],"Has sido registrado como un voluntario del centro" . $centro['nombre']);
+        }
 
         $msgReturn['Mensaje'] = $status == 200 ? 'Voluntario agregado con éxito' : 'Ocurrio un error al agregar el voluntario';
 
