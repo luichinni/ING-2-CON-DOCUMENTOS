@@ -46,6 +46,17 @@ function userValidator(array $data, PDO $pdo, array $camposUser){
     return $valid;
 }
 
+function cancelarIntercambios(string $user){
+    global $intercambioDB, $publiDB;
+    $publis = (array) json_decode($publiDB->getAll(['user'=>$user]));
+    //error_log(json_encode($publis));
+    foreach ($publis as $public){
+        $publi = (array) $public;
+        $intercambioDB->update(['setestado' => 'cancelado', 'publicacion1' => $publi['id']]);
+        $intercambioDB->update(['setestado' => 'cancelado', 'publicacion2' => $publi['id']]);
+    }
+}
+
 $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUser) {
     //obtener usuario
     $group->get('/obtenerUsuario', function (Request $req,Response $res, $args){
@@ -136,6 +147,54 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
         $status = ($pudo) ? 200 : $status;
 
         $msgReturn['Mensaje'] = $status == 200 ? 'Usuario agregado con éxito' : 'Ocurrio un error al agregar el usuario';
+
+        $res->getBody()->write(json_encode($msgReturn));
+
+        return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
+    });
+    $group->post('/probarIntercambio', function (Request $req, Response $res, $args) use ($pdo, $camposUser) {
+        cancelarIntercambios('user2');
+        return $res->withStatus(200)->withHeader('Content-Type', 'application/json');
+    });
+    $group->post('/newVoluntario', function (Request $req, Response $res, $args) use ($pdo, $camposUser) {
+        global $userDB, $centroDB, $publiDB, $centroVolunDB;
+        $pudo = false;
+        $status = 500;
+        $msgReturn = ['Mensaje' => 'Faltan parametros'];
+
+        $bodyParams = (array) $req->getParsedBody();
+
+        if (!array_key_exists('centro',$bodyParams) || !array_key_exists('username',$bodyParams)) {
+            $res->getBody()->write(json_encode($msgReturn));
+            return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
+        }
+
+        $validUser = $userDB->exists(['username'=>$bodyParams['username']]);
+        $validCentro = $centroDB->exists(['id'=>$bodyParams['centro']]);
+
+        if (!$validUser || !$validCentro){
+            $msgReturn['Mensaje'] = 'El centro no es válido';
+            $res->getBody()->write(json_encode($msgReturn));
+            return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
+        }
+
+        $existeCentroVolun = $centroVolunDB->exists(['user'=>$bodyParams['username'],'centro'=>$bodyParams['centro']]);
+
+        if ($existeCentroVolun){
+            $msgReturn['Mensaje'] = 'El voluntario ya está registrado en este centro';
+            $res->getBody()->write(json_encode($msgReturn));
+            return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
+        }
+
+        cancelarIntercambios($bodyParams['username']);
+
+        $pudo = $publiDB->update(['user'=>$bodyParams['username'],'setestado'=>'baja']);
+
+        $pudo = $pudo && $userDB->update(['setrol'=>'volunt','username'=>$bodyParams['username']]);
+
+        $status = ($pudo) ? 200 : $status;
+
+        $msgReturn['Mensaje'] = $status == 200 ? 'Voluntario agregado con éxito' : 'Ocurrio un error al agregar el voluntario';
 
         $res->getBody()->write(json_encode($msgReturn));
 
