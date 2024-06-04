@@ -7,13 +7,46 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 require_once __DIR__ . '/../utilities/bdController.php';
 
 $camposPublicacion = [
-    'id' => '?int',
-    'nombre' => 'varchar',
-    'descripcion' => 'text',
-    'user' => 'varchar',
-    'categoria_id' => 'int',
-    'estado' => 'varchar',
-    'fecha_carga' => '?datetime'
+    'id' => [
+        "pk" => true,
+        "tipo" => "int",
+        "autoincrement" => true,
+        "comparador" => "=",
+        "opcional" => false,
+     ],
+    'nombre' => [
+        "tipo" => "varchar(255)",
+        "comparador" => "like",
+        "opcional" => false,
+     ],
+    'descripcion' => [
+        "tipo" => "text",
+        "comparador" => "like",
+        "opcional" => false,
+     ],
+    'user' => [
+        "tipo" => "varchar(50)",
+        "comparador" => "like",
+        "opcional" => false,
+        "fk" => [
+            "tabla"=>"usuarios", 
+            "campo"=>"user"
+        ]
+     ],
+    'categoria_id' => [
+        "tipo" => "int",
+        "comparador" => "=",
+        "opcional" => false,
+        "fk" => [
+            "tabla" => "categoria",
+            "campo" => "id"
+        ]
+    ],
+    'estado' => [
+        "tipo" => "varchar(50)",
+        "comparador" => "like",
+        "opcional" => false,
+    ]
 ];
 
 $publiDB = new bdController('publicacion',$pdo,$camposPublicacion);

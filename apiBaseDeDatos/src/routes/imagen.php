@@ -5,10 +5,20 @@
 require_once __DIR__ . '/../utilities/bdController.php';
 
 $camposImg = [
-    'archivo' => 'mediumtext',
-    'publicacion' => 'int',
-/*     'tipo_imagen' => 'varchar', */
-    'id' => '?int'
+    'archivo' => [
+        "tipo" => "mediumtext",
+        "comparador" => "like",
+        "opcional" => false
+    ],
+    'publicacion' => [
+        "tipo" => "int",
+        "comparador" => "=",
+        "opcional" => false,
+        "fk" => [
+            "tabla" => "publicacion",
+            "campo" => "id"
+        ]
+    ]
 ];
 
 $imgDB = new bdController('imagen',$pdo,$camposImg);

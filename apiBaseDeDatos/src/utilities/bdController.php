@@ -2,20 +2,80 @@
 
 class bdController{
 
+    private Closure $validador;
+
     /**
      * @param string $tableName - Nombre de la tabla que corresponde al controlador instanciado
      * @param PDO $pdo - Conexion a la base de datos
      * @param array $camposTabla - Se compone de los campos tal que:
      * ```php
      * ["campo" => [
+     *     "pk" => true | false
+     *     "tipo" => "tipo del campo",
+     *     "autoincrement" => true | false,
      *     "comparador" => "=" | "like",
-     *     "opcional" => true | false
+     *     "opcional" => true | false,
+     *     "default" => "valor por defecto"
+     *     "fk" => [
+     *         "tabla"=>"nombre tabla", 
+     *         "campo"=>"nombre campo"
+     *      ]
      *   ],
      *   ...
      * ]
      * ```
-     * Por defecto todos los campos son obligatorios y utilizan el comparador like, aunque es recomendable especificar
+     * Por defecto todos los campos son varchar(255) obligatorios, no automaticos, sin valor por defecto y utilizan el comparador like aunque es recomendable especificar
      * cada campo.
+     * 
+     * Si pk es true, se considera como clave primaria, si hay más de una pk, todas serán consideradas una unica pk compuesta.
+     * 
+     * Si fk existe y tiene el nombre de un campo y tabla válidos, se creara la fk.
+     * @param bool $dropTable - Ignora si existe o no la tabla, si existe la elimina y la vuelve a crear con los campos pasados.
+     */
+    function __construct(private string $tableName, private PDO $pdo, private array $camposTabla, bool $dropTable = false)
+    {
+        $this->camposTabla['created_at'] = [
+            "tipo"=> "DATETIME DEFAULT CURRENT_TIMESTAMP",
+            "comparador" => "like",
+            "opcional"=>true
+        ];
+        $this->camposTabla['updated_at'] = [
+            "tipo" => "DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+            "comparador" => "like",
+            "opcional" => true
+        ];
+        if ($dropTable){
+            $this->dropTable();
+            $this->createIfNotExist($this->tableName, $this->pdo, $this->camposTabla);
+        }else{
+            if ($this->tableExists($tableName)){
+                $this->alterTable($this->camposTabla);
+            }else{
+                $this->createIfNotExist($this->tableName, $this->pdo, $this->camposTabla);
+            }
+        }
+        
+        $this->validador  = Closure::fromCallable(function (array $campos, bool $comprobarTodos = false){
+            return true;
+        });
+    }
+
+    private function alterTable(array $nuevosCampos){
+        foreach ($nuevosCampos as $campo => $opciones){
+            $alterSql = "ALTER TABLE `$this->tableName` ADD IF NOT EXISTS " . $this->getLineaDeclaracion($campo,$opciones);
+            $alterSql = substr($alterSql,0,strlen($alterSql)-2);
+            error_log($alterSql);
+            $this->pdo->prepare($alterSql)->execute();
+        }
+    }
+
+    public function dropTable(){
+        $dropQuery = "DROP TABLE `$this->tableName`";
+        error_log($dropQuery);
+        return $this->pdo->prepare($dropQuery)->execute();
+    }
+
+    /**
      * @param callable $validador - Es el validador de los campos, por norma general deberia contar con la posibilidad
      * de evaluarse campos individuales asi como todos los campos obligatorios.
      * ```php
@@ -26,11 +86,114 @@ class bdController{
      * ```
      * Es opcional, si no se carga ninguno los datos no serán validados, en caso de ingresar una funcion que no sirva, lanza error.
      */
-    function __construct(private string $tableName, private PDO $pdo, private array $camposTabla, private callable $validador = null)
-    {
-        if ($validador != null && (((new ReflectionMethod($validador))->getNumberOfParameters() != 2) || ((new ReflectionMethod($validador))->getNumberOfRequiredParameters() != 1))){
+    public function setValidador($validador){
+        if ($validador != null && (((new ReflectionMethod($validador))->getNumberOfParameters() != 2) || ((new ReflectionMethod($validador))->getNumberOfRequiredParameters() != 1))) {
             throw new Exception("El validador pasado por parametro no es correcto.");
+        }else{
+            $this->validador = Closure::fromCallable($validador);
         }
+    }
+
+    private function getLineaDeclaracion(string $campo, array $opciones, array &$pk = [], array &$fk = []){
+        $createQuery = "";
+        $tipo = "varchar(255)";
+        $auto = false;
+        $opcional = true;
+        $default = "";
+
+        foreach ($opciones as $opcion => $valor) {
+            switch ($opcion) {
+                case "autoincrement":
+                    if ($default != "") throw new Exception("El campo $campo no puede ser autoincremental y tener valor por defecto");
+                    if (!is_bool($valor)) throw new Exception("La opcion 'autoincrement' del campo $campo debe ser boolean");
+                    $auto = true;
+                    break;
+                case "pk":
+                    if (!is_bool($valor)) throw new Exception("La opcion del campo $campo 'pk' debe ser boolean");
+                    $pk[$campo] = $valor;
+                    $opcional = true;
+                    break;
+                case "tipo":
+                    if (!is_string($valor)) throw new Exception("El tipo de $campo debe estar descrito en un string. \nEjemplo: INT, varchar(5), etc");
+                    $tipo = $valor;
+                    break;
+                case "opcional":
+                    if (!is_bool($valor)) throw new Exception("La opcion 'opcional' de $campo debe ser boolean");
+                    $opcional = $valor;
+                    break;
+                case "default":
+                    if ($auto) throw new Exception("El campo $campo no puede ser autoincremental y tener valor por defecto");
+                    $default = $valor;
+                    break;
+                case "fk":
+                    if ($this->tableExists($valor['tabla'])) {
+                        $fk[$campo] = $valor;
+                    } else {
+                        throw new Exception("No existe la tabla " . $valor['tabla'] . " con el campo " . $valor['campo']);
+                    }
+                    break;
+                default:
+                    if (!($valor == "=" | $valor == "like")) {
+                        throw new Exception("El comparador de $campo debe ser '=' o 'like', '$valor' no es un tipo de comparador soportado");
+                    }
+            }
+        }
+        // id INT AUTO_INCREMENT PRIMARY KEY,
+        $createQuery .= $campo . ' ' . $tipo . ' ';
+        if ($auto) $createQuery .= 'AUTO_INCREMENT ';
+        if ($default != "") $createQuery .= "DEFAULT $default ";
+        if (!$opcional) $createQuery .= "NOT NULL ";
+        $createQuery .= ", ";
+        error_log($createQuery);
+        return $createQuery;
+    }
+
+    private function createIfNotExist(string $tableName, PDO $pdo, array $camposTabla){
+
+        $createQuery = "CREATE TABLE IF NOT EXISTS `$tableName` (";
+        $pk = [];
+        $fk = [];
+        foreach ($camposTabla as $campo => $opciones) {
+            $createQuery .= $this->getLineaDeclaracion($campo, $opciones, $pk, $fk);
+        }
+        if (count($pk)==0){
+            $createQuery .= 'id INT AUTO_INCREMENT, ';
+            $pk['id'] = '';
+        }
+        
+        $createQuery .= "PRIMARY KEY (";
+        foreach ($pk as $campo => $opciones) {
+            $createQuery .= "$campo, ";
+        }
+        $createQuery = substr($createQuery, 0, strlen($createQuery) - 2) . ")";
+        if (count($fk) != 0){
+            $createQuery .= ", ";
+            foreach ($fk as $campo => $datos) {
+                $createQuery .= "FOREIGN KEY ($campo) REFERENCES " . $datos['tabla'] . "(" . $datos['campo'] . '),';
+            }
+            $createQuery = substr($createQuery, 0, strlen($createQuery) - 1);
+        }
+        $createQuery .= ")";
+        error_log($createQuery);
+        $var = $pdo->prepare($createQuery)->execute();
+        error_log("Agregado? $var");
+        return $var;
+    }
+
+    private function tableExists(string $tableCheck){
+        $existe = false;
+        $queryCheck = "SELECT 1 FROM $tableCheck LIMIT 1";
+        $preparado = $this->pdo->prepare($queryCheck);
+        try{
+            $preparado->execute();
+            if ($preparado->fetch()) {
+                $existe = true;
+            }
+        }catch (Exception $e){
+            $existe = false;
+        }
+        
+        return $existe;
     }
 
     /**
@@ -179,10 +342,10 @@ class bdController{
         
 
         //error_log("Campos necesarios:" . json_encode($contador >= $this->obligatorios));
-        if ($contador >= $this->obligatorios){
+        /* if ($contador >= $this->obligatorios){
             $queryInsert = $this->generarInsert($datosIn);
             $pudo = $this->pdo->prepare($queryInsert)->execute();
-        }
+        } */
 
         return $pudo;
     }
@@ -197,6 +360,7 @@ class bdController{
      * @param ?int $limit define la cantidad de lineas a retornar
      */
     public function getFirst(array $whereParams, bool $like = false, int $limit = 1, int $offset = 0){
+        $this->createIfNotExist($this->tableName, $this->pdo, $this->camposTabla);
         $querySelect = $this->generarSelect($whereParams,$limit,$like,$offset);
         $result = $this->pdo->query($querySelect)->fetchAll();
         if ($result == false){

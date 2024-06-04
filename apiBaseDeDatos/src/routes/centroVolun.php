@@ -12,8 +12,26 @@ require_once __DIR__ . '/../utilities/bdController.php';
 // listar SOLUCIONADO EN EL OBTENER CON LIMIT
 // CentroVolun = ((centro(FK),voluntario(FK))(PK))
 $camposCentroVolun = [
-    "user" => "varchar",
-    "centro" => "int"
+    "user" => [
+        "pk" => true,
+        "tipo" => "varchar(50)",
+        "comparador" => "like",
+        "opcional" => false,
+        "fk" => [
+            "tabla" => "usuarios",
+            "campo" => "user"
+        ]
+    ],
+    "centro" => [
+        "pk" => true,
+        "tipo" => "int",
+        "comparador" => "=",
+        "opcional" => false,
+        "fk" => [
+            "tabla" => "centros",
+            "campo" => "id"
+        ]
+    ]
 ];
 
 $centroVolunDB = new bdController('centro_volun',$pdo,$camposCentroVolun);

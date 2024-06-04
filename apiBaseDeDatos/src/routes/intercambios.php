@@ -6,17 +6,62 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 require_once __DIR__ . '/notificaciones.php';
 
 $camposIntercambio = [
-    'id' => '?int',
-    'voluntario' => '?varchar',
-    'publicacion1' => 'int', // quien publicó
-    'publicacion2' => 'int', // quien ofertó
-    'horario' => 'DATETIME',
-    'estado' => 'varchar',
-    'descripcion' => '?TEXT',
-    'donacion' => '?bool',
-    'centro' => 'int',
-    'fecha_propuesta' => '?DATETIME',
-    'fecha_modificado' => '?DATETIME'
+    'voluntario' => [
+        "tipo" => "varchar(50)",
+        "comparador" => "like",
+        "opcional" => true,
+        "fk" => [
+            "tabla" => "usuarios",
+            "campo" => "user"
+        ]
+    ],
+    'publicacionOferta' => [
+        "tipo" => "int",
+        "comparador" => "=",
+        "opcional" => false,
+        "fk" => [
+            "tabla" => "publicacion",
+            "campo" => "id"
+        ]
+    ], // quien publicó
+    'publicacionOfertada' => [
+        "tipo" => "int",
+        "comparador" => "=",
+        "opcional" => false,
+        "fk" => [
+            "tabla" => "publicacion",
+            "campo" => "id"
+        ]
+    ], // quien ofertó
+    'horario' => [
+        "tipo" => "datetime",
+        "comparador" => "like",
+        "opcional" => false
+    ],
+    'estado' => [
+        "tipo" => "ENUM('pendiente','cancelado','rechazado','aceptado','concretado')",
+        "comparador" => "like",
+        "opcional" => false
+    ],
+    'descripcion' => [
+        "tipo" => "text",
+        "comparador" => "like",
+        "opcional" => true
+    ],
+    'donacion' => [
+        "tipo" => "bool",
+        "comparador" => "=",
+        "opcional" => true
+    ],
+    'centro' => [
+        "tipo" => "int",
+        "comparador" => "=",
+        "opcional" => false,
+        "fk" => [
+            "tabla" => "centros",
+            "campo" => "id"
+        ]
+    ]
 ];
 
 $intercambioDB = new bdController('intercambio',$pdo,$camposIntercambio);

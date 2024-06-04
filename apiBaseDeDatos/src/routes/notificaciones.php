@@ -5,10 +5,20 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 $camposNotificacion = [
-    'id'=>'?int',
-    'user'=>'varchar',
-    'texto'=>'texto',
-    'fecha'=>'?datetime'
+    'user'=> [
+        "tipo" => "varchar(50)",
+        "comparador" => "like",
+        "opcional" => false,
+        "fk" => [
+            "tabla" => "usuarios",
+            "campo" => "user"
+        ]
+    ],
+    'texto'=> [
+        "tipo" => "text",
+        "comparador" => "like",
+        "opcional" => false
+    ],
 ];
 
 $notificacionDB = new bdController('notificacion',$pdo,$camposNotificacion);

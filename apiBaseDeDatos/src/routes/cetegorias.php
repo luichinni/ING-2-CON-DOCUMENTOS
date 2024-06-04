@@ -7,8 +7,11 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 require_once __DIR__ . '/../utilities/bdController.php';
 
 $camposCategorias = [
-    'id' => '?int',
-    'nombre' => 'varchar'
+    'nombre' => [
+        "tipo" => "varchar(255)",
+        "comparador" => "like",
+        "opcional" => false
+    ]
 ];
 
 $categoriaDB = new bdController('categoria',$pdo,$camposCategorias);

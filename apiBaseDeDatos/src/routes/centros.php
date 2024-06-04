@@ -17,11 +17,40 @@ CREATE TABLE Centros (
 */
 
 $camposCentro = [
-    'id' => '?int',
-    'nombre' => 'varchar',
-    'direccion' => 'varchar',
-    'hora_abre' => 'time',
-    'hora_cierra' => 'time'
+    'id' => [
+        "pk" => true,
+        "tipo" => "int",
+        "comparador" => "=",
+        "opcional" => false
+    ],
+    'nombre' => [
+        "tipo" => "varchar(255)",
+        "comparador" => "like",
+        "opcional" => false
+    ],
+    'direccion' => [
+        "tipo" => "varchar(255)",
+        "comparador" => "like",
+        "opcional" => false
+    ],
+    'hora_abre' => [
+        "tipo" => "time",
+        "comparador" => "like",
+        "opcional" => false,
+        "fk" => [
+            "tabla" => "usuarios",
+            "campo" => "username"
+        ]
+    ],
+    'hora_cierra' => [
+        "tipo" => "time",
+        "comparador" => "like",
+        "opcional" => false,
+        "fk" => [
+            "tabla" => "usuarios",
+            "campo" => "username"
+        ]
+    ]
 ];
 
 $centroDB = new bdController('centros',$pdo,$camposCentro);

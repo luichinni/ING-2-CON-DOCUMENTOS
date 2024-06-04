@@ -7,15 +7,46 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 require_once __DIR__ . '/../utilities/bdController.php';
 
 $camposUser = [
-    "username" => "varchar",
-    "clave" => "varchar",
-    "nombre" => "varchar",
-    "apellido" => "varchar",
-    "dni" => "int",
-    "mail" => "varchar",
-    "telefono" => "?int",
-    "fecha_registro"=>'?datetime',
-    "rol" => "enum",
+    "user" => [
+        "pk" => true,
+        "tipo" => "varchar(50)",
+        "comparador" => "like",
+        "opcional" => false,
+    ],
+    "clave" => [
+        "tipo" => "varchar(50)",
+        "comparador" => "like",
+        "opcional" => false,
+    ],
+    "nombre" => [
+        "tipo" => "varchar(255)",
+        "comparador" => "like",
+        "opcional" => false,
+    ],
+    "apellido" => [
+        "tipo" => "varchar(255)",
+        "comparador" => "like",
+        "opcional" => false,
+    ],
+    "dni" => [
+        "tipo" => "int(8)",
+        "comparador" => "=",
+        "opcional" => false,
+    ],
+    "mail" => [
+        "tipo" => "varchar(255)",
+        "comparador" => "like",
+        "opcional" => false,
+    ],
+    "telefono" => [
+        "tipo" => "int",
+        "comparador" => "=",
+    ],
+    "rol" => [
+        "tipo" => "ENUM('user', 'volunt', 'admin')",
+        "comparador" => "like",
+        "opcional" => false,
+    ]
 ];
 
 $userDB = new bdController('usuarios',$pdo,$camposUser);
