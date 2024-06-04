@@ -1,28 +1,50 @@
 <?php
 
 class bdController{
-    
-    private int $obligatorios = 0;
 
-    function __construct(private string $tableName, private PDO $pdo, private array $camposTabla)
+    /**
+     * @param string $tableName - Nombre de la tabla que corresponde al controlador instanciado
+     * @param PDO $pdo - Conexion a la base de datos
+     * @param array $camposTabla - Se compone de los campos tal que:
+     * ```php
+     * ["campo" => [
+     *     "comparador" => "=" | "like",
+     *     "opcional" => true | false
+     *   ],
+     *   ...
+     * ]
+     * ```
+     * Por defecto todos los campos son obligatorios y utilizan el comparador like, aunque es recomendable especificar
+     * cada campo.
+     * @param callable $validador - Es el validador de los campos, por norma general deberia contar con la posibilidad
+     * de evaluarse campos individuales asi como todos los campos obligatorios.
+     * ```php
+     * $validador = function (array $campos,bool $comprobarTodos=false){
+     *     // tu implementacion aqui
+     *     return $miBool;
+     * }
+     * ```
+     * Es opcional, si no se carga ninguno los datos no serán validados, en caso de ingresar una funcion que no sirva, lanza error.
+     */
+    function __construct(private string $tableName, private PDO $pdo, private array $camposTabla, private callable $validador = null)
     {
-        foreach($this->camposTabla as $key => $value){
-            if (!str_starts_with($value,'?')){
-                $this->obligatorios++;
-            }
+        if ($validador != null && (((new ReflectionMethod($validador))->getNumberOfParameters() != 2) || ((new ReflectionMethod($validador))->getNumberOfRequiredParameters() != 1))){
+            throw new Exception("El validador pasado por parametro no es correcto.");
         }
-        $camposTabla = $this->arrayToLower($camposTabla);
     }
 
-    private function arrayToLower(array $arr)
-    {
-        $newArr = [];
-        foreach ($arr as $key => $value) {
-            $newArr[strtolower($key)] = strtolower($value);
-        }
-        return $newArr;
-    }
-
+    /**
+     * @param bool $like - Habilita la comparacion parcial cuando es true, si es false compara por coincidencia exacta
+     * @param array $whereParams - Define los parametros que se usaran en el where, se compone de los campos tal que:
+     * ```php
+     * [
+     *   "campo" => "valor para filtrar",
+     *    ...
+     * ]
+     * ```
+     * Si no se definen campos para buscar, la funcion devuelve true si existe aunque sea una unica fila en la tabla
+     * @return bool
+     */
     public function exists(array $whereParams, bool $like = false){
         $querySelect = $this->generarSelect($whereParams, null, $like);
         $opSql = $this->pdo->query($querySelect);
@@ -33,6 +55,19 @@ class bdController{
         return $existe;
     }
 
+    /**
+     * @param array $params - Array donde se buscaran los parametros para actualizar, el nombre de la columna debe ser <set>columna, ej:setnombre.
+     * 
+     * Se compone de los campos tal que:
+     * ```php
+     * [
+     *   "setcampo" => "valor nuevo",
+     *    ...
+     * ]
+     * ```
+     * En caso de no haber valores que actualizar, retorna un arreglo vacio.
+     * @return array
+     */ 
     public function getSetParams(array $params){
         $arrReturn = [];
         foreach ($params as $key => $value) {
@@ -43,6 +78,19 @@ class bdController{
         return $arrReturn;
     }
 
+    /**
+     * @param array $params - Array donde se buscaran los parametros del where, el nombre del campo debe ser igual al respectivo de la tabla en la bd.
+     * 
+     * Se compone de los campos tal que:
+     * ```php
+     * [
+     *   "campo" => "valor",
+     *    ...
+     * ]
+     * ```
+     * En caso de no haber valores que correspondan a los campos, retorna un arreglo vacio.
+     * @return array
+     */ 
     public function getWhereParams(array $params){
         $arrReturn = [];
         foreach ($params as $key => $value){
@@ -53,6 +101,18 @@ class bdController{
         return $arrReturn;
     }
 
+    /**
+     * @param array $whereParams - Define los parametros que se usaran en el where, se compone de los campos tal que:
+     * ```php
+     * [
+     *   "campo" => "valor para filtrar",
+     *    ...
+     * ]
+     * ```
+     * En caso de no haber valores para filtrar, no elimina nada por defecto.
+     * @param bool $deleteSinWhere - Por defecto está en false, si se pone en true no es necesario enviar $whereParams ya que permite eliminar toda la tabla.
+     * @return bool
+     */ 
     public function delete(array $whereParams, bool $deleteSinWhere = false){
         $pudo = false;
         $where = $this->armarWhere($whereParams);
@@ -65,13 +125,49 @@ class bdController{
         return $pudo;
     }
 
+    /**
+     * @param array $queryParams - Array asociativo donde están los campos para filtar y los que se deben actualizar
+     * 
+     * Se compone de los campos tal que:
+     * ```php
+     * [
+     *   "campo" => "valor para filtrar",
+     *   "setcampo" => "valor nuevo",
+     *    ...
+     * ]
+     * ```
+     * En caso de no haber valores para filtrar, actualiza todas las filas de la tabla
+     * @return bool
+     */    
     public function update(array $queryParams){
-        $queryUpdate = $this->generarUpdate($queryParams);
-        return $this->pdo->query($queryUpdate)->execute();
+        $validos = true;
+        $pudo = false;
+        if ($this->validador != null) $validos = ($this->validador)($this->getSetParams($queryParams));
+        if ($validos){
+            $queryUpdate = $this->generarUpdate($queryParams);
+            $pudo=$this->pdo->query($queryUpdate)->execute();
+        }
+        return $pudo;
     }
 
+    /**
+     * @param array $datosIn - Array asociativo donde están los campos a cargar con sus valores
+     * 
+     * Se compone de los campos tal que:
+     * ```php
+     * [
+     *   "campo" => "valor a insertar",
+     *    ...
+     * ]
+     * ```
+     * Es necesario pasar todos los campos obligatorios, caso contrario no será posible cargar los datos a la bd.
+     * @return bool
+     */   
     public function insert(array $datosIn){
+        $validos = true;
         $pudo = false;
+
+        if ($this->validador != null) $validos = ($this->validador)($datosIn,true);
 
         $contador = 0;
         foreach ($datosIn as $key => $value) {
@@ -80,6 +176,8 @@ class bdController{
             }
         }
         
+        
+
         //error_log("Campos necesarios:" . json_encode($contador >= $this->obligatorios));
         if ($contador >= $this->obligatorios){
             $queryInsert = $this->generarInsert($datosIn);
@@ -253,11 +351,7 @@ class bdController{
                 $querySql .= "`$key` = '$value', ";
             }
         }
-        $querySql = substr(
-            $querySql,
-            0,
-            strlen($querySql) - 2
-        );
+        $querySql = substr($querySql, 0, strlen($querySql) - 2); // quita ultimo espacio y coma
         $querySql .= $this->armarWhere($valuesIn, $like);
 
         return $querySql;
