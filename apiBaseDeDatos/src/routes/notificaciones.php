@@ -7,7 +7,6 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 $camposNotificacion = [
     'id' => [
         "pk" => true,
-        "autoincrement" => true,
         "tipo" => "int",
         "comparador" => "=",
         "opcional" => false

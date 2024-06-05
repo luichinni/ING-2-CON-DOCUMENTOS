@@ -70,11 +70,7 @@ class bdController{
             $alterSql = "ALTER TABLE `$this->tableName` ADD IF NOT EXISTS " . $this->getLineaDeclaracion($campo,$opciones);
             $alterSql = substr($alterSql,0,strlen($alterSql)-2);
             //error_log($alterSql);
-            try{
-                $this->pdo->prepare($alterSql)->execute();
-            }catch (Exception $e){
-                continue; //solucion rara jaja, tengo que investigar la mejor manera de chequear por campos q ya existen
-            }   
+            $this->pdo->prepare($alterSql)->execute();
         }
     }
 
@@ -219,7 +215,7 @@ class bdController{
      */
     public function exists(array $whereParams, bool $like = false){
         $querySelect = $this->generarSelect($whereParams, false, null, $like);
-        //error_log($querySelect);
+        error_log($querySelect);
         $opSql = $this->pdo->query($querySelect);
         $existe = false;
         if ($opSql->rowCount() > 0) {
@@ -264,11 +260,11 @@ class bdController{
      * En caso de no haber valores que correspondan a los campos, retorna un arreglo vacio.
      * @return array
      */ 
-    public function getWhereParams(array $params, string $table = ""){
+    public function getWhereParams(array $params){
         $arrReturn = [];
         foreach ($params as $key => $value){
             if (array_key_exists($key,$this->camposTabla)){
-                $arrReturn[$table . $key] = $value;
+                $arrReturn[$key] = $value;
             }
         }
         return $arrReturn;
@@ -345,7 +341,6 @@ class bdController{
 
         if ($validos){
             $queryInsert = $this->generarInsert($datosIn);
-            //error_log($queryInsert);
             $pudo = $this->pdo->prepare($queryInsert)->execute();
         }
 
@@ -364,7 +359,7 @@ class bdController{
      * @param int $offset define el desplazamiento, es decir, con limite 1 y desplazamiento 20 devuelve el 20avo elemento.
      */
     public function getFirst(array $whereParams, bool $include=false, bool $like = false, int $limit = 1, int $offset = 0){
-        $querySelect = $this->generarSelect($whereParams,$include,$limit,$like,$offset);
+        $querySelect = $this->generarSelect($whereParams,$limit,$like,$offset);
         //error_log($querySelect);
         $result = $this->pdo->query($querySelect)->fetchAll();
 
@@ -420,7 +415,7 @@ class bdController{
             }
         }
         $querySql = substr($querySql, 0, strlen($querySql) - 1) . ")";
-        //error_log($querySql);
+        error_log($querySql);
         return $querySql;
     }
 
@@ -432,17 +427,17 @@ class bdController{
      * ]```
      * @param bool $like define si en el where se compara por exactos o coincidencias %valor%
      */
-    private function armarWhere(array $whereParams, bool $like = false, bool $include = false)
+    private function armarWhere(array $whereParams, bool $like = false)
     {
         $queryWhere = "WHERE ";
         $querySize = strlen($queryWhere);
         foreach ($whereParams as $key => $value) { // para cada param
             if (array_key_exists($key, $this->camposTabla) && $value != "") { // si existe en la lista de campos
                 if ($value == "null") { // si es null en la query
-                    ($include) ? $queryWhere .= "$this->tableName.$key IS NULL" : $queryWhere .= "`$key` IS NULL ";
+                    $queryWhere .= "`$key` IS NULL ";
                 } else {
-                    if ($this->camposTabla[$key]['comparador'] == "like") ($include) ? $queryWhere .= "$this->tableName.$key " . $this->camposTabla[$key]['comparador'] . " '$value' " : $queryWhere .= "`$key` " . $this->camposTabla[$key]['comparador'] . " '$value' ";
-                    else ($include) ? $queryWhere .= "$this->tableName.$key " . $this->camposTabla[$key]['comparador'] . " $value " : $queryWhere .= "`$key` " . $this->camposTabla[$key]['comparador'] . " $value ";
+                    if ($this->camposTabla[$key]['comparador'] == "like") $queryWhere .= "`$key` " . $this->camposTabla[$key]['comparador'] . " '$value' ";
+                    else $queryWhere .= "`$key` " . $this->camposTabla[$key]['comparador'] . " $value ";
                 }
                 $queryWhere .= "AND ";
             }
@@ -474,7 +469,7 @@ class bdController{
 
         if ($include) $querySql .= $this->getFkJoin();
 
-        $querySql .= $this->armarWhere($whereParams, $like, $include);
+        $querySql .= $this->armarWhere($whereParams, $like);
 
         if ($limit != null){
             $querySql .= "LIMIT $limit OFFSET " . ($offset * $limit);

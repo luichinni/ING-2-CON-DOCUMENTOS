@@ -7,7 +7,6 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 $camposPublicacion = [
     'id' => [
         "pk" => true,
-        "autoincrement" => true,
         "tipo" => "int",
         "autoincrement" => true,
         "comparador" => "=",
@@ -58,7 +57,6 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         $msgReturn = ['Mensaje' => 'Faltan campos por completar'];
 
         $bodyParams = (array) $request->getParsedBody();
-        error_log("LO QUE RECIBO DEL FRONT:" . json_encode($bodyParams));
         $where = $publiDB->getWhereParams($bodyParams); // esto es para los values
 
         //error_log(json_encode($bodyParams));
@@ -67,18 +65,18 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         for ($i = 1; $i <= 6; $i++){
             $foto = $foto || array_key_exists('foto'.$i,$bodyParams);
         }
-        //error_log("hay fotos: " . json_encode($foto));
+        error_log("hay fotos: " . json_encode($foto));
 
         if (empty($where) || count($camposPublicacion) < count($where) || !$foto) {
             $response->getBody()->write(json_encode($msgReturn));
             return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
 
-        //error_log("Ahora intenta insertar");
+        error_log("Ahora intenta insertar");
 
         $pudo = $publiDB->insert($bodyParams);
 
-        //error_log("Insertar: " . json_encode($pudo));
+        error_log("Insertar: " . json_encode($pudo));
 
         $msgReturn['Mensaje'] = 'Ocurrió un error al cargar la publicación';
 
@@ -89,26 +87,24 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
 
         $publiID = (array)(($publiDB->getFirst($where))[0]);
         $publiID = $publiID[0];
-        $whereAgregado['publicacion'] = $publiID;
+        $bodyParams['publicacion'] = $publiID;
 
         for ($i = 1; $i <= 3; $i++) {
             $strCentro = "centro" . $i;
             if (array_key_exists($strCentro, $bodyParams)) {
-                $whereAgregado['centro'] = $bodyParams[$strCentro];
-                //error_log("InsertarCentro '".$whereAgregado['centro']."' : " . json_encode($pudo));
-                $pudo = $pudo && agregarPubliCentros($whereAgregado,$pdo);
-            }
-        }
-        //error_log("InsertarCENTRO: " . json_encode($pudo));
-        for ($j = 1; $j <= 6; $j++) {
-            $strImg = "foto" . $j;
-            if (array_key_exists($strImg, $bodyParams)) {
-                $whereAgregado['archivo'] = $bodyParams[$strImg];
-                $pudo = $pudo && agregarImg($whereAgregado, $pdo);
+                $bodyParams['centro'] = $bodyParams[$strCentro];
+                $pudo = $pudo && agregarPubliCentros($bodyParams,$pdo);
             }
         }
 
-        //error_log("InsertarIMG: " . json_encode($pudo));
+        for ($j = 1; $j <= 6; $j++) {
+            $strImg = "foto" . $j;
+            if (array_key_exists($strImg, $bodyParams)) {
+                $bodyParams['archivo'] = $bodyParams[$strImg];
+                $pudo = $pudo && agregarImg($bodyParams, $pdo);
+            }
+        }
+
         $status = ($pudo) ? 200 : $status;
 
         if ($status == 200) {
@@ -192,16 +188,13 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         $msgReturn = ['Mensaje'=>'No se encontraron coincidencias'];
         // obtener los parametros de la query
         $queryParams = $request->getQueryParams();
-        foreach (array_keys($queryParams, "undefined", true) as $key) {
-            unset($queryParams[$key]); //elimina los undefined
-        }
-        //error_log(json_encode($queryParams));
+        
         if (array_key_exists('like', $queryParams)){
             $queryParams['like'] = $queryParams['like']=="true" ? true : false;
         }else{
             $queryParams['like'] = true;
         }
-        
+
         $where = $publiDB->getWhereParams($queryParams);
 
         if (/* empty($where) || */ !$publiDB->exists($where, $queryParams['like'])) {
@@ -231,11 +224,11 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
                 $value['centros'][$i] = $centroDB->getFirst($wherCentro);
             }
             
-            //error_log(json_encode($where));
+            error_log(json_encode($where));
 
             $value['imagenes'] = listarImg($where);
 
-            //error_log(json_encode(count($value['imagenes'])));
+            error_log(json_encode(count($value['imagenes'])));
 
             $publis[$key] = $value;
         }

@@ -71,7 +71,7 @@ function obtenerPubliCentros(array $valuesWhere, ?int $limit=1){
 function agregarPubliCentros(array $datosIn, PDO $pdo){
     global $publiCentroDB;
     $pudo = false;
-    error_log(json_encode($datosIn));
+
     if ($publiCentroDB->exists($datosIn)) return $pudo;
 
     return $publiCentroDB->insert($datosIn);

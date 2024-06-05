@@ -24,7 +24,6 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo, $camposS
     $group->post('/crearSesion', function (Request $req, Response $res, $args) {
         global $userDB;
         $queryParams = $req->getParsedBody();
-        if (array_key_exists('username', $queryParams)) $queryParams['user'] = $queryParams['username'];
         $queryParams = $queryParams == null ? [] : $queryParams;
         $return = [
             'Mensaje' => 'user o clave invalido'
