@@ -71,7 +71,6 @@ class bdController{
     }
 
     public function insert(array $datosIn){
-        $validos = true;
         $pudo = false;
 
         $contador = 0;
