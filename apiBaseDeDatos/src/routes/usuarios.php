@@ -94,6 +94,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
         $msgReturn = ['Mensaje' => 'Usuario no encontrado'];
         // obtener los parametros de la query
         $queryParams = $req->getQueryParams();
+        if (array_key_exists('username', $queryParams)) $queryParams['user'] = $queryParams['username'];
 
         $where = $userDB->getWhereParams($queryParams);
 
@@ -128,6 +129,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
         $msgReturn = ['Mensaje'=>'Usuarios no encontrados'];
         // obtener los parametros de la query
         $queryParams = $req->getQueryParams();
+        if (array_key_exists('username',$queryParams)) $queryParams['user'] = $queryParams['username'];
 
         $where = $userDB->getWhereParams($queryParams);
 
@@ -155,6 +157,10 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
         $msgReturn = ['Mensaje' => 'Faltan parametros'];
 
         $bodyParams = (array) $req->getParsedBody();
+        if (array_key_exists('username', $bodyParams)) $bodyParams['user'] = $bodyParams['username'];
+
+        error_log(json_encode($bodyParams));
+
         $where = $userDB->getWhereParams($bodyParams); // esto es para los values
 
         if (empty($where)) {
@@ -189,6 +195,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
         $msgReturn = ['Mensaje' => 'Faltan parametros'];
 
         $bodyParams = (array) $req->getParsedBody();
+        if (array_key_exists('username', $bodyParams)) $queryParams['user'] = $bodyParams['username'];
 
         if (!array_key_exists('centro',$bodyParams) || !array_key_exists('user',$bodyParams)) {
             $res->getBody()->write(json_encode($msgReturn));
@@ -238,6 +245,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
         $msgReturn = ['Mensaje' => 'No existe usuario que cumpla con los datos ingresados'];
 
         $queryParams = $req->getQueryParams();
+        if (array_key_exists('username', $queryParams)) $queryParams['user'] = $queryParams['username'];
         $where = $userDB->getWhereParams($queryParams);
 
         if (!$userDB->exists($where)) {
@@ -263,6 +271,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
         $msgReturn = ['Mensaje' => 'Faltan datos para identificar y modificar el usuario'];
 
         $bodyParams = (array) $req->getParsedBody();
+        if (array_key_exists('username', $bodyParams)) $queryParams['user'] = $bodyParams['username'];
         $where = $userDB->getWhereParams($bodyParams);
 
         if (empty($where) || !$userDB->exists($where)) {

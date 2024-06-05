@@ -8,6 +8,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 $camposCategorias = [
     'id' => [
         "pk" => true,
+        "autoincrement" => true,
         "tipo" => "int",
         "comparador" => "=",
         "opcional" => false
@@ -60,6 +61,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
             $response->getBody()->write(json_encode($msgReturn));
             return $response->withStatus($status)->withHeader('content-type', 'application/json');
         }
+        error_log(json_encode($data));
 
         $status = $categoriaDB->insert($data) ? 200 : $status;
 

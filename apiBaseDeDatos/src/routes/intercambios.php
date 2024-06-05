@@ -6,6 +6,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 $camposIntercambio = [
     'id' => [
         "pk" => true,
+        "autoincrement" => true,
         "tipo" => "int",
         "comparador" => "=",
         "opcional" => false
