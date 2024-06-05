@@ -4,8 +4,6 @@ use Slim\Routing\RouteCollectorProxy;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-require_once __DIR__ . '/../utilities/bdController.php';
-
 /*
 CREATE TABLE Centros (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -36,20 +34,12 @@ $camposCentro = [
     'hora_abre' => [
         "tipo" => "time",
         "comparador" => "like",
-        "opcional" => false,
-        "fk" => [
-            "tabla" => "usuarios",
-            "campo" => "username"
-        ]
+        "opcional" => false
     ],
     'hora_cierra' => [
         "tipo" => "time",
         "comparador" => "like",
-        "opcional" => false,
-        "fk" => [
-            "tabla" => "usuarios",
-            "campo" => "username"
-        ]
+        "opcional" => false
     ]
 ];
 
@@ -194,7 +184,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
 
         $queryParams = $request->getQueryParams();
 
-        $centros = json_decode($centroDB->getAll($queryParams,true));
+        $centros = $centroDB->getAll($queryParams,true);
 
         if (empty($centros)){
             $response->getBody()->write(json_encode($msgReturn));

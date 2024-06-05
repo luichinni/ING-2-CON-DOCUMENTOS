@@ -3,7 +3,6 @@ use Slim\Routing\RouteCollectorProxy;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-require_once __DIR__ . '/../utilities/bdController.php';
 // //obtener, 
 // //validar, 
 // //borrar, 
@@ -59,14 +58,14 @@ function listarPubliCentros(array $valuesWhere){
 
 function obtenerPubliCentros(array $valuesWhere, ?int $limit=1){
     global $publiCentroDB;
-    $ret = '{}';
+    $ret = [];
     if ($limit != null){
         $ret = $publiCentroDB->getFirst($valuesWhere, $limit);
     }else{
         $ret = $publiCentroDB->getAll($valuesWhere);
     }
 
-    return ($ret == false) ? json_decode('{}') : json_decode($ret);
+    return $ret;
 }
 
 function agregarPubliCentros(array $datosIn, PDO $pdo){

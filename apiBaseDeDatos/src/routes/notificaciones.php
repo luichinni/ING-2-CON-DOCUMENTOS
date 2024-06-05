@@ -5,6 +5,12 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 $camposNotificacion = [
+    'id' => [
+        "pk" => true,
+        "tipo" => "int",
+        "comparador" => "=",
+        "opcional" => false
+    ],
     'user'=> [
         "tipo" => "varchar(50)",
         "comparador" => "like",
@@ -23,9 +29,9 @@ $camposNotificacion = [
 
 $notificacionDB = new bdController('notificacion',$pdo,$camposNotificacion);
 
-function enviarNotificacion(string $user,string $contenido){
+function enviarNotificacion($user,$contenido){
     global $notificacionDB;
-    return $notificacionDB->insert(['user'=>$user,'texto'=>$contenido]);
+    return $notificacionDB->insert(['user' => $user, 'texto' => $contenido]);
 }
 
 $app->group('/public', function (RouteCollectorProxy $group) {
@@ -36,7 +42,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
 
         $queryParams = $request->getQueryParams();
 
-        $listado = (array) json_decode($notificacionDB->getAll($queryParams));
+        $listado = (array) $notificacionDB->getAll($queryParams);
 
         $listado['Mensaje'] = (!empty($listado)) ? 'Notificaciones listadas con exito' : $msgReturn['Mensaje'];
 

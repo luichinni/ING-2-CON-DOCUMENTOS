@@ -32,7 +32,7 @@ class bdController{
      * Si fk existe y tiene el nombre de un campo y tabla válidos, se creara la fk.
      * @param bool $dropTable - Ignora si existe o no la tabla, si existe la elimina y la vuelve a crear con los campos pasados.
      */
-    function __construct(private string $tableName, private PDO $pdo, private array $camposTabla, bool $dropTable = false)
+    function __construct(private string $tableName, private PDO $pdo, private array $camposTabla,bool $dropTable = false)
     {
         $this->camposTabla['created_at'] = [
             "tipo"=> "DATETIME DEFAULT CURRENT_TIMESTAMP",
@@ -44,34 +44,39 @@ class bdController{
             "comparador" => "like",
             "opcional" => true
         ];
-        if ($dropTable){
-            $this->dropTable();
-            $this->createIfNotExist($this->tableName, $this->pdo, $this->camposTabla);
-        }else{
-            if ($this->tableExists($tableName)){
-                $this->alterTable($this->camposTabla);
-            }else{
-                $this->createIfNotExist($this->tableName, $this->pdo, $this->camposTabla);
-            }
-        }
         
+        $this->initTable($dropTable);
+
         $this->validador  = Closure::fromCallable(function (array $campos, bool $comprobarTodos = false){
             return true;
         });
+    }
+
+    public function initTable($dropTable = false){
+        if ($dropTable) {
+            $this->dropTable();
+            $this->createIfNotExist($this->tableName, $this->pdo, $this->camposTabla);
+        } else {
+            if ($this->tableExists($this->tableName)) {
+                $this->alterTable($this->camposTabla);
+            } else {
+                $this->createIfNotExist($this->tableName, $this->pdo, $this->camposTabla);
+            }
+        }
     }
 
     private function alterTable(array $nuevosCampos){
         foreach ($nuevosCampos as $campo => $opciones){
             $alterSql = "ALTER TABLE `$this->tableName` ADD IF NOT EXISTS " . $this->getLineaDeclaracion($campo,$opciones);
             $alterSql = substr($alterSql,0,strlen($alterSql)-2);
-            error_log($alterSql);
+            //error_log($alterSql);
             $this->pdo->prepare($alterSql)->execute();
         }
     }
 
     public function dropTable(){
         $dropQuery = "DROP TABLE `$this->tableName`";
-        error_log($dropQuery);
+        //error_log($dropQuery);
         return $this->pdo->prepare($dropQuery)->execute();
     }
 
@@ -126,11 +131,11 @@ class bdController{
                     $default = $valor;
                     break;
                 case "fk":
-                    if ($this->tableExists($valor['tabla'])) {
+                    /* if ($this->tableExists($valor['tabla'])) { */
                         $fk[$campo] = $valor;
-                    } else {
+                    /* } else {
                         throw new Exception("No existe la tabla " . $valor['tabla'] . " con el campo " . $valor['campo']);
-                    }
+                    } */
                     break;
                 default:
                     if (!($valor == "=" | $valor == "like")) {
@@ -144,7 +149,7 @@ class bdController{
         if ($default != "") $createQuery .= "DEFAULT $default ";
         if (!$opcional) $createQuery .= "NOT NULL ";
         $createQuery .= ", ";
-        error_log($createQuery);
+        //error_log($createQuery);
         return $createQuery;
     }
 
@@ -174,9 +179,9 @@ class bdController{
             $createQuery = substr($createQuery, 0, strlen($createQuery) - 1);
         }
         $createQuery .= ")";
-        error_log($createQuery);
+        //error_log($createQuery);
         $var = $pdo->prepare($createQuery)->execute();
-        error_log("Agregado? $var");
+        //error_log("Agregado? $var");
         return $var;
     }
 
@@ -209,7 +214,8 @@ class bdController{
      * @return bool
      */
     public function exists(array $whereParams, bool $like = false){
-        $querySelect = $this->generarSelect($whereParams, null, $like);
+        $querySelect = $this->generarSelect($whereParams, false, null, $like);
+        error_log($querySelect);
         $opSql = $this->pdo->query($querySelect);
         $existe = false;
         if ($opSql->rowCount() > 0) {
@@ -303,13 +309,15 @@ class bdController{
      * @return bool
      */    
     public function update(array $queryParams){
-        $validos = true;
         $pudo = false;
-        if ($this->validador != null) $validos = ($this->validador)($this->getSetParams($queryParams));
+
+        $validos = ($this->validador)($this->getSetParams($queryParams));
+
         if ($validos){
             $queryUpdate = $this->generarUpdate($queryParams);
             $pudo=$this->pdo->query($queryUpdate)->execute();
         }
+
         return $pudo;
     }
 
@@ -327,25 +335,14 @@ class bdController{
      * @return bool
      */   
     public function insert(array $datosIn){
-        $validos = true;
         $pudo = false;
 
-        if ($this->validador != null) $validos = ($this->validador)($datosIn,true);
+        $validos = ($this->validador)($datosIn,true);
 
-        $contador = 0;
-        foreach ($datosIn as $key => $value) {
-            if (array_key_exists($key, $this->camposTabla)) {
-                $contador++;
-            }
-        }
-        
-        
-
-        //error_log("Campos necesarios:" . json_encode($contador >= $this->obligatorios));
-        /* if ($contador >= $this->obligatorios){
+        if ($validos){
             $queryInsert = $this->generarInsert($datosIn);
             $pudo = $this->pdo->prepare($queryInsert)->execute();
-        } */
+        }
 
         return $pudo;
     }
@@ -356,18 +353,21 @@ class bdController{
      *      'nombre_campo' => 'valor',
      *      'username' => 'pepe'
      * ]```
+     * @param bool $include define si se incluyen las relaciones que posee la entidad (por ahora solo funciona con entidades que tienen la fk explicita)
      * @param bool $like define si en el where se compara por exactos o coincidencias %valor%
      * @param ?int $limit define la cantidad de lineas a retornar
+     * @param int $offset define el desplazamiento, es decir, con limite 1 y desplazamiento 20 devuelve el 20avo elemento.
      */
-    public function getFirst(array $whereParams, bool $like = false, int $limit = 1, int $offset = 0){
-        $this->createIfNotExist($this->tableName, $this->pdo, $this->camposTabla);
+    public function getFirst(array $whereParams, bool $include=false, bool $like = false, int $limit = 1, int $offset = 0){
         $querySelect = $this->generarSelect($whereParams,$limit,$like,$offset);
+        //error_log($querySelect);
         $result = $this->pdo->query($querySelect)->fetchAll();
+
         if ($result == false){
             $result = [];
         }
-        $json = json_encode($result);
-        return ($json == false) ? '{}' : json_encode($result); // esto retorna un json con los objetos, si está vacio retorna {}
+
+        return $result; // esto retorna un array de arrays asociativos, si está vacio retorna []
     }
 
     /**
@@ -378,14 +378,14 @@ class bdController{
      * ]```
      * @param bool $like define si en el where se compara por exactos o coincidencias %valor%
      */
-    public function getAll(array $whereParams, bool $like = false){
-        $querySelect = $this->generarSelect($whereParams, null, $like);
+    public function getAll(array $whereParams, bool $include = false, bool $like = false){
+        $querySelect = $this->generarSelect($whereParams, $include, null, $like);
+        //error_log($querySelect);
         $result = $this->pdo->query($querySelect)->fetchAll();
         if ($result == false) {
             $result = [];
         }
-        $json = json_encode($result); 
-        return ($json == false) ? '{}' : $json; // esto retorna un json con los objetos, si está vacio retorna {}
+        return $result; // esto retorna un json con los objetos, si está vacio retorna {}
     }
 
     /**
@@ -415,6 +415,7 @@ class bdController{
             }
         }
         $querySql = substr($querySql, 0, strlen($querySql) - 1) . ")";
+        error_log($querySql);
         return $querySql;
     }
 
@@ -435,30 +436,8 @@ class bdController{
                 if ($value == "null") { // si es null en la query
                     $queryWhere .= "`$key` IS NULL ";
                 } else {
-                    switch ($this->camposTabla[$key]) {
-                        case '?int': // se acumula con int
-                        case 'int': // si es numero
-                            $queryWhere .= "`$key`=$value ";
-                            break;
-                        case 'time':
-                        case 'timestamp':
-                        case '?timestamp':
-                        case '?datetime':
-                        case 'datetime':
-                            if ($like) {
-                                $queryWhere .= "`$key` LIKE '%$value%' ";
-                            } else {
-                                $queryWhere .= "`$key`=$value ";
-                            }
-                            break;
-                        default: // si es otra cosa
-                            if ($like) {
-                                $queryWhere .= "`$key` LIKE '%$value%' ";
-                            } else {
-                                $queryWhere .= "`$key` LIKE '$value' ";
-                            }
-                            break;
-                    }
+                    if ($this->camposTabla[$key]['comparador'] == "like") $queryWhere .= "`$key` " . $this->camposTabla[$key]['comparador'] . " '$value' ";
+                    else $queryWhere .= "`$key` " . $this->camposTabla[$key]['comparador'] . " $value ";
                 }
                 $queryWhere .= "AND ";
             }
@@ -474,7 +453,8 @@ class bdController{
 
     /**
      * @param array $whereParams Array asociativo de los valores para el where
-     * ``` $valuesWhere = [
+     * ```php 
+     * $valuesWhere = [
      *      'nombre_campo' => 'valor',
      *      'username' => 'pepe'
      * ]```
@@ -482,14 +462,37 @@ class bdController{
      * @param ?int $limit define la cantidad de lineas a retornar
      * @param int $offset numero de pagina arrancando en 0
      */
-    private function generarSelect(array $whereParams, ?int $limit = 1,bool $like = false, int $offset = 0)
+    private function generarSelect(array $whereParams, bool $include=false, ?int $limit = 1,bool $like = false, int $offset = 0)
     {
         // SELECT * FROM `usuarios` WHERE params LIMIT 1
-        $querySql = "SELECT * FROM `$this->tableName` " . $this->armarWhere($whereParams, $like);
+        $querySql = "SELECT * FROM $this->tableName ";
+
+        if ($include) $querySql .= $this->getFkJoin();
+
+        $querySql .= $this->armarWhere($whereParams, $like);
+
         if ($limit != null){
             $querySql .= "LIMIT $limit OFFSET " . ($offset * $limit);
         }
         return $querySql;
+    }
+
+    private function getFkJoin(){
+        $queryJoin = "";
+        foreach ($this->camposTabla as $campo => $opciones){
+            if (array_key_exists('fk',$opciones)){
+                $queryJoin .= "INNER JOIN " . $opciones['fk']['tabla'] . " ON $this->tableName.$campo " . $opciones['comparador'] . " " . $opciones['fk']['tabla'] . "." . $opciones['fk']['campo'] . " ";
+            }
+        }
+        return $queryJoin;
+    }
+
+    private function getPkArray(){
+        $pkArr = [];
+        foreach ($this->camposTabla as $campo => $opciones){
+            if (array_key_exists('pk',$opciones)) $pkArr[] = $campo;
+        }
+        return $pkArr;
     }
 
     /**

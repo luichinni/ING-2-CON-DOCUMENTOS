@@ -3,9 +3,13 @@ use Slim\Routing\RouteCollectorProxy;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-require_once __DIR__ . '/notificaciones.php';
-
 $camposIntercambio = [
+    'id' => [
+        "pk" => true,
+        "tipo" => "int",
+        "comparador" => "=",
+        "opcional" => false
+    ],
     'voluntario' => [
         "tipo" => "varchar(50)",
         "comparador" => "like",
@@ -91,9 +95,9 @@ $app->group('/public', function (RouteCollectorProxy $group) {
         }
 
         // medio atado con alambre esta parte jaja
-        $p1 = json_decode($publiDB->getFirst(['id'=>$bodyParams['publicacion1']]));
+        $p1 = $publiDB->getFirst(['id'=>$bodyParams['publicacion1']]);
         $p1 = (array) $p1[0];
-        $p2 = json_decode($publiDB->getFirst(['id'=>$bodyParams['publicacion2']]));
+        $p2 = $publiDB->getFirst(['id'=>$bodyParams['publicacion2']]);
         $p2 = (array) $p2[0];
 
         if ($p1['categoria_id'] != $p2['categoria_id']){
@@ -111,9 +115,9 @@ $app->group('/public', function (RouteCollectorProxy $group) {
         if ($pudo) {
             //obtener ambas publis
             $p1 = $bodyParams['publicacion1'];
-            $p1 = (array) json_decode($publiDB->getFirst(['id' => $p1]))[0];
+            $p1 = (array) $publiDB->getFirst(['id' => $p1])[0];
             $p2 = $bodyParams['publicacion2'];
-            $p2 = (array) json_decode($publiDB->getFirst(['id' => $p2]))[0];
+            $p2 = (array) $publiDB->getFirst(['id' => $p2])[0];
             //obtener ambos users
             if ($bodyParams['userMod'] == $p1['user']) {
                 $otroUser = $p2['user'];
@@ -126,8 +130,8 @@ $app->group('/public', function (RouteCollectorProxy $group) {
                 $tuProducto = $p1['nombre'];
                 $elOtroProducto = $p2['nombre'];
             }
-            
-            enviarNotificacion($otroUser, "$userActual te ha ofrecido \"$elOtroProducto\" por \"$tuProducto\"");
+
+            enviarNotificacion($otroUser,"$userActual te ha ofrecido \"$elOtroProducto\" por \"$tuProducto\"");
         }
 
         $msgReturn['Mensaje'] = ($pudo) ? 'Intercambio registrado con exito' : 'Ocurrió un error al registrar el intercambio';
@@ -143,7 +147,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
 
         $queryParams = $request->getQueryParams();
 
-        $listado = (array) json_decode($intercambioDB->getAll($queryParams));
+        $listado = (array) $intercambioDB->getAll($queryParams);
 
         $listado['Mensaje'] = (!empty($listado)) ? 'Intercambios listados con exito' : $msgReturn['Mensaje'];
 
@@ -154,7 +158,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
     });
 
     $group->put('/updateIntercambio', function (Request $req, Response $res){
-        global $intercambioDB,$publiDB,$userDB;
+        global $intercambioDB,$publiDB;
         $pudo = false;
         $status = 500;
         $msgReturn = ['Mensaje' => 'No se pudo actualizar la informacion del intercambio'];
@@ -169,9 +173,9 @@ $app->group('/public', function (RouteCollectorProxy $group) {
         if ($pudo){ 
             //obtener ambas publis
             $p1 = $bodyParams['publicacion1'];
-            $p1 = (array) json_decode($publiDB->getFirst(['id'=>$p1]))[0];
+            $p1 = (array) $publiDB->getFirst(['id'=>$p1])[0];
             $p2 = $bodyParams['publicacion2'];
-            $p2 = (array) json_decode($publiDB->getFirst(['id'=>$p2]))[0];
+            $p2 = (array) $publiDB->getFirst(['id'=>$p2])[0];
             //obtener ambos users
             if ($bodyParams['userMod'] == $p1['user']){
                 $otroUser = $p2['user'];
