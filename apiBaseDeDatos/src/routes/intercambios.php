@@ -3,20 +3,69 @@ use Slim\Routing\RouteCollectorProxy;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-require_once __DIR__ . '/notificaciones.php';
-
 $camposIntercambio = [
-    'id' => '?int',
-    'voluntario' => '?varchar',
-    'publicacion1' => 'int', // quien publicó
-    'publicacion2' => 'int', // quien ofertó
-    'horario' => 'DATETIME',
-    'estado' => 'varchar',
-    'descripcion' => '?TEXT',
-    'donacion' => '?bool',
-    'centro' => 'int',
-    'fecha_propuesta' => '?DATETIME',
-    'fecha_modificado' => '?DATETIME'
+    'id' => [
+        "pk" => true,
+        "tipo" => "int",
+        "comparador" => "=",
+        "opcional" => false
+    ],
+    'voluntario' => [
+        "tipo" => "varchar(50)",
+        "comparador" => "like",
+        "opcional" => true,
+        "fk" => [
+            "tabla" => "usuarios",
+            "campo" => "user"
+        ]
+    ],
+    'publicacionOferta' => [
+        "tipo" => "int",
+        "comparador" => "=",
+        "opcional" => false,
+        "fk" => [
+            "tabla" => "publicacion",
+            "campo" => "id"
+        ]
+    ], // quien publicó
+    'publicacionOfertada' => [
+        "tipo" => "int",
+        "comparador" => "=",
+        "opcional" => false,
+        "fk" => [
+            "tabla" => "publicacion",
+            "campo" => "id"
+        ]
+    ], // quien ofertó
+    'horario' => [
+        "tipo" => "datetime",
+        "comparador" => "like",
+        "opcional" => false
+    ],
+    'estado' => [
+        "tipo" => "ENUM('pendiente','cancelado','rechazado','aceptado','concretado')",
+        "comparador" => "like",
+        "opcional" => false
+    ],
+    'descripcion' => [
+        "tipo" => "text",
+        "comparador" => "like",
+        "opcional" => true
+    ],
+    'donacion' => [
+        "tipo" => "bool",
+        "comparador" => "=",
+        "opcional" => true
+    ],
+    'centro' => [
+        "tipo" => "int",
+        "comparador" => "=",
+        "opcional" => false,
+        "fk" => [
+            "tabla" => "centros",
+            "campo" => "id"
+        ]
+    ]
 ];
 
 $intercambioDB = new bdController('intercambio',$pdo,$camposIntercambio);
@@ -46,9 +95,9 @@ $app->group('/public', function (RouteCollectorProxy $group) {
         }
 
         // medio atado con alambre esta parte jaja
-        $p1 = json_decode($publiDB->getFirst(['id'=>$bodyParams['publicacion1']]));
+        $p1 = $publiDB->getFirst(['id'=>$bodyParams['publicacion1']]);
         $p1 = (array) $p1[0];
-        $p2 = json_decode($publiDB->getFirst(['id'=>$bodyParams['publicacion2']]));
+        $p2 = $publiDB->getFirst(['id'=>$bodyParams['publicacion2']]);
         $p2 = (array) $p2[0];
 
         if ($p1['categoria_id'] != $p2['categoria_id']){
@@ -66,9 +115,9 @@ $app->group('/public', function (RouteCollectorProxy $group) {
         if ($pudo) {
             //obtener ambas publis
             $p1 = $bodyParams['publicacion1'];
-            $p1 = (array) json_decode($publiDB->getFirst(['id' => $p1]))[0];
+            $p1 = (array) $publiDB->getFirst(['id' => $p1])[0];
             $p2 = $bodyParams['publicacion2'];
-            $p2 = (array) json_decode($publiDB->getFirst(['id' => $p2]))[0];
+            $p2 = (array) $publiDB->getFirst(['id' => $p2])[0];
             //obtener ambos users
             if ($bodyParams['userMod'] == $p1['user']) {
                 $otroUser = $p2['user'];
@@ -81,8 +130,8 @@ $app->group('/public', function (RouteCollectorProxy $group) {
                 $tuProducto = $p1['nombre'];
                 $elOtroProducto = $p2['nombre'];
             }
-            
-            enviarNotificacion($otroUser, "$userActual te ha ofrecido \"$elOtroProducto\" por \"$tuProducto\"");
+
+            enviarNotificacion($otroUser,"$userActual te ha ofrecido \"$elOtroProducto\" por \"$tuProducto\"");
         }
 
         $msgReturn['Mensaje'] = ($pudo) ? 'Intercambio registrado con exito' : 'Ocurrió un error al registrar el intercambio';
@@ -98,7 +147,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
 
         $queryParams = $request->getQueryParams();
 
-        $listado = (array) json_decode($intercambioDB->getAll($queryParams));
+        $listado = (array) $intercambioDB->getAll($queryParams);
 
         $listado['Mensaje'] = (!empty($listado)) ? 'Intercambios listados con exito' : $msgReturn['Mensaje'];
 
@@ -109,7 +158,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
     });
 
     $group->put('/updateIntercambio', function (Request $req, Response $res){
-        global $intercambioDB,$publiDB,$userDB;
+        global $intercambioDB,$publiDB;
         $pudo = false;
         $status = 500;
         $msgReturn = ['Mensaje' => 'No se pudo actualizar la informacion del intercambio'];
@@ -124,9 +173,9 @@ $app->group('/public', function (RouteCollectorProxy $group) {
         if ($pudo){ 
             //obtener ambas publis
             $p1 = $bodyParams['publicacion1'];
-            $p1 = (array) json_decode($publiDB->getFirst(['id'=>$p1]))[0];
+            $p1 = (array) $publiDB->getFirst(['id'=>$p1])[0];
             $p2 = $bodyParams['publicacion2'];
-            $p2 = (array) json_decode($publiDB->getFirst(['id'=>$p2]))[0];
+            $p2 = (array) $publiDB->getFirst(['id'=>$p2])[0];
             //obtener ambos users
             if ($bodyParams['userMod'] == $p1['user']){
                 $otroUser = $p2['user'];

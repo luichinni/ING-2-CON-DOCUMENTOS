@@ -4,16 +4,47 @@ use Slim\Routing\RouteCollectorProxy;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-require_once __DIR__ . '/../utilities/bdController.php';
-
 $camposPublicacion = [
-    'id' => '?int',
-    'nombre' => 'varchar',
-    'descripcion' => 'text',
-    'user' => 'varchar',
-    'categoria_id' => 'int',
-    'estado' => 'varchar',
-    'fecha_carga' => '?datetime'
+    'id' => [
+        "pk" => true,
+        "tipo" => "int",
+        "autoincrement" => true,
+        "comparador" => "=",
+        "opcional" => false,
+     ],
+    'nombre' => [
+        "tipo" => "varchar(255)",
+        "comparador" => "like",
+        "opcional" => false,
+     ],
+    'descripcion' => [
+        "tipo" => "text",
+        "comparador" => "like",
+        "opcional" => false,
+     ],
+    'user' => [
+        "tipo" => "varchar(50)",
+        "comparador" => "like",
+        "opcional" => false,
+        "fk" => [
+            "tabla"=>"usuarios", 
+            "campo"=>"user"
+        ]
+     ],
+    'categoria_id' => [
+        "tipo" => "int",
+        "comparador" => "=",
+        "opcional" => false,
+        "fk" => [
+            "tabla" => "categoria",
+            "campo" => "id"
+        ]
+    ],
+    'estado' => [
+        "tipo" => "varchar(50)",
+        "comparador" => "like",
+        "opcional" => false,
+    ]
 ];
 
 $publiDB = new bdController('publicacion',$pdo,$camposPublicacion);
@@ -54,7 +85,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
             return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
 
-        $publiID = (array)((json_decode($publiDB->getFirst($where)))[0]);
+        $publiID = (array)(($publiDB->getFirst($where))[0]);
         $publiID = $publiID[0];
         $bodyParams['publicacion'] = $publiID;
 
@@ -166,19 +197,19 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
 
         $where = $publiDB->getWhereParams($queryParams);
 
-        if (empty($where) || !$publiDB->exists($where, $queryParams['like'])) {
+        if (/* empty($where) || */ !$publiDB->exists($where, $queryParams['like'])) {
             $response->getBody()->write(json_encode($msgReturn));
             return $response->withHeader('Content-Type', 'application/json')->withStatus($status);
         }
 
         $offset = (array_key_exists('pag', $queryParams)) ? $queryParams['pag'] : 0;
 
-        $publis = json_decode($publiDB->getFirst($where, $queryParams['like'], 20,$offset));
+        $publis = $publiDB->getFirst($where, true,$queryParams['like'], 20,$offset);
 
         foreach($publis as $key => $value){
             $value = (array) $value;
 
-            $miCategoria = (array) json_decode($categoriaDB->getFirst(array('id' => $value['categoria_id'])));
+            $miCategoria = (array) $categoriaDB->getFirst(array('id' => $value['categoria_id']));
             $value['categoria_id'] = ((array) $miCategoria[0])['nombre'];
 
             $where = [

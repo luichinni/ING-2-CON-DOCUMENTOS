@@ -4,8 +4,6 @@ use Slim\Routing\RouteCollectorProxy;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-require_once __DIR__ . '/../utilities/bdController.php';
-
 /*
 CREATE TABLE Centros (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -17,11 +15,32 @@ CREATE TABLE Centros (
 */
 
 $camposCentro = [
-    'id' => '?int',
-    'nombre' => 'varchar',
-    'direccion' => 'varchar',
-    'hora_abre' => 'time',
-    'hora_cierra' => 'time'
+    'id' => [
+        "pk" => true,
+        "tipo" => "int",
+        "comparador" => "=",
+        "opcional" => false
+    ],
+    'nombre' => [
+        "tipo" => "varchar(255)",
+        "comparador" => "like",
+        "opcional" => false
+    ],
+    'direccion' => [
+        "tipo" => "varchar(255)",
+        "comparador" => "like",
+        "opcional" => false
+    ],
+    'hora_abre' => [
+        "tipo" => "time",
+        "comparador" => "like",
+        "opcional" => false
+    ],
+    'hora_cierra' => [
+        "tipo" => "time",
+        "comparador" => "like",
+        "opcional" => false
+    ]
 ];
 
 $centroDB = new bdController('centros',$pdo,$camposCentro);
@@ -165,7 +184,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
 
         $queryParams = $request->getQueryParams();
 
-        $centros = json_decode($centroDB->getAll($queryParams,true));
+        $centros = $centroDB->getAll($queryParams,true);
 
         if (empty($centros)){
             $response->getBody()->write(json_encode($msgReturn));
