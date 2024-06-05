@@ -29,7 +29,7 @@ CREATE TABLE Publicacion (
 
 CREATE TABLE Centros (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre varchar(255),
+    Nombre varchar(255),
     direccion varchar (255),
     hora_abre TIME,
     hora_cierra TIME
@@ -38,7 +38,6 @@ CREATE TABLE Centros (
 CREATE TABLE publi_centro (
     publicacion int,
     centro int,
-    fecha_preferida DATETIME,
     PRIMARY KEY (publicacion, centro),
     FOREIGN KEY (publicacion) REFERENCES Publicacion (id),
     FOREIGN KEY (centro) REFERENCES Centros (id)
@@ -51,7 +50,7 @@ CREATE TABLE imagen (
     FOREIGN KEY (publicacion) REFERENCES publicacion (id)
 )
 
-CREATE TABLE centro_volun ( //preguntar si lo volamos
+CREATE TABLE centro_volun (
     centro int,
     voluntario varchar(50),
     PRIMARY KEY (centro, voluntario),
@@ -72,7 +71,6 @@ CREATE TABLE Comentario (
     publicacion int,
     user varchar (50),
     respondeA int NULL,
-    texto TEXT,
     fecha_publicacion DATETIME DEFAULT CURRENT_TIMESTAMP,
     fecha_modificado DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user) REFERENCES Usuarios(username),
@@ -82,13 +80,11 @@ CREATE TABLE Comentario (
 CREATE TABLE Intercambio (
     id INT AUTO_INCREMENT PRIMARY KEY,
     voluntario varchar (50),
-    publicacionOferta int,
-    publicacionOfertada int,
-    aceptadoOferta boolean,
-    aceptadoOfertada boolean,
+    publicacion1 int,
+    publicacion2 int,
     horario DATETIME,
     estado ENUM('pendiente','cancelado','rechazado','aceptado','concretado'),
-    comentario TEXT,
+    descripcion TEXT,
     donacion BOOLEAN,
     centro int,
     fecha_propuesta DATETIME DEFAULT CURRENT_TIMESTAMP,

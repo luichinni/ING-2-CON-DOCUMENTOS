@@ -4,19 +4,11 @@ use Slim\Routing\RouteCollectorProxy;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
+require_once __DIR__ . '/../utilities/bdController.php';
 
 $camposCategorias = [
-    'id' => [
-        "pk" => true,
-        "tipo" => "int",
-        "comparador" => "=",
-        "opcional" => false
-    ],
-    'nombre' => [
-        "tipo" => "varchar(255)",
-        "comparador" => "like",
-        "opcional" => false
-    ]
+    'id' => '?int',
+    'nombre' => 'varchar'
 ];
 
 $categoriaDB = new bdController('categoria',$pdo,$camposCategorias);
@@ -128,7 +120,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
             return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
 
-        $retCat = $categoriaDB->getAll($data,true);
+        $retCat = json_decode($categoriaDB->getAll($data,true));
         $status = 200;
 
         $retCat['Mensaje'] = 'Categorias listadas con éxito';

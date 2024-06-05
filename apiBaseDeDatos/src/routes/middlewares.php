@@ -5,6 +5,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
+require_once __DIR__ . '/../utilities/bdController.php';
+
 $onlyUser = function (Request $req, RequestHandler $handler){
     $res = $handler->handle($req);
     $body = (array) json_decode($res->getBody());

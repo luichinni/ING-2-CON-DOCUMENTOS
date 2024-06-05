@@ -2,28 +2,13 @@
 // Imagen = (archivo,publicacion(FK))
 // obtener
 // eliminar
+require_once __DIR__ . '/../utilities/bdController.php';
 
 $camposImg = [
-    'id' => [
-        "pk" => true,
-        "tipo" => "int",
-        "comparador" => "=",
-        "opcional" => false
-    ],
-    'archivo' => [
-        "tipo" => "mediumtext",
-        "comparador" => "like",
-        "opcional" => false
-    ],
-    'publicacion' => [
-        "tipo" => "int",
-        "comparador" => "=",
-        "opcional" => false,
-        "fk" => [
-            "tabla" => "publicacion",
-            "campo" => "id"
-        ]
-    ]
+    'archivo' => 'mediumtext',
+    'publicacion' => 'int',
+/*     'tipo_imagen' => 'varchar', */
+    'id' => '?int'
 ];
 
 $imgDB = new bdController('imagen',$pdo,$camposImg);
@@ -39,12 +24,12 @@ function agregarImg(array $valueParams){
 
 function listarImg(array $whereParams){
     global $imgDB;
-    return $imgDB->getAll($whereParams);
+    return json_decode($imgDB->getAll($whereParams));
 }
 
 function obtenerImg(array $whereParams){
     global $imgDB;
-    return $imgDB->getFirst($whereParams);
+    return json_decode($imgDB->getFirst($whereParams));
 }
 
 function eliminarImg(array $whereParams){

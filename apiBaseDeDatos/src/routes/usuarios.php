@@ -4,47 +4,18 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
+require_once __DIR__ . '/../utilities/bdController.php';
+
 $camposUser = [
-    "user" => [
-        "pk" => true,
-        "tipo" => "varchar(50)",
-        "comparador" => "like",
-        "opcional" => false,
-    ],
-    "clave" => [
-        "tipo" => "varchar(50)",
-        "comparador" => "like",
-        "opcional" => false,
-    ],
-    "nombre" => [
-        "tipo" => "varchar(255)",
-        "comparador" => "like",
-        "opcional" => false,
-    ],
-    "apellido" => [
-        "tipo" => "varchar(255)",
-        "comparador" => "like",
-        "opcional" => false,
-    ],
-    "dni" => [
-        "tipo" => "int(8)",
-        "comparador" => "=",
-        "opcional" => false,
-    ],
-    "mail" => [
-        "tipo" => "varchar(255)",
-        "comparador" => "like",
-        "opcional" => false,
-    ],
-    "telefono" => [
-        "tipo" => "int",
-        "comparador" => "=",
-    ],
-    "rol" => [
-        "tipo" => "ENUM('user', 'volunt', 'admin')",
-        "comparador" => "like",
-        "opcional" => false,
-    ]
+    "username" => "varchar",
+    "clave" => "varchar",
+    "nombre" => "varchar",
+    "apellido" => "varchar",
+    "dni" => "int",
+    "mail" => "varchar",
+    "telefono" => "?int",
+    "fecha_registro"=>'?datetime',
+    "rol" => "enum",
 ];
 
 $userDB = new bdController('usuarios',$pdo,$camposUser);
@@ -55,7 +26,7 @@ function userValidator(array $data, PDO $pdo, array $camposUser){
     $roles = ['admin', 'user', 'volunt'];
     match (true){
         // menos de 50 chars y que no esté utilizado
-        (array_key_exists('user', $data)) && ((strlen($data['user']) > 50) || ($userDB->exists(array('user' => $data['user'])))) => $valid['invalido'] = 'user',
+        (array_key_exists('username', $data)) && ((strlen($data['username']) > 50) || ($userDB->exists(array('username' => $data['username'])))) => $valid['invalido'] = 'username',
         // menos de 50 char y que tenga más de 6
         (array_key_exists('clave', $data)) && ((strlen($data['clave']) > 50) || (strlen($data['clave']) < 6)) => $valid['invalido'] = 'clave',
         // mayor a 2 letras
@@ -77,7 +48,7 @@ function userValidator(array $data, PDO $pdo, array $camposUser){
 
 function cancelarIntercambios(string $user){
     global $intercambioDB, $publiDB;
-    $publis = (array) $publiDB->getAll(['user'=>$user]);
+    $publis = (array) json_decode($publiDB->getAll(['user'=>$user]));
     //error_log(json_encode($publis));
     foreach ($publis as $public){
         $publi = (array) $public;
@@ -110,7 +81,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
             return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
         } 
 
-        $user = (array) $userDB->getFirst($where,true);
+        $user = (array) json_decode($userDB->getFirst($where,true));
         $user['Mensaje'] = 'Usuario encontrado';
 
         $res->getBody()->write(json_encode($user));
@@ -138,7 +109,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
 
         $offset = (array_key_exists('pag',$queryParams)) ? $queryParams['pag'] : 0;
 
-        $user = $userDB->getFirst($where,true,20, $offset);
+        $user = json_decode($userDB->getFirst($where,true,20, $offset));
 
         $user['Mensaje'] = 'Usuarios encontrados con éxito';
 
@@ -190,12 +161,12 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
 
         $bodyParams = (array) $req->getParsedBody();
 
-        if (!array_key_exists('centro',$bodyParams) || !array_key_exists('user',$bodyParams)) {
+        if (!array_key_exists('centro',$bodyParams) || !array_key_exists('username',$bodyParams)) {
             $res->getBody()->write(json_encode($msgReturn));
             return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
 
-        $validUser = $userDB->exists(['user'=>$bodyParams['user']]);
+        $validUser = $userDB->exists(['username'=>$bodyParams['username']]);
         $validCentro = $centroDB->exists(['id'=>$bodyParams['centro']]);
 
         if (!$validUser || !$validCentro){
@@ -204,7 +175,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
             return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
 
-        $existeCentroVolun = $centroVolunDB->exists(['user'=>$bodyParams['user'],'centro'=>$bodyParams['centro']]);
+        $existeCentroVolun = $centroVolunDB->exists(['user'=>$bodyParams['username'],'centro'=>$bodyParams['centro']]);
 
         if ($existeCentroVolun){
             $msgReturn['Mensaje'] = 'El voluntario ya está registrado en este centro';
@@ -212,16 +183,16 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
             return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
 
-        cancelarIntercambios($bodyParams['user']);
+        cancelarIntercambios($bodyParams['username']);
 
-        $pudo = $publiDB->update(['user'=>$bodyParams['user'],'setestado'=>'baja']);
+        $pudo = $publiDB->update(['user'=>$bodyParams['username'],'setestado'=>'baja']);
 
-        $pudo = $pudo && $userDB->update(['setrol'=>'volunt','user'=>$bodyParams['user']]);
+        $pudo = $pudo && $userDB->update(['setrol'=>'volunt','username'=>$bodyParams['username']]);
 
         if ($pudo){
             $status = 200;
-            $centro = $centroDB->getFirst(['id'=>$bodyParams['centro']]);
-            enviarNotificacion($bodyParams['user'],"Has sido registrado como un voluntario del centro" . $centro['nombre']);
+            $centro = json_decode($centroDB->getFirst(['id'=>$bodyParams['centro']]));
+            enviarNotificacion($bodyParams['username'],"Has sido registrado como un voluntario del centro" . $centro['nombre']);
         }
 
         $msgReturn['Mensaje'] = $status == 200 ? 'Voluntario agregado con éxito' : 'Ocurrio un error al agregar el voluntario';

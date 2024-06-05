@@ -3,6 +3,7 @@ use Slim\Routing\RouteCollectorProxy;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
+require_once __DIR__ . '/../utilities/bdController.php';
 // //obtener, 
 // //validar, 
 // //borrar, 
@@ -11,26 +12,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 // listar SOLUCIONADO EN EL OBTENER CON LIMIT
 // CentroVolun = ((centro(FK),voluntario(FK))(PK))
 $campoPubliCentro = [
-    "publicacion" => [
-        "pk" => true,
-        "tipo" => "int",
-        "comparador" => "=",
-        "opcional" => false,
-        "fk" => [
-            "tabla" => "publicacion",
-            "campo" => "id"
-        ]
-    ],
-    "centro" => [
-        "pk" => true,
-        "tipo" => "int",
-        "comparador" => "like",
-        "opcional" => false,
-        "fk" => [
-            "tabla" => "centros",
-            "campo" => "id"
-        ]
-    ]
+    "publicacion" => "int",
+    "centro" => "int"
 ];
 
 $publiCentroDB = new bdController('publi_centro',$pdo,$campoPubliCentro);
@@ -58,14 +41,14 @@ function listarPubliCentros(array $valuesWhere){
 
 function obtenerPubliCentros(array $valuesWhere, ?int $limit=1){
     global $publiCentroDB;
-    $ret = [];
+    $ret = '{}';
     if ($limit != null){
         $ret = $publiCentroDB->getFirst($valuesWhere, $limit);
     }else{
         $ret = $publiCentroDB->getAll($valuesWhere);
     }
 
-    return $ret;
+    return ($ret == false) ? json_decode('{}') : json_decode($ret);
 }
 
 function agregarPubliCentros(array $datosIn, PDO $pdo){
