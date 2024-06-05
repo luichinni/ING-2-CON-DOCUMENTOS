@@ -185,7 +185,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
 
         $queryParams = $request->getQueryParams();
 
-        $centros = $centroDB->getAll($queryParams,true);
+        $centros = $centroDB->getAll($queryParams,false,true);
 
         if (empty($centros)){
             $response->getBody()->write(json_encode($msgReturn));
