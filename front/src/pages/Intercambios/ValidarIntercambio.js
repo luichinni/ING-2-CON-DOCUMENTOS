@@ -6,23 +6,11 @@ import '../../HarryStyles/Intercambios.css';
 
 const ValidarIntercambio = () => {
 	const navigate = useNavigate(); 
-    const [nombre, setNombre] = useState('');
-    const [apellido, setApellido] = useState('');
-    const [edad, setEdad] = useState('');
-    const [numeroDocumento, setNumeroDocumento] = useState('');
-    const [mail, setEmail] = useState('');
-    const [telefono, setTelefono] = useState('');
 	const [comentario, setComentario] =useState('');
 	const [donacion, setDonacion] =useState('');
 	const [myError, setMyError] = useState(false);
 	const [intercambio, setIntercambio] = useState('')
 
-    const handleNombreChange = (e) => setNombre(e.target.value);
-    const handleApellidoChange = (e) => setApellido(e.target.value);
-    const handleEdadChange = (e) => setEdad(e.target.value);
-    const handleNumeroDocumentoChange = (e) => setNumeroDocumento(e.target.value);
-    const handleMailChange = (e) => setEmail(e.target.value);
-    const handleTelefonoChange = (e) => setTelefono(e.target.value);
 	const handleComentarioChange = (e) => setComentario(e.target.value);
 	const handleIntercambioChange = (e) => setIntercambio(e.target.value);
 	const handleDonacionChange = (e) => setDonacion(e.target.value);
@@ -37,13 +25,9 @@ const ValidarIntercambio = () => {
 		}else{
 			console.log('entro');
 			const formData = new FormData();
-			formData.append('nombre', nombre);
-			formData.append('apellido', apellido);
-			formData.append('edad', edad);
-			formData.append('dni', numeroDocumento);
-			formData.append('mail', mail);
-			formData.append('telefono', telefono);
-			formData.append('rol', "user");
+			formData.append('intercambio', intercambio);
+			formData.append('donacion', donacion);
+			formData.append('comentario', comentario);
 
 			try {
 				setMyError(false);
@@ -65,55 +49,28 @@ const ValidarIntercambio = () => {
 
     return (
 	<>
-	<br/><br/><br/><br/><br/>
-	<h1>Trueca </h1>
 	<div id="validarIntercambio">
 		<br/>
 		<form onSubmit={handleSubmit}>
-			<h3> Valida el intercambio para poder hacer estadisticas del centro! </h3>  <br /> <br />
-			
+			<h3> Valida el intercambio! </h3>  <br /> <br />			
             <label>
-                ¿Se realizó el intercambio?
-                        <input className="Seleccion" type="radio" value="sí" checked={intercambio === 'sí'} onChange={handleIntercambioChange} /> Sí
-                        <input className="Seleccion" type="radio" value="no" checked={intercambio === 'no'} onChange={handleIntercambioChange} />No 
-            </label>
+                El intercambio fue: 
+				<Button text="Validado" value="{intercambio}" onChange={handleIntercambioChange} />
+				<Button text="Cancelado" value="{intercambio}" onChange={handleIntercambioChange}/>
+				<Button text="Rechazado" value="{intercambio}" onChange={handleIntercambioChange}/>
 
-
-            <label>
                 ¿Se obtuvo alguna donación?
-                <div>
-                    <label>
-                        <input type="radio" value="sí" checked={donacion === 'sí'} onChange={handleDonacionChange} />
-                        Sí
-                    </label>
-                    <label>
-                        <input type="radio" value="no" checked={donacion === 'no'} onChange={handleDonacionChange} />
-                        No
-                    </label>
-                </div>
+				<Button text="Si" onChange={handleDonacionChange} />
+				<Button text="No"onChange={handleDonacionChange}  />
             </label>
 
-			<input placeholder='Nombre' type="text" value={nombre} onChange={handleNombreChange} required /> <br/><br/>  
-
-
-			<input placeholder='Apellido' type="text" value={apellido} onChange={handleApellidoChange} required />  <br/><br/>  
-
-
-			<input placeholder='Edad' type="text" value={edad} onChange={handleEdadChange} required />  <br/><br/>  
-
-
-			<input placeholder='N° de DNI' type="text" value={numeroDocumento} onChange={handleNumeroDocumentoChange} required />  <br/><br/>  
-
-	
-			<input placeholder='Email' type="text"  value={mail} onChange={handleMailChange} required /> <br/> <br/> 
-			
-
-			<input placeholder='Telefono' type="text" value={telefono} onChange={handleTelefonoChange} />  <br/><br/>  
+			<textarea value={comentario} onChange={handleComentarioChange} maxLength="255" placeholder="Comentario del intercambio" required></textarea>
+            <br /><br />
 			
 			<ButtonSubmit text="Registrarse" />
 		</form>
 				{myError &&
-					<p style={{ backgroundColor: "red", color: "white", textAlign: "center" }}>error</p>
+					<p style={{ backgroundColor: "red", color: "white", textAlign: "center" }}>{msgError}</p>
 				}
 	</div>
 	</>
