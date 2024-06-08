@@ -30,11 +30,12 @@ const User = (props) => {
 		formData.append('setrol',rol);
 
         if (rol == "volunt"){
+            console.log ("aca")
             formData.append('setCentro',centrosSeleccionados)
-            formData.append('username',props.username)
+            formData.append('user',props.username)
             
             try {
-                const response = await axios.put("http://localhost:8000/public/updateUsuario", formData,
+                const response = await axios.post("http://localhost:8000/public/newVoluntario", formData,
                     {
                         headers: {
                             "Content-Type": "application/json",
@@ -47,12 +48,11 @@ const User = (props) => {
                 setMsgError(error.response.data.Mensaje);
                 alert (msgError);
             }
-        } else if (rol == "volunt"){
-            formData.append('setCentro',centrosSeleccionados)
+        } else if (rol == "admin"){
             formData.append('username',props.username)
             
             try {
-                const response = await axios.put("http://localhost:8000/public/updateUsuario", formData,
+                const response = await axios.post("http://localhost:8000/public/newAdmin", formData,
                     {
                         headers: {
                             "Content-Type": "application/json",
@@ -66,8 +66,8 @@ const User = (props) => {
                 alert (msgError);
             }
         } else {
-                formData.append('setCentro',centrosSeleccionados)
                 formData.append('username',props.username)
+                formData.append('rol', "user")
                 
                 try {
                     const response = await axios.put("http://localhost:8000/public/updateUsuario", formData,

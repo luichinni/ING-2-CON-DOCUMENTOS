@@ -31,7 +31,8 @@ const PubliDetalle = () => {
     }
 
     const handleDetalleClick = () => {
-        localStorage.setItem("publicacion", JSON.stringify({ id }));
+        localStorage.setItem("publiOferto", publicacion.id);
+        console.log(localStorage.getItem("publiOferto"));
     };
 
     return (

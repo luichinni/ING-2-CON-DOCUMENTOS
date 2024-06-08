@@ -4,47 +4,45 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import "../../HarryStyles/estilos.css";
 
+// idpubli1(publico), idpubli2(oferto), horario, centro
 
-const AgregarPublicacion = () => {
-    const [nombre, setNombre] = useState('');
-    const [descripcion, setDescripcion] = useState('');
-    const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('');
+const InterCentroHorario = () => {
     const [centros, setCentros] = useState([]);
-    const [centrosSeleccionados, setCentrosSeleccionados] = useState([]);
-    const [base64Fotos, setFotosBase64] = useState([]);
+    const [centroSeleccionado, setCentroSeleccionado] = useState("");
+    const [publicacion2, setPublicacion2] = useState([]);
+    const [horario, setHorario] = useState ("");
+    const [fecha, setFecha] = useState ("");
     const [myError, setMyError] = useState(false);
     const [msgError, setMsgError] = useState('No deberías estar viendo este mensaje');
 
+    const id_publi1 = localStorage.getItem("publiPublico");
+    const id_publi2 = localStorage.getItem("publiOferto");
+
     const navigate = useNavigate();    
     const handleCentrosChange = (e) => {
-        const selectedValues = Array.from(e.target.selectedOptions, option => option.value);
-        setCentrosSeleccionados(selectedValues);
+        setCentroSeleccionado(e.target.value);
     };
 
+    const handleHorarioChange = (e) =>{
+        setHorario(e.target.value);
+    }
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Submit button clicked!');
 
         const formData = new FormData();
-        formData.append('nombre', nombre);
-        formData.append('descripcion', descripcion);
-        base64Fotos.forEach((file, index) => {
-            formData.append(`foto${index+1}`, file);
-        });
-        formData.append('categoria_id', categoriaSeleccionada);
-        centrosSeleccionados.forEach((centro, index) => {
-            formData.append(`centro${index+1}`, centro);
-        });
-        formData.append('user',localStorage.getItem('username'));
-        formData.append('estado','alta');
+        formData.append(`publicacion1`, id_publi1)
+        formData.append(`publicacion2`, id_publi2)
+        formData.append(`horario`, horario)
+        formData.append(`centro`, centroSeleccionado)
+        formData.append(`fecha_propuesta`, centroSeleccionado)
 
         try {
-            const response = await axios.post("http://localhost:8000/public/newPublicacion", formData,
+            const response = await axios.post(`http://localhost:8000/public/newIntercambio`, formData,
                 {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                });
+                })
             console.log('Success:', response);
             navigate("../Explorar");
             window.location.reload();
@@ -56,8 +54,11 @@ const AgregarPublicacion = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`http://localhost:8000/public/listarCentros?id=&nombre=&direccion=&hora_abre=&hora_cierra=`);
-                setCentros(procesarcen(res.data));
+                const res = await axios.get(`http://localhost:8000/public/listarPublicaciones?id=${id_publi1}&token=${localStorage.getItem('token')}`);
+                console.log(res.data)
+                setCentros(procesarcen(res.data.centro));
+                console.log("aca")
+                console.log(res)
             } catch (error) {
                 console.error(error);
             }
@@ -65,13 +66,20 @@ const AgregarPublicacion = () => {
         fetchData();
     }, []);
     function procesarcen(centros) {
+        if (!centros) {
+            console.log("vacio")
+            return [];
+        }
+        if (Array.isArray(centros)) {
+            return centros;
+        } else {
         let cenCopy = [];
         Object.keys(centros).forEach(function (clave) {
             if (!isNaN(clave)) {
                 cenCopy[clave] = centros[clave]
             }
         })
-        return cenCopy
+        return cenCopy}
     }
 
     return (
@@ -87,35 +95,13 @@ const AgregarPublicacion = () => {
                     ))}
                 </select>
                 <br /> <br />
-                {/*
-                //
-                //          NO TIENE FUNCIONALIDAD, ESTA HARDCODEADO
-                //
-                */}
-
-                <select id="Horario">
+                <select id="Horario" value={horario} onChange={handleHorarioChange}>
                     <option value="">Seleccione un horario</option>
-                    <option key="10:00" value="10:00">10:00</option>
-                    <option key="10:30" value="10:30">10:30</option>
-                    <option key="11:00" value="11:00">11:00</option>
-                    <option key="11:30" value="11:30">11:30</option>
-                    <option key="12:00" value="12:00">12:00</option>
-                    <option key="12:30" value="12:30">12:30</option>
-                    <option key="13:00" value="13:00">13:00</option>
-                    <option key="13:30" value="13:30">13:30</option>
-                    <option key="14:00" value="14:00">14:00</option>
-                    <option key="14:30" value="14:30">14:30</option>
-                    <option key="15:00" value="15:00">15:00</option>
-                    <option key="15:30" value="15:30">15:30</option>
-                    <option key="16:00" value="16:00">16:00</option>
-                    <option key="16:30" value="16:30">16:30</option>
-                    <option key="17:00" value="17:00">17:00</option>
-                    <option key="17:30" value="17:30">17:30</option>
-                    <option key="18:00" value="18:00">18:00</option>
-                    <option key="18:30" value="18:30">18:30</option>
-                    <option key="19:00" value="19:00">19:00</option>
-                    <option key="19:30" value="19:30">19:30</option>
-                    <option key="20:00" value="20:00">20:00</option>
+                    {["10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", 
+                      "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", 
+                      "18:00", "18:30", "19:00", "19:30", "20:00"].map(hora => (
+                        <option key={hora} value={hora}>{hora}</option>
+                    ))}
                 </select>           
                 <ButtonSubmit text="Ofrecer Intercambio" />
             </form>
@@ -126,4 +112,4 @@ const AgregarPublicacion = () => {
     );
 };
 
-export default AgregarPublicacion;
+export default InterCentroHorario;

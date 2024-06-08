@@ -6,9 +6,9 @@ const Dashboard = () => {
   return (
     <div className='dashboard'>
       <br /><br /><br /><br /><br /><br />
-      <banner className='banner'>
+      <div className='banner'>
         <h1>Bienvenido a TrueCa</h1>
-      </banner>
+      </div>
       <br/><br/><br/>
       <div className="background-image"></div>
     </div>

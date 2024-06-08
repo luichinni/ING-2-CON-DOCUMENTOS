@@ -79,7 +79,7 @@ const ListarMisPublis = () => {
         ) : (
           publicaciones.map(publicacion => (
             <InterPubli
-              key={publicacion.id} // Agregar key prop para evitar advertencia
+              key={publicacion.id}//evita advertencia
               id={publicacion.id}
               nombre={publicacion.nombre}
               descripcion={publicacion.descripcion}

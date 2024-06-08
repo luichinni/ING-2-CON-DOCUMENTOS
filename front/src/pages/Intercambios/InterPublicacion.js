@@ -8,9 +8,9 @@ const MisPublis = () => {
   return (
     <div className='dashboard'>
       <br /><br /><br /><br /><br /><br />
-      <banner className='banner'>
+      <div className='banner'>
         <h1>Seleccione el producto que desea intercambiar:</h1>
-      </banner>
+      </div>
 
       <ListarPubliInter />
     </div>

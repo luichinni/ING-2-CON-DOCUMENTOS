@@ -72,6 +72,7 @@ const ListarPublis = () => {
         ) : (
           publicaciones.map(publicacion => (
             <Publicacion
+                  key={publicacion.id} //para que no llore react
                   id={publicacion.id}
                   nombre={publicacion.nombre}
                   descripcion={publicacion.descripcion}
