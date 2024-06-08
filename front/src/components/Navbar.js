@@ -80,7 +80,7 @@ export function NavBar(){
                 </li>
                 <li className='buttonNavBar'>
                     <Link 
-                        to="/ValidarIntercambios"
+                        to="/ValidarIntercambio"
                         className="botonNavBar"> 
                         Validar intercambio
                     </Link>

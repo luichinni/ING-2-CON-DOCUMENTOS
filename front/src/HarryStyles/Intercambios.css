@@ -1,0 +1,41 @@
+
+/* Ocultar el radio button estándar */
+.seleccion {
+    display: none;
+}
+
+/* Estilos para el label que actúa como el radio button estilizado */
+.seleccion-label {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    border: 2px solid #555;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Estado cuando el radio button está marcado */
+.seleccion:checked + .seleccion-label::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    background-color: #2196F3;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 0.3s ease;
+}
+
+/* Efecto hover */
+.seleccion-label:hover {
+    border-color: #2196F3;
+}
+
+/* Efecto de transición al hacer click */
+.seleccion-label:active::after {
+    width: 16px;
+    height: 16px;
+}

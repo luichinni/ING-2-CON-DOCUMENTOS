@@ -2,6 +2,7 @@ import { ButtonSubmit } from "../../components/ButtonSubmit";
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import '../../HarryStyles/Intercambios.css';
 
 const ValidarIntercambio = () => {
 	const navigate = useNavigate(); 
@@ -11,11 +12,11 @@ const ValidarIntercambio = () => {
     const [numeroDocumento, setNumeroDocumento] = useState('');
     const [mail, setEmail] = useState('');
     const [telefono, setTelefono] = useState('');
-	const [comentario, setComentarntario] =useState('');
+	const [comentario, setComentario] =useState('');
 	const [donacion, setDonacion] =useState('');
 	const [myError, setMyError] = useState(false);
+	const [intercambio, setIntercambio] = useState('')
 
-	const handleUsernameChange = (e) => setUsername(e.target.value);
     const handleNombreChange = (e) => setNombre(e.target.value);
     const handleApellidoChange = (e) => setApellido(e.target.value);
     const handleEdadChange = (e) => setEdad(e.target.value);
@@ -23,6 +24,8 @@ const ValidarIntercambio = () => {
     const handleMailChange = (e) => setEmail(e.target.value);
     const handleTelefonoChange = (e) => setTelefono(e.target.value);
 	const handleComentarioChange = (e) => setComentario(e.target.value);
+	const handleIntercambioChange = (e) => setIntercambio(e.target.value);
+	const handleDonacionChange = (e) => setDonacion(e.target.value);
 
     const handleSubmit = async (e) => {
 		
@@ -31,18 +34,15 @@ const ValidarIntercambio = () => {
 
 		if (edad < 18){
 			setMyError(true);
-			setMsgError('Debes ser mayor de edad para registrarte.');
 		}else{
 			console.log('entro');
 			const formData = new FormData();
-			formData.append('username', username);
 			formData.append('nombre', nombre);
 			formData.append('apellido', apellido);
 			formData.append('edad', edad);
 			formData.append('dni', numeroDocumento);
 			formData.append('mail', mail);
 			formData.append('telefono', telefono);
-			formData.append('clave', contraseña);
 			formData.append('rol', "user");
 
 			try {
@@ -59,13 +59,13 @@ const ValidarIntercambio = () => {
 			} catch (error) {
 				console.error('Error:', error.response.data.Mensaje);
 				setMyError(true);
-				setMsgError(error.response.data.Mensaje);
 			}
 		}
     };
 
     return (
 	<>
+	<br/><br/><br/><br/><br/>
 	<h1>Trueca </h1>
 	<div id="validarIntercambio">
 		<br/>
@@ -74,16 +74,8 @@ const ValidarIntercambio = () => {
 			
             <label>
                 ¿Se realizó el intercambio?
-                <div>
-                    <label>
-                        <input type="radio" value="sí" checked={intercambio === 'sí'} onChange={handleIntercambioChange} />
-                        Sí
-                    </label>
-                    <label>
-                        <input type="radio" value="no" checked={intercambio === 'no'} onChange={handleIntercambioChange} />
-                        No
-                    </label>
-                </div>
+                        <input className="Seleccion" type="radio" value="sí" checked={intercambio === 'sí'} onChange={handleIntercambioChange} /> Sí
+                        <input className="Seleccion" type="radio" value="no" checked={intercambio === 'no'} onChange={handleIntercambioChange} />No 
             </label>
 
 
@@ -101,8 +93,6 @@ const ValidarIntercambio = () => {
                 </div>
             </label>
 
-            <input placeholder='Nombre de usuario' type="text" value={username} onChange={handleUsernameChange} required /> <br/><br/> 
-
 			<input placeholder='Nombre' type="text" value={nombre} onChange={handleNombreChange} required /> <br/><br/>  
 
 
@@ -118,15 +108,12 @@ const ValidarIntercambio = () => {
 			<input placeholder='Email' type="text"  value={mail} onChange={handleMailChange} required /> <br/> <br/> 
 			
 
-			<input placeholder='Telefono' type="text" value={telefono} onChange={handleTelefonoChange} />  <br/><br/> 
-			
-
-			<input placeholder='Contraseña' type="password" value={contraseña} onChange={handleContraseñaChange} required />  <br/><br/> 
+			<input placeholder='Telefono' type="text" value={telefono} onChange={handleTelefonoChange} />  <br/><br/>  
 			
 			<ButtonSubmit text="Registrarse" />
 		</form>
 				{myError &&
-					<p style={{ backgroundColor: "red", color: "white", textAlign: "center" }}>{msgError}</p>
+					<p style={{ backgroundColor: "red", color: "white", textAlign: "center" }}>error</p>
 				}
 	</div>
 	</>
