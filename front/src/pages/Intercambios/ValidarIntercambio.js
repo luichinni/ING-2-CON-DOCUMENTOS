@@ -66,8 +66,8 @@ const ValidarIntercambio = () => {
 
 			<textarea value={comentario} onChange={handleComentarioChange} maxLength="255" placeholder="Comentario del intercambio" required></textarea>
             <br /><br />
-			
-			<ButtonSubmit text="Registrarse" />
+
+			<ButtonSubmit text="Subir la validación" />
 		</form>
 				{myError &&
 					<p style={{ backgroundColor: "red", color: "white", textAlign: "center" }}>{msgError}</p>
