@@ -153,8 +153,10 @@ const User = (props) => {
                         <option key={role} value={role}>{convertirNombre(role)}</option>
                         ))}
                     </select>
+                    <br/><br/>
                     {rol === "volunt"&&(
                         <select id="centro" value={centrosSeleccionados} onChange={handleCentrosChange}>
+                            <br/>
                             <option value="">Seleccione un centro</option>
                             {centros.map((centro) => (
                                 <option key={centro.id} value={centro.id}>
