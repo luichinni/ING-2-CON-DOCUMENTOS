@@ -1,4 +1,5 @@
 import { ButtonSubmit } from "../../components/ButtonSubmit";
+import { Button } from "../../components/Button";
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
@@ -19,11 +20,7 @@ const ValidarIntercambio = () => {
 		
         e.preventDefault();
 		console.log('Submit button clicked!');
-
-		if (edad < 18){
-			setMyError(true);
-		}else{
-			console.log('entro');
+			console.log('entro'); 
 			const formData = new FormData();
 			formData.append('intercambio', intercambio);
 			formData.append('donacion', donacion);
@@ -44,7 +41,6 @@ const ValidarIntercambio = () => {
 				console.error('Error:', error.response.data.Mensaje);
 				setMyError(true);
 			}
-		}
     };
 
     return (
@@ -69,8 +65,8 @@ const ValidarIntercambio = () => {
 
 			<ButtonSubmit text="Subir la validación" />
 		</form>
-				{myError &&
-					<p style={{ backgroundColor: "red", color: "white", textAlign: "center" }}>{msgError}</p>
+				{//myError &&
+					//<p style={{ backgroundColor: "red", color: "white", textAlign: "center" }}>{msgError}</p>
 				}
 	</div>
 	</>
