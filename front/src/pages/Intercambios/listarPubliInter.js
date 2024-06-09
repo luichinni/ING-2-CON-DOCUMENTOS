@@ -26,7 +26,7 @@ const ListarMisPublis = () => {
         const queryParams = new URLSearchParams({
             nombre: parametros.nombre,
             user: username,
-            categoria_id: localStorage.getItem("categoriaInter"),
+            categoria_id: parametros.categoria_id,
             estado: parametros.estado,
             id: parametros.id
         }).toString();
@@ -78,6 +78,7 @@ const ListarMisPublis = () => {
           <h1 className='sin-publi'>{error}</h1>
         ) : (
           publicaciones.map(publicacion => (
+            (publicacion.categoria_id === localStorage.getItem("categoriaInter"))?
             <InterPubli
               key={publicacion.id}//evita advertencia
               id={publicacion.id}
@@ -87,7 +88,7 @@ const ListarMisPublis = () => {
               categoria_id={publicacion.categoria_id}
               estado={publicacion.estado}
               imagen={publicacion.imagenes[0].archivo}
-            />
+            />:<></>
           ))
         )}
       </div>
