@@ -1,7 +1,6 @@
 import "../HarryStyles/centros.css"
 import "../HarryStyles/styles.css"
 import React from "react";
-import {buttonEliminar} from "./buttonEliminar" 
 import {Link} from "react-router-dom";
 
 const Categoria = (props) => {
