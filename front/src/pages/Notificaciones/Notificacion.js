@@ -10,10 +10,8 @@ const Notificacion = (props) => {
                     {props.texto}
                 </p>
                 {(props.url)&&
-                <Link
-                to={props.url}
-                >
-                <button className="detalle-Noti">Ver Detalle</button>
+                <Link to={props.url}>
+                    <button className="detalle-Noti">Ver Detalle</button>
                 </Link>
                 }
                 <small className="fecha">{props.fecha}</small>
