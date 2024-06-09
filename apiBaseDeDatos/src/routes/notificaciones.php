@@ -8,7 +8,8 @@ $camposNotificacion = [
     'id'=>'?int',
     'user'=>'varchar',
     'texto'=>'texto',
-    'fecha'=>'?datetime'
+    'fecha'=>'?datetime',
+    'url' => 'texto'
 ];
 
 $notificacionDB = new bdController('notificacion',$pdo,$camposNotificacion);

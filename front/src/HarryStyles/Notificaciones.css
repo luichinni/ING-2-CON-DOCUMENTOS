@@ -14,9 +14,46 @@
 }
 
 .notificacion {
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 5px;
+    border: 1px solid #ddd; /* Borde gris claro */
+    padding: 10px; /* Relleno interno */
+    margin-bottom: 10px; /* Espacio entre notificaciones */
+    border-radius: 5px; /* Bordes redondeados */
+    background-color: #f9f9f9; /* Fondo gris claro */
+    position: relative; /* Necesario para la posición absoluta del botón */
 }
+
+.notificacion-info {
+    position: relative; /* Para el posicionamiento absoluto del botón */
+}
+
+.descripcion {
+    margin: 0; /* Sin margen */
+    padding-right: 80px; /* Espacio para el botón */
+}
+
+.fecha {
+    font-size: 10px; /* Tamaño pequeño para la fecha */
+    color: #888; /* Color gris para la fecha */
+    display: block; /* Ocupa toda la línea */
+    margin-top: 5px; /* Espacio superior */
+}
+
+.detalle-Noti {
+    background-color: #4CAF50; /* Fondo verde */
+    color: white; /* Texto blanco */
+    border: none; /* Sin borde */
+    padding: 5px 10px; /* Relleno interno */
+    font-size: 12px; /* Tamaño de fuente pequeño */
+    border-radius: 4px; /* Bordes redondeados */
+    cursor: pointer; /* Indicador de clic */
+    position: absolute; /* Posición absoluta */
+    right: 10px; /* Alineación a la derecha */
+    bottom: 10px; /* Alineación inferior */
+    transition: background-color 0.3s; /* Transición suave */
+}
+
+.detalle-Noti:hover {
+    background-color: #45a049; /* Color de fondo al pasar el ratón */
+}
+
 
