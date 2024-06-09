@@ -14,9 +14,9 @@ $camposNotificacion = [
 
 $notificacionDB = new bdController('notificacion',$pdo,$camposNotificacion);
 
-function enviarNotificacion(string $user,string $contenido){
+function enviarNotificacion(string $user,string $contenido,string $url = ""){
     global $notificacionDB;
-    return $notificacionDB->insert(['user'=>$user,'texto'=>$contenido]);
+    return $notificacionDB->insert(['user'=>$user,'texto'=>$contenido,'url'=>$url]);
 }
 
 $app->group('/public', function (RouteCollectorProxy $group) {

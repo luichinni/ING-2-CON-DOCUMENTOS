@@ -202,6 +202,39 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
         return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
     });
 
+    $group->post('/newAdmin', function (Request $req, Response $res, $args) use ($pdo, $camposUser) {
+        global $userDB, $centroDB, $publiDB;
+        $pudo = false;
+        $status = 500;
+        $msgReturn = ['Mensaje' => 'Faltan parametros'];
+
+        $bodyParams = (array) $req->getParsedBody();
+
+        if (!array_key_exists('username', $bodyParams)) {
+            $res->getBody()->write(json_encode($msgReturn));
+            return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
+        }
+
+        $validUser = $userDB->exists(['username' => $bodyParams['username']]);
+
+        cancelarIntercambios($bodyParams['username']);
+
+        $pudo = $publiDB->update(['user' => $bodyParams['username'], 'setestado' => 'baja']);
+
+        $pudo = $pudo && $userDB->update(['setrol' => 'admin', 'username' => $bodyParams['username']]);
+
+        if ($pudo) {
+            $status = 200;
+            enviarNotificacion($bodyParams['username'], "Has sido registrado como un administrador del sistema");
+        }
+
+        $msgReturn['Mensaje'] = $status == 200 ? 'Administrador agregado con éxito' : 'Ocurrio un error al asignar el rol de administrador';
+
+        $res->getBody()->write(json_encode($msgReturn));
+
+        return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
+    });
+
     $group->delete('/deleteUsuario',function (Request $req,Response $res, $args){
         global $userDB;
         $pudo = false;
