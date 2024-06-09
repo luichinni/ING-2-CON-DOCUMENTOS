@@ -9,6 +9,7 @@ $camposNotificacion = [
     'user'=>'varchar',
     'texto'=>'texto',
     'fecha'=>'?datetime',
+    'visto'=>'?bool',
     'url' => 'texto'
 ];
 

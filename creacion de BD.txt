@@ -80,8 +80,10 @@ CREATE TABLE Comentario (
 CREATE TABLE Intercambio (
     id INT AUTO_INCREMENT PRIMARY KEY,
     voluntario varchar (50),
-    publicacion1 int,
-    publicacion2 int,
+    publicacionOferta int,
+    publicacionOfertada int,
+    ofertaAcepta BOOLEAN,
+    ofertadaAcepta BOOLEAN,
     horario DATETIME,
     estado ENUM('pendiente','cancelado','rechazado','aceptado','concretado'),
     descripcion TEXT,
@@ -100,6 +102,7 @@ CREATE TABLE Notificacion (
     user varchar(50),
     texto TEXT,
     visto BOOLEAN DEFAULT FALSE,
+    url TEXT,
     fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user) REFERENCES Usuarios(username)
 )
