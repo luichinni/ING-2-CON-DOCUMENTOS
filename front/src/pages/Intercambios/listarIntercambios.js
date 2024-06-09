@@ -32,21 +32,17 @@ const ListarIntercambios = () => {
           id: parametros.id
         }).toString();
 
-        // Actualizar la URL del endpoint para listar intercambios
         const url = `http://localhost:8000/public/listarIntercambios?${queryParams}`;
         const response = await axios.get(url);
 
-        // Manejo de la respuesta según la nueva estructura de la API
         if (response.data.Mensaje === 'No hay intercambios disponibles') {
           setError('No hay intercambios disponibles');
           setIntercambios([]);
         } else {
           setIntercambios(procesar(response.data));
-          console.log("datos de intercambios:")
-          console.log(intercambios)
         }
       } catch (error) {
-        setError('Error al obtener intercambios.');
+        setError('Error al obtener los intercambios.');
         console.error(error);
       } finally {
         setLoading(false);
@@ -67,19 +63,15 @@ const ListarIntercambios = () => {
         intercambiosCopy[clave] = inter[clave];
       }
     });
-    console.log("intercambiosCopy:")
-    console.log(intercambiosCopy)
     return intercambiosCopy;
   }
 
   return (
     <div className='content'>
-      <br/><br/><br/><br/>
       <div className='sidebar'>
         <Filtro onFiltroSubmit={handleParametrosChange} />
       </div>
       <div className='publi-container'>
-      <br/><br/>
         {loading ? (
           <h1 className='cargando'>Cargando...</h1>
         ) : error ? (
@@ -87,7 +79,7 @@ const ListarIntercambios = () => {
         ) : (
           intercambios.map((intercambio) => (
             <Intercambio
-              key={intercambio.id} // Asegurarse de que 'key' sea único
+              key={intercambio.id}
               id={intercambio.id}
               voluntario={intercambio.voluntario}
               publicacion1={intercambio.publicacion1}

@@ -1,6 +1,16 @@
 .notiContent {
     max-height: 200px;
     overflow-y: auto;
+    z-index: 1; /* Agrega esta línea */
+}
+
+.dropdownmenuNoti{
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 50px;  /*Ajustar según la altura del NavBar */
+    position: relative; /* Agrega esta línea */
+    left: 1050px;
+    z-index: 1; /* Agrega esta línea */
 }
 
 .cargando {

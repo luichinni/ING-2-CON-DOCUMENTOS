@@ -1,81 +1,141 @@
-
 /* Ocultar el radio button estándar */
 .seleccion {
-    display: none;
+  display: none;
 }
 
 /* Estilos para el label que actúa como el radio button estilizado */
 .seleccion-label {
-    position: relative;
-    width: 24px;
-    height: 24px;
-    border: 2px solid #555;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: all 0.3s ease;
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #555;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 /* Estado cuando el radio button está marcado */
 .seleccion:checked + .seleccion-label::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 12px;
-    height: 12px;
-    background-color: #2196F3;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: all 0.3s ease;
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  background-color: #2196F3;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.3s ease;
 }
 
 /* Efecto hover */
 .seleccion-label:hover {
-    border-color: #2196F3;
+  border-color: #2196F3;
 }
 
 /* Efecto de transición al hacer click */
 .seleccion-label:active::after {
-    width: 16px;
-    height: 16px;
+  width: 16px;
+  height: 16px;
 }
+
 .content {
-    display: flex;
+  display: flex;
+  flex-direction: column; /* Ajustado para que la barra lateral y el contenedor publi se apilen verticalmente */
+  height: 100vh; /* Asegura que ocupe toda la altura de la ventana */
+  overflow: hidden; /* Evita que el contenido se desborde de la pantalla */
+}
+
+.sidebar {
+  width: 100%;
+  padding: 10px;
+  max-height: 20%; /* Limita la altura de la barra lateral */
+  overflow-y: auto; /* Permite desplazamiento vertical si el contenido es demasiado largo */
+  box-sizing: border-box; /* Incluye padding y borde en el cálculo del ancho y altura */
+}
+
+/* Añade esta regla CSS para los contenedores de intercambios */
+.publi-container {
+  display: flex;
+  flex-direction: column; /* Asegura que los intercambios se apilen uno sobre otro */
+  gap: 20px; /* Espacio entre intercambios */
+  align-items: center; /* Centra el contenido horizontalmente */
+}
+
+
+.cargando, .sin-publi {
+  text-align: center;
+}
+
+.intercambio-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.intercambio-item {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.intercambio-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Asegura que ocupe toda la altura */
+  justify-content: space-between;
+}
+
+.publicaciones-container {
+  display: flex;
+  gap: 10px; /* Añadir espacio entre publicaciones */
+  flex-grow: 1; /* Asegura que las publicaciones ocupen el espacio disponible */
+}
+
+.publicacion {
+  width: 200px; /* Tamaño fijo para las publicaciones */
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra el contenido horizontalmente */
+}
+
+.publicacion img {
+  width: 100%; /* Tamaño fijo para las imágenes */
+  height: 200px; /* Tamaño fijo para las imágenes */
+  margin-bottom: 10px;
+  border-radius: 5px;
+  object-fit: cover; /* Ajusta el tamaño de la imagen para cubrir el contenedor */
+}
+
+.detalles {
+  width: 100%; /* Ajusta el ancho de los detalles */
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-top: 1px solid #ddd;
+  text-align: center;
+  box-sizing: border-box; /* Incluye padding y borde en el cálculo del ancho y altura */
+  align-self: center; /* Centra los detalles horizontalmente */
+}
+
+/* Media queries para asegurar responsividad */
+@media (min-width: 768px) {
+  .content {
+      flex-direction: row; /* Cambia a disposición horizontal para pantallas más grandes */
   }
-  
   .sidebar {
-    width: 20%;
-    padding: 10px;
+      width: 20%;
+      max-height: none; /* Restablece la altura máxima */
   }
-  
   .publi-container {
-    width: 80%;
-    padding: 10px;
+      width: 80%;
   }
-  
-  .cargando, .sin-publi {
-    text-align: center;
-  }
-  
-  .intercambio-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .intercambio-item {
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin-bottom: 10px;
-    background-color: #f9f9f9;
-    border-radius: 5px;
-  }
-  
-  .intercambio-content p {
-    margin: 5px 0;
-  }
-  
-  .intercambio-content strong {
-    font-weight: bold;
-  }
-  
+}
