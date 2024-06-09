@@ -5,7 +5,7 @@ import "../HarryStyles/styles.css";
 
 const FiltroUsuario = ({ onFiltroSubmit }) => {
   const [filtro, setFiltro] = useState({
-    userName: "",
+    username: "",
     nombre: "",
     apellido: "",
     dni: "",
@@ -28,7 +28,7 @@ const FiltroUsuario = ({ onFiltroSubmit }) => {
   return (
     <form onSubmit={handleSubmit}>
       <label> Filtrar por: </label>
-      <input type="text" name="userName" value={filtro.userName} onChange={handleChange} placeholder="Nombre de usuario"/>
+      <input type="text" name="username" value={filtro.username} onChange={handleChange} placeholder="Nombre de usuario"/>
       <input type="text" name="nombre" value={filtro.nombre} onChange={handleChange} placeholder="Nombre"/>
       <input type="text" name="apellido" value={filtro.apellido} onChange={handleChange} placeholder="Apellido"/>
       <input type="text" name="dni" value={filtro.dni} onChange={handleChange} placeholder="DNI" />
