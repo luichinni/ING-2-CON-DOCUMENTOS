@@ -34,6 +34,7 @@ const PubliDetalle = () => {
         localStorage.setItem("publiOferto", publicacion.id);
         localStorage.setItem("categoriaInter", publicacion.categoria_id);
         console.log(localStorage.getItem("publiOferto"));
+        console.log(localStorage.getItem("categoriaInter"));
     };
 
     return (
