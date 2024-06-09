@@ -1,155 +1,106 @@
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
+import '../HarryStyles/Notificaciones.css';
 import '../HarryStyles/NavBar.css';
-import {ButtonCerrarSesion} from './ButttonCerrarSesion';
+import { ButtonCerrarSesion } from './ButttonCerrarSesion';
 import { CiBellOn } from "react-icons/ci";
+import ListarNotis from '../pages/Notificaciones/ListarNotis';
 
-
-export function NavBar(){
-
+export function NavBar() {
     const [menuOpen, setMenuOpen] = useState(false);
-    /* const [Token, setToken] = useState(false); */
+    const [notiOpen, setNotiOpen] = useState(false);
+    const [token, setToken] = useState(null);
 
     const toggleMenu = () => {
-        if (menuOpen) {
-            setMenuOpen(false);
-        } else {
-            setMenuOpen(true);
-        }
+        setMenuOpen(prevState => !prevState);
     };
-    /* setToken(localStorage.getItem('token')); */   
-    const Token = localStorage.getItem('token');
+
+    const toggleNotificaciones = () => {
+        setNotiOpen(prevState => !prevState);
+    };
 
     useEffect(() => {
-    },[Token]);
+        const savedToken = localStorage.getItem('token');
+        setToken(savedToken);
+    }, []);
 
     return (
-    <div className='navbar'>
-        <div className='navbarItems'>
-                <img style={{ position: "absolute", left: "0","maxHeight":"95px",width: "auto"}} src='./truecaLogo.webp'></img>
-            <li className='buttonNavBar'>
-                <Link 
-                    to="/"
-                    className="botonNavBar"> 
-                    Inicio
-                </Link>
-            </li>
-            <li className='buttonNavBar'>
-                <Link 
-                    to="/Explorar"
-                    className="botonNavBar"> 
-                    Explorar
-                </Link>
-            </li>
-            {(Token == 'tokenUser') ?(
-            <>
+        <div className='navbar'>
+            <div className='navbarItems'>
+                <img style={{ position: "absolute", left: "0", "maxHeight": "95px", width: "auto" }} src='./truecaLogo.webp' alt='Logo' />
                 <li className='buttonNavBar'>
-                    <Link 
-                        to="/agregarPublicacion"
-                        className="botonNavBar"> 
-                        Subir Publicacion
-                    </Link>
+                    <Link to="/" className="botonNavBar">Inicio</Link>
                 </li>
                 <li className='buttonNavBar'>
-                    <Link 
-                        to="/MisPublicaciones"
-                        className="botonNavBar"> 
-                        Mis Publicaciones
-                    </Link>
+                    <Link to="/Explorar" className="botonNavBar">Explorar</Link>
                 </li>
-                <li className='buttonNavBar'>
-                    <Link 
-                        to="/Intercambios"
-                        className="botonNavBar"> 
-                        Mis Intercambios
-                    </Link>
-                </li>
-                <li>
-                <CiBellOn />
-                </li>
-                
-            </>
-            ):(Token == 'tokenAdmin')?(
-            <>
-                <li className='buttonNavBar'>
-                    <Link 
-                        to="/Categorias"
-                        className="botonNavBar"> 
-                        Categorias
-                    </Link>
-                </li>
-                <li className='buttonNavBar'>
-                    <Link 
-                        to="/Centros"
-                        className="botonNavBar"> 
-                        Centros
-                    </Link>
-                </li>
-                <li className='buttonNavBar'>
-                    <Link 
-                        to="/ValidarIntercambio"
-                        className="botonNavBar"> 
-                        Validar intercambio
-                    </Link>
-                </li>
-                <li className='buttonNavBar'>
-                    <Link 
-                        to="/Usuarios"
-                        className="botonNavBar"> 
-                        Usuarios
-                    </Link>
-                </li> 
-            </>
-            ):(Token == 'tokenVolunt')?(
-                <>
+                {token === 'tokenUser' && (
+                    <>
+                        <li className='buttonNavBar'>
+                            <Link to="/agregarPublicacion" className="botonNavBar">Subir Publicación</Link>
+                        </li>
+                        <li className='buttonNavBar'>
+                            <Link to="/MisPublicaciones" className="botonNavBar">Mis Publicaciones</Link>
+                        </li>
+                        <li className='buttonNavBar'>
+                            <Link to="/Intercambios" className="botonNavBar">Mis Intercambios</Link>
+                        </li>
+                        <li className='notiIcon'>
+                            <button onClick={toggleNotificaciones}>
+                                <CiBellOn />
+                            </button>
+                            {notiOpen && (
+                                <div className={`dropdownmenuNoti ${notiOpen ? 'showNoti' : ''}`}>
+                                    <ListarNotis />
+                                </div>
+                            )}
+                        </li>
+                    </>
+                )}
+                {token === 'tokenAdmin' && (
+                    <>
+                        <li className='buttonNavBar'>
+                            <Link to="/Categorias" className="botonNavBar">Categorías</Link>
+                        </li>
+                        <li className='buttonNavBar'>
+                            <Link to="/Centros" className="botonNavBar">Centros</Link>
+                        </li>
+                        <li className='buttonNavBar'>
+                            <Link to="/ValidarIntercambio" className="botonNavBar">Validar intercambio</Link>
+                        </li>
+                        <li className='buttonNavBar'>
+                            <Link to="/Usuarios" className="botonNavBar">Usuarios</Link>
+                        </li>
+                    </>
+                )}
+                {token === 'tokenVolunt' && (
                     <li className='buttonNavBar'>
-                        <Link 
-                            to="/ValidarIntercambios"
-                            className="botonNavBar"> 
-                            Validar intercambio
-                        </Link>
+                        <Link to="/ValidarIntercambios" className="botonNavBar">Validar intercambio</Link>
                     </li>
-                </>
-                ):(<></>)}
-            <li className='buttonNavBar'>
-                <a href="https://caritas.org.ar/quienes-somos/" className="botonNavBar">¿Quiénes somos?</a>
-            </li>
-            {(Token == null) ? 
-            (<li className='buttonNavBar'>
-                <Link 
-                    to="/IniciarSesion"
-                    className="botonNavBar"> 
-                    Iniciar Sesion
-                </Link>
-            </li>) :
-            (
-            <li className='buttonNavBar'>
-                <button className="botonNavBar" onClick={toggleMenu}>Menú</button>
-            </li>)}
-            {menuOpen && (
-                <div className={`dropdownmenu ${menuOpen ? 'show' : ''}`}>
-                <ul>
-                    <li><button onClick={() => console.log("Ver mi Perfil")}>Ver mi Perfil</button></li>
-                    <li><button onClick={() => console.log("Configuraciones")}>Configuraciones</button></li>
-                    <li><ButtonCerrarSesion /></li>
-                </ul>
-                </div>
-            )}
-            {/*<li className='button-NavBar'>
-                <button className="botonNavBar" onClick={toggleMenu}>categorias</button>
-            </li>
-            {menuOpen && (
-                <div className={`dropdown-menu ${menuOpen ? 'show' : ''}`}>
-                <ul>
-                    <li><button onClick={() => console.log("Cerrar Sesión")}>Articulos</button></li>
-                    <li><button onClick={() => console.log("Configuraciones")}>Configuraciones</button></li>
-                    <li><button onClick={() => console.log("Ver mi Perfil")}>Ver mi Perfil</button></li>
-                </ul>
-                </div>
-            )}*/}
-
+                )}
+                <li className='buttonNavBar'>
+                    <a href="https://caritas.org.ar/quienes-somos/" className="botonNavBar">¿Quiénes somos?</a>
+                </li>
+                {token === null ? (
+                    <li className='buttonNavBar'>
+                        <Link to="/IniciarSesion" className="botonNavBar">Iniciar Sesión</Link>
+                    </li>
+                ) : (
+                    <li className='buttonNavBar'>
+                        <button className="botonNavBar" onClick={toggleMenu}>Menú</button>
+                    </li>
+                )}
+                {menuOpen && (
+                    <div className={`dropdownmenu ${menuOpen ? 'show' : ''}`}>
+                        <ul>
+                            <li><button onClick={() => console.log("Ver mi Perfil")}>Ver mi Perfil</button></li>
+                            <li><button onClick={() => console.log("Configuraciones")}>Configuraciones</button></li>
+                            <li><ButtonCerrarSesion /></li>
+                        </ul>
+                    </div>
+                )}
+            </div>
         </div>
-    </div>
     );
 }
-export default NavBar
+export default NavBar;

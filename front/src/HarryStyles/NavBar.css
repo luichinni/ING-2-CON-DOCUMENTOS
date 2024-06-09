@@ -94,4 +94,29 @@
   .dropdownmenu ul li:hover {
     background-color: #f5f5f5;
   }
-  
+  .show {
+    display: block;
+  }
+  .notiIcon {
+      margin: 0 10px;
+  }
+
+  .dropdownmenuNoti {
+      position: absolute;
+      top: 50px;
+      right: 10px;
+      background-color: white;
+      border: 1px solid #ccc;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 5px;
+      width: 300px;
+      max-height: 300px;
+      overflow-y: auto;
+      z-index: 1000;
+      padding: 10px;
+  }
+
+  .showNoti {
+      display: block;
+  }
+

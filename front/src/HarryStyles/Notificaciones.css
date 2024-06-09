@@ -1,0 +1,22 @@
+.notiContent {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.cargando {
+    text-align: center;
+    color: #555;
+}
+
+.sin-noti {
+    text-align: center;
+    color: #999;
+}
+
+.notificacion {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+}
+
