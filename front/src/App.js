@@ -21,6 +21,7 @@ import InterPublicacion from './pages/Intercambios/InterPublicacion';
 import InterCentroHorario from './pages/Intercambios/InterCentroHorario';
 import ListarUsuario from './pages/sesion/ListarUsuarios';
 import ValidarIntercambio from './pages/Intercambios/ValidarIntercambio';
+import ListarIntercambios from './pages/Intercambios/listarIntercambios';
 
 function App() {
   return (
@@ -55,6 +56,7 @@ function App() {
                 <Route path={"/InterSelePubli"} element={<InterPublicacion />} />
                 <Route path={"/InterSeleCentHor"} element={<InterCentroHorario />} />
                 <Route path={"/ValidarIntercambio"} element={<ValidarIntercambio />} />
+                <Route path={"/Intercambios"} element={<ListarIntercambios />} />
 
               </Routes>
             </div>

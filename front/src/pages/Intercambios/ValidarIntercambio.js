@@ -50,12 +50,15 @@ const ValidarIntercambio = () => {
 		<form onSubmit={handleSubmit}>
 			<h3> Valida el intercambio! </h3>  <br /> <br />			
             <label>
+				<br/>
                 El intercambio fue: 
-				<Button text="Validado" value="{intercambio}" onChange={handleIntercambioChange} />
-				<Button text="Cancelado" value="{intercambio}" onChange={handleIntercambioChange}/>
-				<Button text="Rechazado" value="{intercambio}" onChange={handleIntercambioChange}/>
-
+				<br/><br/>
+				<Button text="Confirmado" value="{intercambio}" onChange={handleIntercambioChange} /><br/><br/>
+				<Button text="Cancelado" value="{intercambio}" onChange={handleIntercambioChange}/><br/><br/>
+				<Button text="Rechazado" value="{intercambio}" onChange={handleIntercambioChange}/><br/><br/>
+				<br/><br/><br/>
                 ¿Se obtuvo alguna donación?
+				<br/><br/>
 				<Button text="Si" onChange={handleDonacionChange} />
 				<Button text="No"onChange={handleDonacionChange}  />
             </label>

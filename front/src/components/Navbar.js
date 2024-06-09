@@ -57,6 +57,13 @@ export function NavBar(){
                         Mis Publicaciones
                     </Link>
                 </li>
+                <li className='buttonNavBar'>
+                    <Link 
+                        to="/Intercambios"
+                        className="botonNavBar"> 
+                        Mis Intercambios
+                    </Link>
+                </li>
                 <li>
                 <CiBellOn />
                 </li>
