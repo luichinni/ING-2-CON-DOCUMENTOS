@@ -26,7 +26,7 @@ const ListarMisPublis = () => {
         const queryParams = new URLSearchParams({
             nombre: parametros.nombre,
             user: username,
-            categoria_id: localStorage.getItem("CategoriaInter"),
+            categoria_id: localStorage.getItem("categoriaInter"),
             estado: parametros.estado,
             id: parametros.id
         }).toString();
