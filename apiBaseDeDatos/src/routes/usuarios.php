@@ -189,8 +189,8 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
 
         if ($pudo){
             $status = 200;
-            $centro = json_decode($centroDB->getFirst(['id'=>$bodyParams['centro']]));
-            enviarNotificacion($bodyParams['username'],"Has sido registrado como un voluntario del centro" . $centro['nombre']);
+            $centro = (array) ((array)json_decode($centroDB->getFirst(['id'=>$bodyParams['centro']])))[0];
+            enviarNotificacion($bodyParams['username'],"Has sido registrado como un voluntario del centro \"" . $centro['Nombre']."\"");
         }
 
         $msgReturn['Mensaje'] = $status == 200 ? 'Voluntario agregado con éxito' : 'Ocurrio un error al agregar el voluntario';
