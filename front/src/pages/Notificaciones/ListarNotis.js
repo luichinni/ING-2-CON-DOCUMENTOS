@@ -3,7 +3,7 @@ import '../../HarryStyles/Notificaciones.css';
 import { useEffect, useState } from 'react';
 import Notificacion from './Notificacion';
 
-
+let llamada = 0;
 const ListarNotis = () => {
   const [notificaciones, setNotificaciones] = useState([]);
   const [error, setError] = useState('');
@@ -19,8 +19,13 @@ const ListarNotis = () => {
         if (response.data.length === 0) {
           setError('No hay notificaciones disponibles.');
         } else {
-
-          setNotificaciones(procesar(response.data)); // Mostrar solo las primeras 5 notificaciones
+          console.log(llamada);
+          if (llamada%2 === 0){
+            localStorage.setItem('notis',JSON.stringify(response.data));
+            console.log('entra');
+          }
+          llamada++;
+          setNotificaciones(procesar(JSON.parse(localStorage.getItem('notis')))); // Mostrar solo las primeras 5 notificaciones
         }
       } catch (error) {
         setError('No hay notificaciones disponibles.');
@@ -57,6 +62,7 @@ const ListarNotis = () => {
             texto={notificacion.texto}
             fecha={notificacion.fecha}
             url={notificacion.url}
+            visto={notificacion.visto}
           />
         ))
       )}

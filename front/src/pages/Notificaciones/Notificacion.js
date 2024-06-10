@@ -3,8 +3,13 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const Notificacion = (props) => {
+    let classVista = "notificacion";
+    if (props.visto == 0){
+        classVista = "notificacion-nueva";
+        console.log("ENTRO");
+    }
     return (
-        <fieldset className="notificacion">
+        <fieldset className={classVista}>
             <div className="notificacion-info">
                 <p className="descripcion">
                     {props.texto}

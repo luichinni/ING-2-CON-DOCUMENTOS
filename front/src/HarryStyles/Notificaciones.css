@@ -32,6 +32,15 @@
     position: relative; /* Necesario para la posición absoluta del botón */
 }
 
+.notificacion-nueva {
+    border: 1px solid #ddd; /* Borde gris claro */
+    padding: 10px; /* Relleno interno */
+    margin-bottom: 10px; /* Espacio entre notificaciones */
+    border-radius: 5px; /* Bordes redondeados */
+    background-color: #fff174; /* Fondo gris claro */
+    position: relative; /* Necesario para la posición absoluta del botón */
+}
+
 .notificacion-info {
     position: relative; /* Para el posicionamiento absoluto del botón */
 }
