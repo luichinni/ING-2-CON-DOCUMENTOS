@@ -58,6 +58,9 @@ export function NavBar() {
                         <li className='buttonNavBar'>
                             <Link to="/Usuarios" className="botonNavBar">Usuarios</Link>
                         </li>
+                        <li className='buttonNavBar'>
+                            <Link to="/Intercambios" className="botonNavBar">Intercambios</Link>
+                        </li>
                     </>
                 )}
                 {token === 'tokenVolunt' && (

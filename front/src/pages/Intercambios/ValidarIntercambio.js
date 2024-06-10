@@ -5,16 +5,21 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import '../../HarryStyles/Intercambios.css';
 
-const ValidarIntercambio = () => {
+const ValidarIntercambio = (props) => {
 	const navigate = useNavigate(); 
 	const [comentario, setComentario] =useState('');
 	const [donacion, setDonacion] =useState('');
+	const [montoDonacion, setMontoDonacion] = useState('');
+	const [objetoDonado, setObjetoDonado] = useState('');
 	const [myError, setMyError] = useState(false);
-	const [intercambio, setIntercambio] = useState('')
+	const [estado, setEstado] = useState('')
+
 
 	const handleComentarioChange = (e) => setComentario(e.target.value);
-	const handleIntercambioChange = (e) => setIntercambio(e.target.value);
+	const handleEstadoChange = (e) => setEstado(e.target.value);
 	const handleDonacionChange = (e) => setDonacion(e.target.value);
+	const handleObjetoDonadoChange = (e) => setObjetoDonado(e.target.value);
+	const handleMontoDonacionChange = (e) => setMontoDonacion(e.target.value);
 
     const handleSubmit = async (e) => {
 		
@@ -22,21 +27,21 @@ const ValidarIntercambio = () => {
 		console.log('Submit button clicked!');
 			console.log('entro'); 
 			const formData = new FormData();
-			formData.append('intercambio', intercambio);
-			formData.append('donacion', donacion);
-			formData.append('comentario', comentario);
-
+			formData.append('id', props.id)
+			formData.append('setvoluntario', localStorage.getItem('username'))
+			formData.append('setestado', estado);
+			formData.append('setdonacion', donacion);
+			/*formData.append('montoDonacion', montoDonacion);
+			formData.append('objetoDonado', objetoDonado);*/
+			formData.append('setdescripcion', comentario);
+			console.log(`formData:${formData}`)
 			try {
+				console.log(formData)
 				setMyError(false);
-				console.log('myErr  =false')
-				const response = await axios.post("http://localhost:8000/public/newUsuario", formData,
-					{
-						headers: {
-							"Content-Type": "application/json",
-						},
-					});
+				const response = await axios.put("http://localhost:8000/public/updateIntercambio", formData);
+
 				console.log('Success:', response);
-				navigate("../"); //No se donde tiene que ir 
+				navigate("../Intercambios"); //No se donde tiene que ir 
 			} catch (error) {
 				console.error('Error:', error.response.data.Mensaje);
 				setMyError(true);
@@ -50,17 +55,17 @@ const ValidarIntercambio = () => {
 		<form onSubmit={handleSubmit}>
 			<h3> Valida el intercambio! </h3>  <br /> 			
             <label>
-				<select id="centro" onChange={handleIntercambioChange}>
+				<select id="estado" onChange={handleEstadoChange}>
                     <option value="">Seleccione el estado del intercambio</option>
-					<option value="Confirmado">Confirmado</option>
-					<option value="Cancelado">Cancelado</option>
-					<option value="Rechazado">Rechazado</option>
+					<option value="concretado">Confirmado</option>
+					<option value="cancelado">Cancelado</option>
+					<option value="rechazado">Rechazado</option>
 				</ select>
 				<br/><br/>
-				<select id="centro" onChange={handleIntercambioChange}>
+				<select id="donacion" onChange={handleDonacionChange}>
                     <option value="">¿Se obtuvo alguna donación?</option>
-					<option value="Si">Si</option>
-					<option value="No">No</option>
+					<option value="1">Si</option>
+					<option value="0">No</option>
 				</ select>
 				<br /> <br/>
             </label>

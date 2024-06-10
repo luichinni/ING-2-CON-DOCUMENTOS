@@ -4,13 +4,15 @@ import React from "react";
 import Publicacion from "./Publicacion";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link } from "react-router-dom";
+import { Link , useNavigate } from "react-router-dom";
+import ValidarIntercambio from "../pages/Intercambios/ValidarIntercambio";
 
 const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horario, estado }) => {
   const [publi1, setPubli1] = useState([]);
   const [publi2, setPubli2] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate(); 
 
   const Token = localStorage.getItem('token');
 
@@ -67,62 +69,56 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
     return publisCopy;
   }
 
-/*
-  const handleRechazadoClick = async (e) =>{
-    const formData = new FormData();
-        formData.append('estado', 'rechazado');
 
-    const respon = await axios.put(`http://localhost:8000/public/`);
-    setCategorias(procesarcat(respon.data));
-  }*/
-    const handleRechazadoClick = async(e) =>{
-      try{
-        console.log("apretado Rechazar")
-        const formData = new FormData();
-        formData.append('id',id)
-        formData.append('setestado', 'rechazado');
-        const respon = await axios.put(`http://localhost:8000/public/updateIntercambio`, formData,
-          {
-            headers: {
-                "Content-Type": "application/json",
-            },
+  const handleValidarClick = async (e) =>{
+    localStorage.setItem('idValidar',id)
+    navigate ("../ValidarIntercambio")
+  }
+  const handleRechazadoClick = async(e) =>{
+    try{
+      console.log("apretado Rechazar")
+      const formData = new FormData();
+      formData.append('id',id)
+      formData.append('setestado', 'rechazado');
+      const respon = await axios.put(`http://localhost:8000/public/updateIntercambio`, formData,
+        {
+          headers: {
+              "Content-Type": "application/json",
+          },
         });
-    
-        if (respon.data.length === 3) {
-          setError('No se realizo la modificacion.');
-
-        } else {
-          window.location.reload();
-        }
-      } catch (error) {
-        setError('No se pudo rechazar el intercambio.');
-        console.error(error);
+      if (respon.data.length === 3) {
+        setError('No se realizo la modificacion.');
+      } else {
+        window.location.reload();
       }
-    };
+    } catch (error) {
+      setError('No se pudo rechazar el intercambio.');
+      console.error(error);
+    }
+  };
 
-    const handleAceptadoClick = async(e) =>{
-      try{
-        console.log("apretado Confirmar")
-        const formData = new FormData();
-        formData.append('id',id)
-        formData.append('setestado', 'aceptado');
-        const respon = await axios.put(`http://localhost:8000/public/updateIntercambio`, formData,
-          {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-    
-        if (respon.data.length === 3) {
-          setError('No se realizo la modificacion.');
-        } else {
-          window.location.reload();
-        }
-      } catch (error) {
-        setError('No se pudo rechazar el intercambio.');
-        console.error(error);
+  const handleAceptadoClick = async(e) =>{
+    try{
+      console.log("apretado Confirmar")
+      const formData = new FormData();
+      formData.append('id',id)
+      formData.append('setestado', 'aceptado');
+      const respon = await axios.put(`http://localhost:8000/public/updateIntercambio`, formData,
+        {
+          headers: {
+              "Content-Type": "application/json",
+          },
+      });
+      if (respon.data.length === 3) {
+        setError('No se realizo la modificacion.');
+      } else {
+        window.location.reload();
       }
-    };
+    } catch (error) {
+      setError('No se pudo rechazar el intercambio.');
+      console.error(error);
+    }
+  };
 
 /*
   const handleModificarClick =() =>{
@@ -175,9 +171,7 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
         
         {((Token === 'tokenAdmin'))?(
             <>
-              <Link to={`/ValidarIntercambio`}>
-                <button className="detalle-button"> Validar Intercambio </button>
-              </Link>
+              <button className="detalle-button" onClick={handleValidarClick}> Validar Intercambio </button>
             </>
           ):( 
           <>
