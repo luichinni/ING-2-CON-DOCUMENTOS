@@ -175,12 +175,8 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
             return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
 
-        $existeCentroVolun = $centroVolunDB->exists(['voluntario'=>$bodyParams['username'],'centro'=>$bodyParams['centro']]);
-
-        if ($existeCentroVolun){
-            $msgReturn['Mensaje'] = 'El voluntario ya está registrado en este centro';
-            $res->getBody()->write(json_encode($msgReturn));
-            return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
+        if (validarCentroVolun(['voluntario'=>$bodyParams['username']])){
+            $centroVolunDB->delete(['voluntario'=>$bodyParams['username']]);
         }
 
         $centroVolunDB->insert(['centro'=>$bodyParams['centro'],'voluntario'=>$bodyParams['username']]);
