@@ -2,6 +2,7 @@ import { ButtonSubmit } from "../../components/ButtonSubmit";
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import "../../HarryStyles/Intercambios.css"
 import "../../HarryStyles/estilos.css";
 
 // idpubli1(publico), idpubli2(oferto), horario, centro
@@ -78,7 +79,7 @@ const InterCentroHorario = () => {
             setMsgError("Debe seleccionar un horario.");
             return;
         }
-        const horarioEnFormato = `${anio}-${mes.padStart(2,'0')}-${dia.padStart(2,'0')} ${horario}}`
+        const horarioEnFormato = `${anio}-${mes.padStart(2,'0')}-${dia.padStart(2,'0')} ${horario}`
 
         const fechaSeleccionada = new Date(`${anio}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}T${horario}:00`);
         const fechaActual = new Date();
@@ -154,7 +155,7 @@ const InterCentroHorario = () => {
                         </option>
                     ))}
                 </select>
-                <br /> <br />
+                <br /><br />
                 {(centroSeleccionado != "") && (
                 <>
                 <select id="Horario" value={horario} onChange={handleHorarioChange}>
@@ -164,26 +165,29 @@ const InterCentroHorario = () => {
                     ))}
                 </select>
                 <br/><br/>
-                <select id="dia" value={dia} onChange={handleDiaChange}>
-                    <option value="">Seleccione un dia</option>
-                        {dias.map(di => (
-                        <option key={di} value={di}>{di}</option>
-                    ))}
-                </select>
-                <br/><br/>
-                <select id="mes" value={mes} onChange={handleMesChange}>
-                    <option value="">Seleccione un mes</option>
-                        {meses.map(me => (
-                        <option key={me.value} value={me.value}>{me.nombre}</option>
-                    ))}
-                </select>
-                <br/><br/>
-                <select id="anio" value={anio} onChange={handleAnioChange}>
-                    <option value="">Seleccione un año</option>
-                        {anios.map(ani => (
-                        <option key={ani} value={ani}>{ani}</option>
-                    ))}
-                </select>
+                <div className="fecha-container">
+                    <label>Seleccione una fecha:</label>
+                    <div className="fecha-selectores">
+                        <select id="dia" value={dia} onChange={handleDiaChange}>
+                            <option value="">Día</option>
+                            {dias.map(di => (
+                            <option key={di} value={di}>{di}</option>
+                            ))}
+                        </select>
+                        <select id="mes" value={mes} onChange={handleMesChange}>
+                            <option value="">Mes</option>
+                            {meses.map(me => (
+                            <option key={me.value} value={me.value}>{me.nombre}</option>
+                            ))}
+                        </select>
+                        <select id="anio" value={anio} onChange={handleAnioChange}>
+                            <option value="">Año</option>
+                            {anios.map(ani => (
+                            <option key={ani} value={ani}>{ani}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
                 <br/><br/>
                 <ButtonSubmit text="Ofrecer Intercambio" /> 
                 </>

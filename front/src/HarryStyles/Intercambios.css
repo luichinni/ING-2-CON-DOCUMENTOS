@@ -138,4 +138,28 @@
   .publi-container {
       width: 80%;
   }
+  .fecha-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.fecha-container label {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.fecha-selectores {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.fecha-selectores select {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
 }

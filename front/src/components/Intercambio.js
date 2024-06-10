@@ -1,4 +1,5 @@
 import "../HarryStyles/Intercambios.css";
+import "../HarryStyles/Publicaciones.css"
 import React from "react";
 import Publicacion from "./Publicacion";
 import { useEffect, useState } from 'react';
