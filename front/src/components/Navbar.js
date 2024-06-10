@@ -45,16 +45,6 @@ export function NavBar() {
                         <li className='buttonNavBar'>
                             <Link to="/Intercambios" className="botonNavBar">Mis Intercambios</Link>
                         </li>
-                        <li className='notiIcon'>
-                            <button onClick={toggleNotificaciones}>
-                                <CiBellOn />
-                            </button>
-                            {notiOpen && (
-                                <div className={`dropdownmenuNoti ${notiOpen ? 'showNoti' : ''}`}>
-                                    <ListarNotis />
-                                </div>
-                            )}
-                        </li>
                     </>
                 )}
                 {token === 'tokenAdmin' && (
@@ -90,6 +80,16 @@ export function NavBar() {
                         <button className="botonNavBar" onClick={toggleMenu}>Menú</button>
                     </li>
                 )}
+                <li className='notiIcon'>
+                    <button onClick={toggleNotificaciones}>
+                        <CiBellOn />
+                    </button>
+                        {notiOpen && (
+                            <div className={`dropdownmenuNoti ${notiOpen ? 'showNoti' : ''}`}>
+                                <ListarNotis />
+                            </div>
+                        )}
+                </li>
                 {menuOpen && (
                     <div className={`dropdownmenu ${menuOpen ? 'show' : ''}`}>
                         <ul>
