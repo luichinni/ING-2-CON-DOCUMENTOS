@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 
 const InterPubli = (props) => {
     const handleDetalleClick = () => {
-        localStorage.setItem("publiPublico", props.id);
-        console.log(localStorage.getItem("publiPublico"));
+        localStorage.setItem("publicacionOfertada", props.id);
+        console.log(localStorage.getItem("publicacionOfertada"));
     };
 
     return (

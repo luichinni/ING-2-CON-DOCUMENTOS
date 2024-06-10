@@ -9,14 +9,13 @@ import "../../HarryStyles/estilos.css";
 const InterCentroHorario = () => {
     const [centros, setCentros] = useState([]);
     const [centroSeleccionado, setCentroSeleccionado] = useState("");
-    const [publicacion2, setPublicacion2] = useState([]);
     const [horario, setHorario] = useState ("");
     const [fecha, setFecha] = useState ("");
     const [myError, setMyError] = useState(false);
     const [msgError, setMsgError] = useState('No deberías estar viendo este mensaje');
 
-    const id_publi1 = localStorage.getItem("publiPublico");
-    const id_publi2 = localStorage.getItem("publiOferto");
+    const id_publi1 = localStorage.getItem("publicacionOferta");
+    const id_publi2 = localStorage.getItem("publicacionOfertada");
 
     const navigate = useNavigate();    
     const handleCentrosChange = (e) => {
@@ -30,11 +29,10 @@ const InterCentroHorario = () => {
         e.preventDefault();
 
         const formData = new FormData();
-        formData.append(`publicacion1`, id_publi1)
-        formData.append(`publicacion2`, id_publi2)
+        formData.append(`publicacionOferta`, id_publi1)
+        formData.append(`publicacionOfertada`, id_publi2)
         formData.append(`horario`, horario)
         formData.append(`centro`, centroSeleccionado)
-        formData.append(`fecha_propuesta`, centroSeleccionado)
 
         try {
             const response = await axios.post(`http://localhost:8000/public/newIntercambio`, formData,
@@ -54,11 +52,16 @@ const InterCentroHorario = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`http://localhost:8000/public/listarPublicaciones?id=${id_publi1}&token=${localStorage.getItem('token')}`);
-                console.log(res.data)
-                setCentros(procesarcen(res.data.centro));
-                console.log("aca")
-                console.log(res)
+                const publicacionGuardada = localStorage.getItem("publicacion");
+                console.log(`Datos sin procesar del localStorage: ${publicacionGuardada}`);
+
+                const publicacionObj = JSON.parse(publicacionGuardada);
+                console.log(`Datos parseados:`, publicacionObj);
+
+                let nuevoArr = [];
+                publicacionObj.centros.forEach((centro)=> nuevoArr.push(centro));
+                setCentros(publicacionObj.centros);
+                console.log(`centros: ${centros}`)
             } catch (error) {
                 console.error(error);
             }
@@ -95,15 +98,19 @@ const InterCentroHorario = () => {
                     ))}
                 </select>
                 <br /> <br />
+                {(centroSeleccionado != "") && (
+                <>
                 <select id="Horario" value={horario} onChange={handleHorarioChange}>
                     <option value="">Seleccione un horario</option>
-                    {["10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", 
-                      "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", 
-                      "18:00", "18:30", "19:00", "19:30", "20:00"].map(hora => (
+                        {["10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", 
+                        "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", 
+                        "18:00", "18:30", "19:00", "19:30", "20:00"].map(hora => (
                         <option key={hora} value={hora}>{hora}</option>
                     ))}
-                </select>           
-                <ButtonSubmit text="Ofrecer Intercambio" />
+                </select>     
+                <ButtonSubmit text="Ofrecer Intercambio" /> 
+                </>
+                )}
             </form>
             {myError &&
                 <p style={{ backgroundColor: "red", color: "white", textAlign: "center" }}>{msgError}</p>
