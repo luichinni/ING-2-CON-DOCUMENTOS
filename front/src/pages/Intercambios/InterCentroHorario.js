@@ -111,7 +111,7 @@ const InterCentroHorario = () => {
         fetchData();
     }, []);
     const datosCentro = centros.find(centro => centro.id == centroSeleccionado)
-    const horariosDisponibles = datosCentro ? horarios.filter(hora => datosCentro.hora_abre <= hora && hora <= datosCentro.hora_cierra):([]);
+    const horariosDisponibles = datosCentro ? horarios.filter(hora => hora >= datosCentro.hora_abre && hora <= datosCentro.hora_cierra):([]);
     
     return (
         <div>

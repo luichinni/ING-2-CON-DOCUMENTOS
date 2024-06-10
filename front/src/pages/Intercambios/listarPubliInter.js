@@ -28,7 +28,8 @@ const ListarMisPublis = () => {
             user: username,
             categoria_id: parametros.categoria_id,
             estado: parametros.estado,
-            id: parametros.id
+            id: parametros.id,
+            habilitado: 0
         }).toString();
         const url = `http://localhost:8000/public/listarPublicaciones?${queryParams}&token=${localStorage.getItem('token')}`;
         const response = await axios.get(url);
