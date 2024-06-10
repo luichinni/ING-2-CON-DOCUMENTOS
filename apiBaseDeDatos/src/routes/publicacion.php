@@ -1,5 +1,8 @@
 <?php
 
+use Collections\CollectionsStream;
+use Collections\Collector;
+use Collections\Examples\CollectionsSampleObject;
 use Slim\Routing\RouteCollectorProxy;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -152,12 +155,12 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
     });
 
     $group->GET('/listarPublicaciones', function ($request, Response $response, $args) use ($pdo) {
-        global $publiDB, $centroDB, $categoriaDB;
+        global $publiDB, $centroDB, $categoriaDB, $publiCentroDB, $centroVolunDB;
         $status = 404;
         $msgReturn = ['Mensaje'=>'No se encontraron coincidencias'];
         // obtener los parametros de la query
         $queryParams = $request->getQueryParams();
-        
+        error_log(json_encode($queryParams));
         if (array_key_exists('like', $queryParams)){
             $queryParams['like'] = $queryParams['like']=="true" ? true : false;
         }else{
@@ -173,7 +176,29 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
 
         $offset = (array_key_exists('pag', $queryParams)) ? $queryParams['pag'] : 0;
 
-        $publis = json_decode($publiDB->getFirst($where, $queryParams['like'], 20,$offset));
+        $publis = json_decode($publiDB->getAll($where, $queryParams['like']));
+
+        if(!array_key_exists('habilitado',$queryParams) || (array_key_exists('habilitado',$queryParams) && $queryParams['habilitado'] == '1')){
+            $collector = Collector::of(Collector::TO_FLAT_ARRAY,fn($obj)=>$obj);
+            $stream = new CollectionsStream($publis);
+            //error_log("antes del stream: " . json_encode($publis));
+            $publis = $stream->reject(function($publi){
+                global $publiCentroDB, $centroVolunDB;
+                $publi = (array) $publi;
+                $valido = true;
+                $centros = (array) json_decode($publiCentroDB->getAll(['publicacion'=>$publi['id']]));
+                //error_log(json_encode($centros));
+                foreach ($centros as $key){
+                    $id = (array) $key;
+                    $id = $id['centro'];
+                    //error_log('Centro '.$id.': '. $centroVolunDB->getFirst(['centro'=>$id]));
+                    $valido = $valido && !empty((array)json_decode($centroVolunDB->getFirst(['centro' => $id])));
+                    //error_log('valid='.((!$valido)?'true':'false'));
+                }
+                return !$valido;
+            })->collect($collector);
+            //error_log("despues del stream: ". json_encode($publis));
+        }
 
         foreach($publis as $key => $value){
             $value = (array) $value;
@@ -193,11 +218,11 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
                 $value['centros'][$i] = ((array)json_decode($centroDB->getFirst($wherCentro)))[0];
             }
             
-            error_log(json_encode($value));
+            //error_log(json_encode($value));
 
             $value['imagenes'] = listarImg($where);
 
-            error_log(json_encode(count($value['imagenes'])));
+            //error_log(json_encode(count($value['imagenes'])));
 
             $publis[$key] = $value;
         }

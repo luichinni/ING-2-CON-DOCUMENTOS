@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3330638b65a325a8387769d50108b43a",
+    "content-hash": "c7dbc5de448c2db42f3d74a2bd5e13c2",
     "packages": [
         {
             "name": "fig/http-message-util",
@@ -61,6 +61,51 @@
                 "source": "https://github.com/php-fig/http-message-util/tree/1.1.5"
             },
             "time": "2020-11-24T22:02:12+00:00"
+        },
+        {
+            "name": "hadasbro/php-streams",
+            "version": "1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hadasbro/php-stream-api.git",
+                "reference": "eaf56d1ee210954e6dcc0b98484cb9d41913dde7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hadasbro/php-stream-api/zipball/eaf56d1ee210954e6dcc0b98484cb9d41913dde7",
+                "reference": "eaf56d1ee210954e6dcc0b98484cb9d41913dde7",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "codeception/codeception": "^2.5"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [],
+                "psr-4": {
+                    "Collections\\": "src/Collections/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Slawomir Hadas",
+                    "email": "slawomir.hadas@yahoo.com"
+                }
+            ],
+            "description": "PHP Streams - Java-like Stream API for PHP",
+            "support": {
+                "issues": "https://github.com/hadasbro/php-stream-api/issues",
+                "source": "https://github.com/hadasbro/php-stream-api/tree/master"
+            },
+            "time": "2020-03-17T18:29:03+00:00"
         },
         {
             "name": "nikic/fast-route",
