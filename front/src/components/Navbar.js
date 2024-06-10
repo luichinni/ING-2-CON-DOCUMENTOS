@@ -76,29 +76,31 @@ export function NavBar() {
                         <Link to="/IniciarSesion" className="botonNavBar">Iniciar Sesión</Link>
                     </li>
                 ) : (
-                    <li className='buttonNavBar'>
-                        <button className="botonNavBar" onClick={toggleMenu}>Menú</button>
-                    </li>
-                )}
-                <li className='notiIcon'>
-                    <button onClick={toggleNotificaciones}>
-                        <CiBellOn />
-                    </button>
+                <>
+                    <li className='notiIcon'>
+                        <button onClick={toggleNotificaciones}>
+                            <CiBellOn />
+                        </button>
                         {notiOpen && (
                             <div className={`dropdownmenuNoti ${notiOpen ? 'showNoti' : ''}`}>
                                 <ListarNotis />
                             </div>
                         )}
-                </li>
-                {menuOpen && (
-                    <div className={`dropdownmenu ${menuOpen ? 'show' : ''}`}>
-                        <ul>
-                            <li><button className='opButton' onClick={() => console.log("Ver mi Perfil")}>Ver mi Perfil</button></li>
-                            <li><button className='opButton' onClick={() => console.log("Configuraciones")}>Configuraciones</button></li>
-                            <li><ButtonCerrarSesion /></li>
-                        </ul>
-                    </div>
-                )}
+                    </li>
+                    <li className='buttonNavBar'>
+                        <button className="botonNavBar" onClick={toggleMenu}>Menú</button>
+                    </li>
+                </>
+                    )}
+                    {menuOpen && (
+                        <div className={`dropdownmenu ${menuOpen ? 'show' : ''}`}>
+                            <ul>
+                                <li><button className='opButton' onClick={() => console.log("Ver mi Perfil")}>Ver mi Perfil</button></li>
+                                <li><button className='opButton' onClick={() => console.log("Configuraciones")}>Configuraciones</button></li>
+                                <li><ButtonCerrarSesion /></li>
+                            </ul>
+                        </div>
+                    )}
             </div>
         </div>
     );
