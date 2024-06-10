@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const DeleteCategoria = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const hasMounted = useRef(false);
 
   useEffect(() => {
     const deleteCategoria = async () => {
@@ -20,7 +21,10 @@ const DeleteCategoria = () => {
         alert(error);
       }
     };
-    deleteCategoria();
+    if(!hasMounted.current){
+      deleteCategoria();
+      hasMounted.current = true;
+    }
   }, []); // Pasamos un array vacío como segundo argumento
 
   return null; // No renderizamos nada en esta página
