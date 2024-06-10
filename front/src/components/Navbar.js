@@ -93,8 +93,8 @@ export function NavBar() {
                 {menuOpen && (
                     <div className={`dropdownmenu ${menuOpen ? 'show' : ''}`}>
                         <ul>
-                            <li><button onClick={() => console.log("Ver mi Perfil")}>Ver mi Perfil</button></li>
-                            <li><button onClick={() => console.log("Configuraciones")}>Configuraciones</button></li>
+                            <li><button className='opButton' onClick={() => console.log("Ver mi Perfil")}>Ver mi Perfil</button></li>
+                            <li><button className='opButton' onClick={() => console.log("Configuraciones")}>Configuraciones</button></li>
                             <li><ButtonCerrarSesion /></li>
                         </ul>
                     </div>

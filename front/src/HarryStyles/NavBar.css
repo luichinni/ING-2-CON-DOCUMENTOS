@@ -44,6 +44,10 @@
     text-decoration: none; /* Elimina el subrayado predeterminado */
   }
   
+  .opButton {
+
+  }
+
   .botonNavBar:hover::after {
     content: ""; /* Agrega contenido pseudo-elemento */
     position: absolute; /* Posición absoluta */
@@ -63,7 +67,7 @@
   .dropdownmenu {
     position: absolute;
     top: calc(100% + 5px); /* Colocamos el menú justo debajo del botón "Menú" */
-    right: 0; /* Alineamos el menú a la derecha */
+    right: 15px; /* Alineamos el menú a la derecha */
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -71,7 +75,7 @@
     z-index: 1000;
     display: none; /* Ocultamos inicialmente el menú */
     max-height: 50vh; /* Limitamos la altura máxima del menú */
-    overflow-y: auto; /* Agregamos desplazamiento vertical si el contenido es demasiado largo */
+    /*overflow-y: auto; /* Agregamos desplazamiento vertical si el contenido es demasiado largo */
   }
   
   .dropdownmenu.show {
@@ -82,17 +86,18 @@
     list-style: none;
     padding: 0;
     margin: 0;
+    padding-right: 20px;
   }
   
   .dropdownmenu ul li {
     padding: 10px;
-    text-align: right; /* Alineamos el texto a la derecha */
-    display: block; /* Hacemos que cada elemento sea un bloque para que aparezcan uno debajo del otro */
+    text-align: center; /* Alineamos el texto a la derecha */
+    display: grid; /* Hacemos que cada elemento sea un bloque para que aparezcan uno debajo del otro */
     width: 100%; /* Aseguramos que ocupen todo el ancho del menú */
   }
   
   .dropdownmenu ul li:hover {
-    background-color: #f5f5f5;
+    /*background-color: #f5f5f5;*/
   }
   .show {
     display: block;

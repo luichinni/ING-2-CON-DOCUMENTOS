@@ -11,7 +11,7 @@ export function ButtonCerrarSesion() {
   };
 
   return (
-    <button onClick={handleClick}>
+    <button className='opButton' onClick={handleClick}>
       Cerrar Sesion
     </button>
   );
