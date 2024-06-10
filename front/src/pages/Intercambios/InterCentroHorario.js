@@ -61,13 +61,33 @@ const InterCentroHorario = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if(!dia || !mes || !anio || !horario){
+        if(!dia){
             setMyError(true);
-            setMsgError("Debe seleccionar un centro, una fecha y una hora.");
+            setMsgError("Debe seleccionar un Dia.");
+            return;
+        } else if(!mes){
+            setMyError(true);
+            setMsgError("Debe seleccionar un mes.");
+            return;
+        } else if (!anio) {
+            setMyError(true);
+            setMsgError("Debe seleccionar un anio.");
+            return;
+        } else if(!horario){
+            setMyError(true);
+            setMsgError("Debe seleccionar un horario.");
             return;
         }
-
         const horarioEnFormato = `${anio}-${mes.padStart(2,'0')}-${dia.padStart(2,'0')} ${horario}}`
+
+        const fechaSeleccionada = new Date(`${anio}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}T${horario}:00`);
+        const fechaActual = new Date();
+
+        if (fechaSeleccionada <= fechaActual) {
+            setMyError(true);
+            setMsgError("La fecha y hora deben ser posteriores a la fecha y hora actuales.");
+            return;
+        }
 
         const formData = new FormData();
         formData.append(`publicacionOferta`, id_publi1)
@@ -111,8 +131,17 @@ const InterCentroHorario = () => {
         fetchData();
     }, []);
     const datosCentro = centros.find(centro => centro.id == centroSeleccionado)
-    const horariosDisponibles = datosCentro ? horarios.filter(hora => hora >= datosCentro.hora_abre && hora <= datosCentro.hora_cierra):([]);
     
+    const extractTime = (time) => time.slice(0, 5);
+
+    const horariosDisponibles = datosCentro 
+    ? horarios.filter(hora => {
+        const horaCentroAbre = extractTime(datosCentro.hora_abre);
+        const horaCentroCierra = extractTime(datosCentro.hora_cierra);
+        return hora >= horaCentroAbre && hora <= horaCentroCierra;
+        })
+    : [];
+
     return (
         <div>
             <br /><br /><br /><br /><br /><br />
