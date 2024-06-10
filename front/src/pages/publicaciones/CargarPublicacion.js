@@ -132,7 +132,7 @@ const AgregarPublicacion = () => {
             <form onSubmit={handleSubmit}>
                 <input type="text" value={nombre} onChange={handleNombreChange} placeholder="Nombre del producto" required />
                 <br /><br />
-                <textarea value={descripcion} onChange={handleDescripcionChange} maxLength="255" placeholder="Descripción del producto" required></textarea>
+                <textarea value={descripcion} onChange={handleDescripcionChange} maxLength="255" placeholder="Descripción del producto (Máximo 255 caracteres)" required></textarea>
                 <br /><br />
                 <label>
                     Seleccione las fotos, por lo menos una:

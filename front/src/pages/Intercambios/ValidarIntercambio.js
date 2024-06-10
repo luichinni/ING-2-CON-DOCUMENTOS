@@ -51,19 +51,22 @@ const ValidarIntercambio = () => {
 			<h3> Valida el intercambio! </h3>  <br /> <br />			
             <label>
 				<br/>
-                El intercambio fue: 
+				<select id="centro" onChange={handleIntercambioChange}>
+                    <option value="">Seleccione el estado del intercambio</option>
+					<option value="Confirmado">Confirmado</option>
+					<option value="Cancelado">Cancelado</option>
+					<option value="Rechazado">Rechazado</option>
+				</ select>
 				<br/><br/>
-				<Button text="Confirmado" value="{intercambio}" onChange={handleIntercambioChange} /><br/><br/>
-				<Button text="Cancelado" value="{intercambio}" onChange={handleIntercambioChange}/><br/><br/>
-				<Button text="Rechazado" value="{intercambio}" onChange={handleIntercambioChange}/><br/><br/>
-				<br/><br/><br/>
-                ¿Se obtuvo alguna donación?
-				<br/><br/>
-				<Button text="Si" onChange={handleDonacionChange} />
-				<Button text="No"onChange={handleDonacionChange}  />
+				<select id="centro" onChange={handleIntercambioChange}>
+                    <option value="">¿Se obtuvo alguna donación?</option>
+					<option value="Si">Si</option>
+					<option value="No">No</option>
+				</ select>
+				<br /> <br/>
             </label>
 
-			<textarea value={comentario} onChange={handleComentarioChange} maxLength="255" placeholder="Comentario del intercambio" required></textarea>
+			<textarea NameClass="textarea" value={comentario} onChange={handleComentarioChange} maxLength="255" placeholder="Comentario del intercambio (Máximo 255 caracteres)" required></textarea>
             <br /><br />
 
 			<ButtonSubmit text="Subir la validación" />
