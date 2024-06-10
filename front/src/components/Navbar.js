@@ -56,9 +56,6 @@ export function NavBar() {
                             <Link to="/Centros" className="botonNavBar">Centros</Link>
                         </li>
                         <li className='buttonNavBar'>
-                            <Link to="/ValidarIntercambio" className="botonNavBar">Validar intercambio</Link>
-                        </li>
-                        <li className='buttonNavBar'>
                             <Link to="/Usuarios" className="botonNavBar">Usuarios</Link>
                         </li>
                     </>
