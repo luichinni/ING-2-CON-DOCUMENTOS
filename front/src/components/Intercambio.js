@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from "react-router-dom";
 
-const Intercambio = ({ publicacionOferta, publicacionOfertada, centro, horario, estado }) => {
+const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horario, estado }) => {
   const [publi1, setPubli1] = useState([]);
   const [publi2, setPubli2] = useState([]);
   const [error, setError] = useState('');
@@ -74,15 +74,57 @@ const Intercambio = ({ publicacionOferta, publicacionOfertada, centro, horario, 
 
     const respon = await axios.put(`http://localhost:8000/public/`);
     setCategorias(procesarcat(respon.data));
-  }
-*/
-/*const handleRechazadoClick =() =>{
-  //direccionar a ModificarIntercambio
-}
-const handleConfirmadoClick =() =>{
-  //direccionar a ModificarIntercambio
-}
+  }*/
+    const handleRechazadoClick = async(e) =>{
+      try{
+        console.log("apretado Rechazar")
+        const formData = new FormData();
+        formData.append('id',id)
+        formData.append('setestado', 'rechazado');
+        const respon = await axios.put(`http://localhost:8000/public/updateIntercambio`, formData,
+          {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+    
+        if (respon.data.length === 3) {
+          setError('No se realizo la modificacion.');
 
+        } else {
+          window.location.reload();
+        }
+      } catch (error) {
+        setError('No se pudo rechazar el intercambio.');
+        console.error(error);
+      }
+    };
+
+    const handleAceptadoClick = async(e) =>{
+      try{
+        console.log("apretado Confirmar")
+        const formData = new FormData();
+        formData.append('id',id)
+        formData.append('setestado', 'aceptado');
+        const respon = await axios.put(`http://localhost:8000/public/updateIntercambio`, formData,
+          {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+    
+        if (respon.data.length === 3) {
+          setError('No se realizo la modificacion.');
+        } else {
+          window.location.reload();
+        }
+      } catch (error) {
+        setError('No se pudo rechazar el intercambio.');
+        console.error(error);
+      }
+    };
+
+/*
   const handleModificarClick =() =>{
     //direccionar a ModificarIntercambio
   }*/
@@ -90,9 +132,11 @@ const handleConfirmadoClick =() =>{
 
   return (
     <li className="intercambio-item">
+      <br/><br/><br/><br/>
       <div className="intercambio-content">
         <div className="publicaciones-container"> 
           <div className="publicacion">
+            Publicacion
             {publi1.map(publicacion => (
               <Publicacion
                 key={publicacion.id} //para que no llore react
@@ -108,6 +152,7 @@ const handleConfirmadoClick =() =>{
             ))}
           </div>
           <div className="publicacion">
+            oferta Recibida
             {publi2.map(publicacion => (
               <Publicacion
                 key={publicacion.id}
@@ -137,16 +182,12 @@ const handleConfirmadoClick =() =>{
           ):( 
           <>
             <Link to={`/ModificarIntercambio`} >
-              <button className="detalle-button"> Modificiar </button>
+              <button className="detalle-button"> Modificar </button>
             </Link>
-            <Link to={`/ListarMisIntercambios`}>
-              <button className="detalle-button"> Rechazar </button>
-            </Link>
+            <button className="detalle-button" onClick={handleRechazadoClick}> Rechazar </button>
             { // ACA VA ALGO QUE ME DIGA SI SOY EL DUEÑO DE LA PUBLICACIÓN QUE PUEDE ACEPTAR
             }
-            <Link to={`/ValidarIntercambio`}>
-              <button className="detalle-button"> Confirmar </button>
-            </Link>
+            <button className="detalle-button" onClick={handleAceptadoClick}> Confirmar </button>
           </>
           )
         }
