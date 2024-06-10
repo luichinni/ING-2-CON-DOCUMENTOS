@@ -44,8 +44,8 @@ $app->group('/public', function (RouteCollectorProxy $group) {
         $intercambio1 = (array) json_decode($intercambioDB->getFirst(['publicacionOferta' => $bodyParams['publicacionOferta'], 'publicacionOfertada' => $bodyParams['publicacionOfertada']]));
         $intercambio2 = (array) json_decode($intercambioDB->getFirst(['publicacionOferta' => $bodyParams['publicacionOfertada'], 'publicacionOfertada' => $bodyParams['publicacionOferta']]));
 
-        error_log(json_encode($intercambio1));
-        error_log(json_encode($intercambio2));
+        //error_log(json_encode($intercambio1));
+        //error_log(json_encode($intercambio2));
 
         if (!empty($intercambio1)) $intercambio1 = (array) $intercambio1[0];
         if (!empty($intercambio2)) $intercambio2 = (array) $intercambio2[0]; 

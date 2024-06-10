@@ -13,7 +13,7 @@ const User = (props) => {
     const [centrosSeleccionados, setCentrosSeleccionados] = useState([]);
     const [msgError, setMsgError] = useState('No deberías estar viendo este mensaje');
     const roles = ["user", "volunt", "admin"]
-
+    const [centroActual,setCentroActual] = useState("Seleccione un centro");
 
     const handleCentrosChange = (e) => {
         const selectedValues = Array.from(e.target.selectedOptions, option => option.value);
@@ -31,8 +31,9 @@ const User = (props) => {
 
         if (rol == "volunt"){
             console.log ("aca")
-            formData.append('Centro',centrosSeleccionados)
-            formData.append('user',props.username)
+            formData.append('centro',centrosSeleccionados[0])
+            console.log(centrosSeleccionados[0]);
+            formData.append('username',props.username)
             
             try {
                 const response = await axios.post("http://localhost:8000/public/newVoluntario", formData,
@@ -67,7 +68,7 @@ const User = (props) => {
             }
         } else {
                 formData.append('username',props.username)
-                formData.append('rol', "user")
+                //formData.append('rol', "user")
                 
                 try {
                     const response = await axios.put("http://localhost:8000/public/updateUsuario", formData,
@@ -108,6 +109,12 @@ const User = (props) => {
             try {
                 const res = await axios.get(`http://localhost:8000/public/listarCentros?id=&nombre=&direccion=&hora_abre=&hora_cierra=`);
                 setCentros(procesarcen(res.data));
+                if (props.rol == "volunt"){
+                    let centroActualRec = await axios.get(`http://localhost:8000/public/getCentroVolunt?voluntario=${props.username}`)
+                    console.log(centroActualRec.data);
+                    setCentroActual("Actual: "+centroActualRec.data.Nombre);
+                    console.log(centroActual);
+                }
             } catch (error) {
                 console.error(error);
             }
@@ -157,7 +164,7 @@ const User = (props) => {
                     {rol === "volunt"&&(
                         <select id="centro" value={centrosSeleccionados} onChange={handleCentrosChange}>
                             <br/>
-                            <option value="">Seleccione un centro</option>
+                            <option value="">{centroActual}</option>
                             {centros.map((centro) => (
                                 <option key={centro.id} value={centro.id}>
                                     {centro.Nombre}

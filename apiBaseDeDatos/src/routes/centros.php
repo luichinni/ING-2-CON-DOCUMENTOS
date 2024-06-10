@@ -74,6 +74,12 @@ function validaDatos($data, $response) {
     return true;
 }
 
+function tieneVoluntarios(int|string $id){
+    global $centroVolunDB;
+    error_log("dentro con $id: ". $centroVolunDB->exists(['centro' => $id]));
+    return $centroVolunDB->exists(['centro'=>$id]);
+}
+
 $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
     $group->POST('/newCentro', function ($request, $response, $args){
         $msgReturn = ['Mensaje' => 'Error de formato'];
@@ -175,6 +181,34 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         $centros['Mensaje'] = 'Centros listados con éxito';
 
         $response->getBody()->write(json_encode($centros));
+        return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
+    });
+
+    $group->GET('/getCentroVolunt', function (Request $request, Response $response, $args) use ($pdo) {
+        global $centroDB, $centroVolunDB;
+        $msgReturn = ['Mensaje' => 'No existe centro'];
+
+        $queryParams = $request->getQueryParams();
+
+        if (!validarCentroVolun(['voluntario'=>$queryParams['voluntario']])) {
+            $response->getBody()->write(json_encode($msgReturn));
+            return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
+        }
+
+        $centroVol = (array) ((array) obtenerCentroVolun(['voluntario'=>$queryParams['voluntario']]))[0];
+        error_log(json_encode($centroVol));
+        $centro = (array) json_decode($centroDB->getFirst(['id'=>$centroVol['centro']]));
+        error_log(json_encode($centro));
+        if (empty($centro)) {
+            $response->getBody()->write(json_encode($msgReturn));
+            return $response->withStatus(404)->withHeader('Content-Type', 'application/json');
+        }else{
+            $centro = (array) $centro[0];
+        }
+
+        $centro['Mensaje'] = 'Centros listados con éxito';
+
+        $response->getBody()->write(json_encode($centro));
         return $response->withStatus(200)->withHeader('Content-Type', 'application/json');
     });
 });

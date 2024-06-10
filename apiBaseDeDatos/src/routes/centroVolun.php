@@ -12,7 +12,7 @@ require_once __DIR__ . '/../utilities/bdController.php';
 // listar SOLUCIONADO EN EL OBTENER CON LIMIT
 // CentroVolun = ((centro(FK),voluntario(FK))(PK))
 $camposCentroVolun = [
-    "user" => "varchar",
+    "voluntario" => "varchar",
     "centro" => "int"
 ];
 

@@ -160,7 +160,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
         $msgReturn = ['Mensaje' => 'Faltan parametros'];
 
         $bodyParams = (array) $req->getParsedBody();
-
+        error_log(json_encode($bodyParams));
         if (!array_key_exists('centro',$bodyParams) || !array_key_exists('username',$bodyParams)) {
             $res->getBody()->write(json_encode($msgReturn));
             return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
@@ -175,13 +175,15 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
             return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
 
-        $existeCentroVolun = $centroVolunDB->exists(['user'=>$bodyParams['username'],'centro'=>$bodyParams['centro']]);
+        $existeCentroVolun = $centroVolunDB->exists(['voluntario'=>$bodyParams['username'],'centro'=>$bodyParams['centro']]);
 
         if ($existeCentroVolun){
             $msgReturn['Mensaje'] = 'El voluntario ya está registrado en este centro';
             $res->getBody()->write(json_encode($msgReturn));
             return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
+
+        $centroVolunDB->insert(['centro'=>$bodyParams['centro'],'voluntario'=>$bodyParams['username']]);
 
         cancelarIntercambios($bodyParams['username']);
 
@@ -269,6 +271,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
         $bodyParams = (array) $req->getParsedBody();
         $where = $userDB->getWhereParams($bodyParams);
 
+        error_log(json_encode($bodyParams));
         if (empty($where) || !$userDB->exists($where)) {
             $res->getBody()->write(json_encode($msgReturn));
             return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
