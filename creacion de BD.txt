@@ -92,8 +92,8 @@ CREATE TABLE Intercambio (
     fecha_propuesta DATETIME DEFAULT CURRENT_TIMESTAMP,
     fecha_modificado DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (voluntario) REFERENCES Usuarios(username),
-    FOREIGN KEY (publicacion1) REFERENCES Publicacion(id),
-    FOREIGN KEY (publicacion2) REFERENCES Publicacion(id),
+    FOREIGN KEY (publicacionOferta) REFERENCES Publicacion(id),
+    FOREIGN KEY (publicacionOfertada) REFERENCES Publicacion(id),
     FOREIGN KEY (centro) REFERENCES Centros(id)
 )
 

@@ -72,7 +72,7 @@ class bdController{
 
     public function insert(array $datosIn){
         $pudo = false;
-
+        //error_log(json_encode($datosIn));
         $contador = 0;
         foreach ($datosIn as $key => $value) {
             if (array_key_exists($key, $this->camposTabla)) {
@@ -80,12 +80,12 @@ class bdController{
             }
         }
         
-        //error_log("Campos necesarios:" . json_encode($contador >= $this->obligatorios));
+        //error_log("Campos necesarios: $contador/$this->obligatorios ->" . json_encode($contador >= $this->obligatorios));
         if ($contador >= $this->obligatorios){
             $queryInsert = $this->generarInsert($datosIn);
             $pudo = $this->pdo->prepare($queryInsert)->execute();
+            //error_log($queryInsert);
         }
-
         return $pudo;
     }
 
@@ -118,6 +118,7 @@ class bdController{
      */
     public function getAll(array $whereParams, bool $like = false){
         $querySelect = $this->generarSelect($whereParams, null, $like);
+        error_log($querySelect);
         $result = $this->pdo->query($querySelect)->fetchAll();
         if ($result == false) {
             $result = [];

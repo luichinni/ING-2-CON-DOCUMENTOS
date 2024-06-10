@@ -34,20 +34,27 @@ $app->group('/public', function (RouteCollectorProxy $group) {
         $bodyParams = (array) $request->getParsedBody();
 
         //error_log(json_encode($bodyParams));
-
+        error_log(json_encode($bodyParams));
         if (!$publiDB->exists(['id'=>$bodyParams['publicacionOferta']]) || !$publiDB->exists(['id' => $bodyParams['publicacionOferta']])){
             $msgReturn['Mensaje'] = 'Ocurrió un error al comprobar las publicaciones';
             $response->getBody()->write(json_encode($msgReturn));
             return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
-
+        
         $intercambio1 = (array) json_decode($intercambioDB->getFirst(['publicacionOferta' => $bodyParams['publicacionOferta'], 'publicacionOfertada' => $bodyParams['publicacionOfertada']]));
         $intercambio2 = (array) json_decode($intercambioDB->getFirst(['publicacionOferta' => $bodyParams['publicacionOfertada'], 'publicacionOfertada' => $bodyParams['publicacionOferta']]));
 
-        $intercambio1 = $intercambio1[0];
-        $intercambio2 = $intercambio2[0];
+        error_log(json_encode($intercambio1));
+        error_log(json_encode($intercambio2));
 
-        if ($intercambio1['estado'] != 'rechazado' || $intercambio1['estado'] != 'cancelado' || $intercambio2['estado'] == 'rechazado' || $intercambio2['estado'] == 'cancelado'){
+        if (!empty($intercambio1)) $intercambio1 = (array) $intercambio1[0];
+        if (!empty($intercambio2)) $intercambio2 = (array) $intercambio2[0]; 
+
+        if (!empty($intercambio1) && ($intercambio1['estado'] != 'rechazado' || $intercambio1['estado'] != 'cancelado')){
+            $msgReturn['Mensaje'] = 'Ya hay un intercambio activo con la misma publicacion';
+            $response->getBody()->write(json_encode($msgReturn));
+            return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
+        }else if(!empty($intercambio2) && ($intercambio2['estado'] != 'rechazado' || $intercambio2['estado'] != 'cancelado')){
             $msgReturn['Mensaje'] = 'Ya hay un intercambio activo con la misma publicacion';
             $response->getBody()->write(json_encode($msgReturn));
             return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
@@ -66,7 +73,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
         }
 
         $bodyParams['estado'] = 'pendiente';
-        $bodyParams['ofertadaAceptada'] = true;
+        $bodyParams['ofertadaAcepta'] = true;
 
         $pudo = $intercambioDB->insert($bodyParams);
         
@@ -79,21 +86,10 @@ $app->group('/public', function (RouteCollectorProxy $group) {
             $p2 = $bodyParams['publicacionOfertada'];
             $p2 = (array) json_decode($publiDB->getFirst(['id' => $p2]))[0];
             //obtener ambos users
-            if ($bodyParams['userMod'] == $p1['user']) {
-                $otroUser = $p2['user'];
-                $userActual = $p1['user'];
-                $tuProducto = $p2['nombre'];
-                $elOtroProducto = $p1['nombre'];
-            } else {
-                $otroUser = $p1['user'];
-                $userActual = $p2['user'];
-                $tuProducto = $p1['nombre'];
-                $elOtroProducto = $p2['nombre'];
-            }
             
             $redirect = (array) json_decode($intercambioDB->getFirst(['publicacionOferta'=>$p1['id'], 'publicacionOfertada'=>$p2['id'], 'estado'=>'pendiente']));
-            $redirect = $redirect[0];
-            enviarNotificacion($otroUser, "$userActual te ha ofrecido \"$elOtroProducto\" por \"$tuProducto\"", './intercambio/'. $redirect['id']);
+            $redirect = (array) $redirect[0];
+            enviarNotificacion($p2['user'], $p1['user']. " te ha ofrecido \"".$p1['nombre']."\" por \"".$p2['nombre']."\"", './intercambio/'. $redirect['id']);
         }
 
         $msgReturn['Mensaje'] = ($pudo) ? 'Intercambio registrado con exito' : 'Ocurrió un error al registrar el intercambio';
