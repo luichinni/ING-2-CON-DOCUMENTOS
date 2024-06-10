@@ -20,6 +20,11 @@ function enviarNotificacion(string $user,string $contenido,string $url = ""){
     return $notificacionDB->insert(['user'=>$user,'texto'=>$contenido,'url'=>$url]);
 }
 
+function verNotificacion(int $id){
+    global $notificacionDB;
+    $notificacionDB->update(['id'=>$id,'setvisto'=>true]);
+}
+
 $app->group('/public', function (RouteCollectorProxy $group) {
     $group->GET('/listarNotificaciones', function (Request $request, Response $response, $args) {
         global $notificacionDB;
@@ -31,6 +36,14 @@ $app->group('/public', function (RouteCollectorProxy $group) {
         $listado = (array) json_decode($notificacionDB->getAll($queryParams));
 
         $listado['Mensaje'] = (!empty($listado)) ? 'Notificaciones listadas con exito' : $msgReturn['Mensaje'];
+
+        foreach ($listado as $key => $noti){
+            $noti = (array) $noti;
+            if (array_key_exists('id',$noti)){
+                error_log("index 0 => " . $noti[0]);
+                verNotificacion($noti['id']);
+            }
+        }
 
         $status = (!empty($listado)) ? 200 : 404;
 
