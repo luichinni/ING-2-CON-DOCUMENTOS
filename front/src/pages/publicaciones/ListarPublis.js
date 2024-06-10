@@ -60,7 +60,7 @@ const ListarPublis = () => {
   }
 
   return (
-    <div className='content'>
+    <div className='content'> 
       <div className='sidebar'>
         <Filtro onFiltroSubmit={handleParametrosChange} />
       </div>

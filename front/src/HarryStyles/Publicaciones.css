@@ -25,25 +25,31 @@
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); /* Columnas dinámicas */
   gap: 50px; /* Espacio entre las publicaciones */
   padding: 20px;
-  /*max-height: 350px; /* Altura máxima */
+  height: 5000px; /* Altura máxima */
   overflow-y: auto; /* Desplazamiento vertical si es necesario */
   z-index: 1;
 }
 
   
-  
+
   .publicacion {
-    /*width: 400px; /* Ancho fijo para cada publicación */
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-    display: flex; /* Añadido */
-    align-items: center; /* Añadido */
-    z-index: 1;
+      width: 600px; /* Ancho fijo para cada publicación */
+      max-width: 100%; /* Para que sea responsive */
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+      display: flex;
+      align-items: center;
+      margin: 20px auto; /* Añadir un margen */
+      padding: 20px; /* Añadir padding interno */
+      box-sizing: border-box; /* Para incluir el padding y el borde en el tamaño */
+      z-index: 1;
+ 
+    
   }
-  
+ 
   .publicacion:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transform: scale(1.05);
@@ -60,7 +66,7 @@
     z-index: 1;
   }
   
-  .publicacion-img img {
+  .publicacion-img, .img{
     width: 300px; /* La imagen ocupará todo el ancho del contenedor */
     height: 300px; /* La imagen ocupará toda la altura del contenedor */
     object-fit: contain; /* La imagen se ajustará para cubrir el contenedor manteniendo su relación de aspecto */

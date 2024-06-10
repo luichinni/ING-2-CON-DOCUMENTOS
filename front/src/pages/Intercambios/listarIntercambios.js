@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Publicacion from '../../components/Publicacion';
 import Filtro from '../../components/Filtro';
 import '../../HarryStyles/Publicaciones.css';
 import { useEffect, useState } from 'react';

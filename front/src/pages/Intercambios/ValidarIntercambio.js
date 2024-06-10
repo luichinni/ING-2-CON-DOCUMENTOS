@@ -46,11 +46,10 @@ const ValidarIntercambio = () => {
     return (
 	<>
 	<div id="validarIntercambio">
-		<br/>
+		<br/> <br /> <br/> <br/> < br/>
 		<form onSubmit={handleSubmit}>
-			<h3> Valida el intercambio! </h3>  <br /> <br />			
+			<h3> Valida el intercambio! </h3>  <br /> 			
             <label>
-				<br/>
 				<select id="centro" onChange={handleIntercambioChange}>
                     <option value="">Seleccione el estado del intercambio</option>
 					<option value="Confirmado">Confirmado</option>
