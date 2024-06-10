@@ -25,7 +25,7 @@ $intercambioDB = new bdController('intercambio',$pdo,$camposIntercambio);
 
 $app->group('/public', function (RouteCollectorProxy $group) {
 
-    $group->POST('/newIntercambio', function (Request $request, Response $response, $args) {
+    $group->POST('/newIntercambio', function (Request $request, Response $response, $args) { //necesita en el body publicacionOferta, publicacionOfertada, centro, horario
         global $publiDB, $intercambioDB;
         $pudo = false;
         $status = 500;
@@ -103,7 +103,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
     });
 
     $group->GET('/listarIntercambios', function (Request $request,Response $response, $args) {
-        global $intercambioDB;
+        global $intercambioDB, $centroDB;
         $status = 404;
         $msgReturn = ['Mensaje' => 'No hay intercambios disponibles'];
 
@@ -111,10 +111,19 @@ $app->group('/public', function (RouteCollectorProxy $group) {
 
         $listado = (array) json_decode($intercambioDB->getAll($queryParams));
 
+        foreach ($listado as $id => $intercambio){
+            $intercambio = (array) $intercambio;
+            $centro = (array) json_decode($centroDB->getFirst(['id'=>$intercambio['centro']]));
+            $centro = (array) $centro[0];
+            error_log(json_encode($centro));
+            $intercambio['centro'] = $centro['Nombre'];
+            $listado[$id] = $intercambio;
+        }
+
         $listado['Mensaje'] = (!empty($listado)) ? 'Intercambios listados con exito' : $msgReturn['Mensaje'];
 
         $status = (!empty($listado)) ? 200 : 404;
-
+        error_log(json_encode($listado));
         $response->getBody()->write(json_encode($listado));
         return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
     });

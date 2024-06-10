@@ -7,7 +7,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 $camposNotificacion = [
     'id'=>'?int',
     'user'=>'varchar',
-    'texto'=>'texto',
+    'texto'=>'text',
     'fecha'=>'?datetime',
     'visto'=>'?bool',
     'url' => 'texto'
