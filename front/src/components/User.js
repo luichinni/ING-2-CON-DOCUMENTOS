@@ -31,7 +31,7 @@ const User = (props) => {
 
         if (rol == "volunt"){
             console.log ("aca")
-            formData.append('setCentro',centrosSeleccionados)
+            formData.append('Centro',centrosSeleccionados)
             formData.append('user',props.username)
             
             try {

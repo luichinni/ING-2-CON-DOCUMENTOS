@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from "react-router-dom";
 
-const Intercambio = ({ publicacion1, publicacion2, centro, horario, estado }) => {
+const Intercambio = ({ publicacionOferta, publicacionOfertada, centro, horario, estado }) => {
   const [publi1, setPubli1] = useState([]);
   const [publi2, setPubli2] = useState([]);
   const [error, setError] = useState('');
@@ -19,7 +19,9 @@ const Intercambio = ({ publicacion1, publicacion2, centro, horario, estado }) =>
       setError('');
 
       try {
-        const url1 = `http://localhost:8000/public/listarPublicaciones?id=${publicacion1}&token=${localStorage.getItem('token')}`;
+        console.log(publicacionOferta)
+        const url1 = `http://localhost:8000/public/listarPublicaciones?id=${publicacionOferta}&token=${localStorage.getItem('token')}`;
+        console.log(url1);
         const response1 = await axios.get(url1);
 
         if (response1.data.length === 3) {
@@ -34,7 +36,7 @@ const Intercambio = ({ publicacion1, publicacion2, centro, horario, estado }) =>
       }
 
       try {
-        const url2 = `http://localhost:8000/public/listarPublicaciones?id=${publicacion2}&token=${localStorage.getItem('token')}`;
+        const url2 = `http://localhost:8000/public/listarPublicaciones?id=${publicacionOfertada}&token=${localStorage.getItem('token')}`;
         const response2 = await axios.get(url2);
 
         if (response2.data.length === 3) {
@@ -52,7 +54,7 @@ const Intercambio = ({ publicacion1, publicacion2, centro, horario, estado }) =>
     };
 
     fetchData();
-  }, [publicacion1, publicacion2]);
+  }, [publicacionOferta, publicacionOfertada]);
 
   function procesar(publicaciones) {
     let publisCopy = [];
@@ -73,7 +75,7 @@ const Intercambio = ({ publicacion1, publicacion2, centro, horario, estado }) =>
     setCategorias(procesarcat(respon.data));
   }
 */
-const handleRechazadoClick =() =>{
+/*const handleRechazadoClick =() =>{
   //direccionar a ModificarIntercambio
 }
 const handleConfirmadoClick =() =>{
@@ -82,7 +84,7 @@ const handleConfirmadoClick =() =>{
 
   const handleModificarClick =() =>{
     //direccionar a ModificarIntercambio
-  }
+  }*/
 
 
   return (
@@ -92,7 +94,7 @@ const handleConfirmadoClick =() =>{
           <div className="publicacion">
             {publi1.map(publicacion => (
               <Publicacion
-                key={publicacion.id}
+                key={publicacion.id} //para que no llore react
                 id={publicacion.id}
                 nombre={publicacion.nombre}
                 descripcion={publicacion.descripcion}
@@ -100,6 +102,7 @@ const handleConfirmadoClick =() =>{
                 categoria_id={publicacion.categoria_id}
                 estado={publicacion.estado}
                 imagen={publicacion.imagenes[0]?.archivo}
+                centros={publicacion.centros}
               />
             ))}
           </div>
@@ -114,7 +117,7 @@ const handleConfirmadoClick =() =>{
                 categoria_id={publicacion.categoria_id}
                 estado={publicacion.estado}
                 imagen={publicacion.imagenes[0]?.archivo}
-		centros={publicacion.centros}
+		            centros={publicacion.centros}
               />
             ))}
           </div>
@@ -123,29 +126,30 @@ const handleConfirmadoClick =() =>{
           <p><strong>Centro:</strong> {centro}</p>
           <p><strong>Horario:</strong> {horario}</p>
           <p><strong>Estado:</strong> {estado}</p>
-        </div>
+        
         {((Token === 'tokenAdmin'))?(
             <>
-              <Link to={`/ValidarIntercambio`} onClick={handleConfirmadoClick}>
+              <Link to={`/ValidarIntercambio`}>
                 <button className="detalle-button"> Validar Intercambio </button>
               </Link>
             </>
           ):( 
           <>
-            <Link to={`/ModificarIntercambio`} onClick={handleModificarClick}>
-              <button className="detalle-button"> Modifciar </button>
+            <Link to={`/ModificarIntercambio`} >
+              <button className="detalle-button"> Modificiar </button>
             </Link>
-            <Link to={`/ListarMisIntercambios`} onClick={handleRechazadoClick}>
+            <Link to={`/ListarMisIntercambios`}>
               <button className="detalle-button"> Rechazar </button>
             </Link>
             { // ACA VA ALGO QUE ME DIGA SI SOY EL DUEÑO DE LA PUBLICACIÓN QUE PUEDE ACEPTAR
             }
-            <Link to={`/ValidarIntercambio`} onClick={handleConfirmadoClick}>
+            <Link to={`/ValidarIntercambio`}>
               <button className="detalle-button"> Confirmar </button>
             </Link>
           </>
           )
         }
+        </div>
       </div>
     </li>
   );

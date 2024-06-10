@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Publicacion from '../../components/Publicacion';
 import Filtro from '../../components/Filtro';
 import '../../HarryStyles/Publicaciones.css';
 import { useEffect, useState } from 'react';
@@ -33,7 +34,7 @@ const ListarIntercambios = () => {
 
         const url = `http://localhost:8000/public/listarIntercambios?${queryParams}`;
         const response = await axios.get(url);
-
+        
         if (response.data.Mensaje === 'No hay intercambios disponibles') {
           setError('No hay intercambios disponibles');
           setIntercambios([]);
@@ -49,7 +50,7 @@ const ListarIntercambios = () => {
     };
 
     fetchData();
-  }, [parametros]);
+  }, []);
 
   const handleParametrosChange = (newParametros) => {
     setParametros(newParametros);
@@ -62,6 +63,7 @@ const ListarIntercambios = () => {
         intercambiosCopy[clave] = inter[clave];
       }
     });
+    console.log(intercambiosCopy)
     return intercambiosCopy;
   }
 
@@ -81,8 +83,10 @@ const ListarIntercambios = () => {
               key={intercambio.id}
               id={intercambio.id}
               voluntario={intercambio.voluntario}
-              publicacion1={intercambio.publicacion1}
-              publicacion2={intercambio.publicacion2}
+              publicacionOferta={intercambio.publicacionOferta}
+              publicacionOfertada={intercambio.publicacionOfertada}
+              ofertaAcepta={intercambio.ofertaAcepta}
+              ofertaAceptada={intercambio.ofertaAceptada}
               horario={intercambio.horario}
               estado={intercambio.estado}
               descripcion={intercambio.descripcion}
