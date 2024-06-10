@@ -17,6 +17,10 @@ const PubliDetalle = () => {
         const publicacionObj = JSON.parse(publicacionGuardada);
         console.log(`Datos parseados:`, publicacionObj);
 
+        let nuevoArr = [];
+        publicacionObj.centros.forEach((centro)=> nuevoArr.push(centro.Nombre));
+        publicacionObj.centros = nuevoArr;
+
         const idNumero = Number(id);
 
         if (publicacionObj && publicacionObj.id === idNumero) {
@@ -47,7 +51,7 @@ const PubliDetalle = () => {
                 <br/><br/><br/><br/><br/><br/><br/><br/>
                 <h2>{publicacion.nombre}</h2>
                 <p><strong>Usuario:</strong> {publicacion.user}</p>
-                <p><strong>Centros:</strong> {publicacion.centros}</p>
+                <p><strong>Centros:</strong> {publicacion.centros.join(' | ')}</p>
                 <p><strong>Descripción:</strong> {publicacion.descripcion}</p>
                 <p><strong>Categoría:</strong> {publicacion.categoria_id}</p>
                 {((Token === 'tokenUser')&&(username !== publicacion.user))?(

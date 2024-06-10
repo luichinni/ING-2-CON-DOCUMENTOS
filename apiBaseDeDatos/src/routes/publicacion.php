@@ -190,10 +190,10 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
             for ($i = 0; $i < count($publiCent); $i++){
                 $tempArr = (array) $publiCent[$i];
                 $wherCentro = ['id' => $tempArr['centro']];
-                $value['centros'][$i] = $centroDB->getFirst($wherCentro);
+                $value['centros'][$i] = ((array)json_decode($centroDB->getFirst($wherCentro)))[0];
             }
             
-            error_log(json_encode($where));
+            error_log(json_encode($value));
 
             $value['imagenes'] = listarImg($where);
 

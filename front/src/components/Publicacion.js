@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 const Publicacion = (props) => {
     const handleDetalleClick = () => {
+        console.log("AL APRETAR EL BOTON" + JSON.stringify(props.centros));
         localStorage.setItem("publicacion", JSON.stringify(props));
     };
 

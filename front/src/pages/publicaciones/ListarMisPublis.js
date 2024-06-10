@@ -87,6 +87,7 @@ const ListarMisPublis = () => {
               categoria_id={publicacion.categoria_id}
               estado={publicacion.estado}
               imagen={publicacion.imagenes[0].archivo}
+              centros={publicacion.centros}
             />
           ))
         )}
