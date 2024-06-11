@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import '../../HarryStyles/Intercambios.css';
 
-const ValidarIntercambio = (props) => {
+const ValidarIntercambio = () => {
 	const navigate = useNavigate(); 
 	const [comentario, setComentario] =useState('');
 	const [donacion, setDonacion] =useState('');
@@ -26,20 +26,28 @@ const ValidarIntercambio = (props) => {
         e.preventDefault();
 		console.log('Submit button clicked!');
 			console.log('entro'); 
-			const formData = new FormData();
-			formData.append('id', props.id)
-			formData.append('setvoluntario', localStorage.getItem('username'))
-			formData.append('setestado', estado);
-			formData.append('setdonacion', donacion);
-			/*formData.append('montoDonacion', montoDonacion);
-			formData.append('objetoDonado', objetoDonado);*/
-			formData.append('setdescripcion', comentario);
-			console.log(`formData:${formData}`)
 			try {
-				console.log(formData)
+				const formData = new FormData();
+				formData.append('id', localStorage.getItem('idValidar'))
+				console.log( localStorage.getItem('idValidar'));
+				formData.append('setvoluntario', localStorage.getItem('username'))
+				console.log(localStorage.getItem('username'));
+				formData.append('setestado', estado);
+				console.log('estado');
+				formData.append('setdonacion', donacion);
+				console.log('donacion');
+				/*formData.append('montoDonacion', montoDonacion);
+				formData.append('objetoDonado', objetoDonado);*/
+				formData.append('setdescripcion', comentario);
+				console.log(comentario);
+				console.log(`formData:${formData}`)
 				setMyError(false);
-				const response = await axios.put("http://localhost:8000/public/updateIntercambio", formData);
-
+				const response = await axios.put(`http://localhost:8000/public/updateIntercambio`, formData,
+					{
+					  headers: {
+						  "Content-Type": "application/json",
+					  },
+					});
 				console.log('Success:', response);
 				navigate("../Intercambios"); //No se donde tiene que ir 
 			} catch (error) {

@@ -65,7 +65,7 @@ export function NavBar() {
                 )}
                 {token === 'tokenVolunt' && (
                     <li className='buttonNavBar'>
-                        <Link to="/ValidarIntercambios" className="botonNavBar">Validar intercambio</Link>
+                        <Link to="/Intercambios" className="botonNavBar">Intercambios</Link>
                     </li>
                 )}
                 <li className='buttonNavBar'>

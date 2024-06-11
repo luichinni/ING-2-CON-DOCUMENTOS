@@ -169,7 +169,7 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
           <p><strong>Horario:</strong> {horario}</p>
           <p><strong>Estado:</strong> {estado}</p>
         
-        {((Token === 'tokenAdmin'))?(
+        {((Token === 'tokenAdmin' || Token === 'tokenVolunt'))?(
             <>
               <button className="detalle-button" onClick={handleValidarClick}> Validar Intercambio </button>
             </>
