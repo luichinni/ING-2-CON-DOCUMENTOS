@@ -18,6 +18,7 @@
 
 .publi-container {
   display: flex;
+  max-height: 550px;
   flex-wrap: wrap; /* Permite que los elementos se ajusten a la siguiente fila si no caben en la misma */
   gap: 50px; /* Espacio entre las publicaciones */
   padding: 20px;
@@ -27,7 +28,8 @@
 
 .publicacion {
   flex: 1 1 400px; /* Establece un tamaño mínimo y permite crecer */
-  max-width: 400px; /* Asegura que no excedan este tamaño */
+  max-width: 400px;
+  max-height: 500px; /* Asegura que no excedan este tamaño */
   background-color: #ffffff;
   border: 1px solid #ddd;
   border-radius: 8px;
