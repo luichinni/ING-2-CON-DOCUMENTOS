@@ -138,7 +138,10 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
         $valid = ($campoInv == null) && !$userDB->exists($where);
         
         if (!$valid) {
-            $msgReturn['Mensaje'] = "El campo " . $campoInv['invalido'] . " no es válido";
+            match (true){
+                ($campoInv['invalido']=="mail") => $msgReturn['Mensaje'] = "El mail ya está registrado",
+                default => $msgReturn['Mensaje'] = "El campo " . $campoInv['invalido'] . " no es válido"
+            };
             $res->getBody()->write(json_encode($msgReturn));
             return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
