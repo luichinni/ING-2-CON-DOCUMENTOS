@@ -1,126 +1,115 @@
 /* Publicaciones.css */
 
 .content {
-    display: flex;
-    min-height: 100vh;
-    background-color: #f9f9f9;
-    z-index: 1;
-  }
-  
-  .sidebar {
-    width: 370px;
-    padding: 20px;
-    background-color: #ffffff;
-    border-right: 1px solid #ddd;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 1;
-  }
-  
-
-/* Publicaciones.css */
-
-.publi-container {
-  flex: 1;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); /* Columnas dinámicas */
-  gap: 50px; /* Espacio entre las publicaciones */
-  padding: 20px;
-  height: 5000px; /* Altura máxima */
-  overflow-y: auto; /* Desplazamiento vertical si es necesario */
+  display: flex;
+  min-height: 100vh;
+  background-color: #f9f9f9;
   z-index: 1;
 }
 
-  
+.sidebar {
+  width: 370px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-right: 1px solid #ddd;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
 
-  .publicacion {
-      width: 600px; /* Ancho fijo para cada publicación */
-      max-width: 100%; /* Para que sea responsive */
-      background-color: #ffffff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      overflow: hidden;
-      transition: box-shadow 0.3s ease, transform 0.3s ease;
-      display: flex;
-      align-items: center;
-      margin: 20px auto; /* Añadir un margen */
-      padding: 20px; /* Añadir padding interno */
-      box-sizing: border-box; /* Para incluir el padding y el borde en el tamaño */
-      z-index: 1;
- 
-    
-  }
- 
-  .publicacion:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transform: scale(1.05);
-    z-index: 1;
-  }
-  
-/* Publicaciones.css */
+.publi-container {
+  display: flex;
+  flex-wrap: wrap; /* Permite que los elementos se ajusten a la siguiente fila si no caben en la misma */
+  gap: 50px; /* Espacio entre las publicaciones */
+  padding: 20px;
+  overflow-y: auto; /* Permite el desplazamiento vertical */
+  align-items: flex-start; /* Alinea elementos al inicio para evitar espacios grandes entre filas */
+}
 
- .publicacion-img {
-    flex: 1;
-    height: 300px;
-    width: 300px; /* Altura fija para todas las imágenes */
-    overflow: hidden; /* Oculta cualquier parte de la imagen que exceda la altura fija */
-    z-index: 1;
-  }
-  
-  .publicacion-img, .img{
-    width: 300px; /* La imagen ocupará todo el ancho del contenedor */
-    height: 300px; /* La imagen ocupará toda la altura del contenedor */
-    object-fit: contain; /* La imagen se ajustará para cubrir el contenedor manteniendo su relación de aspecto */
-  }
-  
-  
-  .publicacion-info {
-    flex: 1;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  
-  .descripcion {
-    font-size: 14px;
-    color: #666;
-  }
-  
-  .descripcion p {
-    margin: 5px 0;
-  }
-  
-  .descripcion button {
-    padding: 10px 15px;
-    font-size: 14px;
-    color: #fff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .descripcion button:hover {
-    background-color: #0056b3;
-  }
-  
-  .cargando,
-  .sin-publi {
-    text-align: center;
-    font-size: 24px;
-    color: #333;
-    grid-column: 1 / -1;
-  }
-  
-  .banner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100px;
-    background-color: #f0f0f0;
-  }
-  .detalle-button {
+.publicacion {
+  flex: 1 1 400px; /* Establece un tamaño mínimo y permite crecer */
+  max-width: 400px; /* Asegura que no excedan este tamaño */
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  display: flex;
+  flex-direction: column; /* Alinea el contenido en columna */
+  align-items: center;
+  margin: 20px; /* Añade margen */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.publicacion:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: scale(1.05);
+  z-index: 1;
+}
+
+.publicacion-img {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  text-align: center; /* Centro de la imagen en el contenedor */
+}
+
+.publicacion-img img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.publicacion-info {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Alinea al inicio en el contenedor de info */
+  justify-content: space-between;
+  width: 100%; /* Hace que ocupe todo el ancho disponible */
+}
+
+.descripcion {
+  font-size: 14px;
+  color: #666;
+}
+
+.descripcion p {
+  margin: 5px 0;
+}
+
+.descripcion button {
+  padding: 10px 15px;
+  font-size: 14px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.descripcion button:hover {
+  background-color: #0056b3;
+}
+
+.cargando,
+.sin-publi {
+  text-align: center;
+  font-size: 24px;
+  color: #333;
+  grid-column: 1 / -1;
+}
+
+.banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  background-color: #f0f0f0;
+}
+
+.detalle-button {
   display: inline-block;
   padding: 10px 20px;
   font-size: 16px;
@@ -135,6 +124,7 @@
 .detalle-button:hover {
   background-color: #0056b3;
 }
+
 .background-image {
   background-image: url('../../public/fondoDashboard.jpeg');
   background-size: contain;
@@ -143,4 +133,3 @@
   width: 100%;
   height: 400px; /* Ajusta la altura según sea necesario */
 }
-

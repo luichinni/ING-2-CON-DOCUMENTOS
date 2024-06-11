@@ -23,10 +23,9 @@ const ListarPublis = () => {
       setError('');
 
       try {
-
-       const queryParams = new URLSearchParams(parametros).toString();
-       const url = `http://localhost:8000/public/listarPublicaciones?${queryParams}&token=${localStorage.getItem('token')}`;
-      const response = await axios.get(url);
+        const queryParams = new URLSearchParams(parametros).toString();
+        const url = `http://localhost:8000/public/listarPublicaciones?${queryParams}&token=${localStorage.getItem('token')}`;
+        const response = await axios.get(url);
 
         if (response.data.length === 3) {
           setError('No hay publicaciones disponibles.');
@@ -72,15 +71,15 @@ const ListarPublis = () => {
         ) : (
           publicaciones.map(publicacion => (
             <Publicacion
-                  key={publicacion.id} //para que no llore react
-                  id={publicacion.id}
-                  nombre={publicacion.nombre}
-                  descripcion={publicacion.descripcion}
-                  user={publicacion.user}
-                  categoria_id={publicacion.categoria_id}
-                  estado={publicacion.estado}
-                  imagen={publicacion.imagenes[0].archivo}
-                  centros={publicacion.centros}
+              key={publicacion.id} //para que no llore react
+              id={publicacion.id}
+              nombre={publicacion.nombre}
+              descripcion={publicacion.descripcion}
+              user={publicacion.user}
+              categoria_id={publicacion.categoria_id}
+              estado={publicacion.estado}
+              imagen={publicacion.imagenes[0].archivo}
+              centros={publicacion.centros}
             />
           ))
         )}

@@ -23,6 +23,7 @@ const Publicacion = (props) => {
                     <br />
                     Por: {props.user}
                 </p>
+                <br/>
                 <Link to={`/PubliDetalle/${props.id}`} onClick={handleDetalleClick}>
                     <button className="detalle-button">Ver Detalle</button>
                 </Link>
