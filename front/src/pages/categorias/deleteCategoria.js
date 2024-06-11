@@ -18,7 +18,8 @@ const DeleteCategoria = () => {
           navigate(`../Categorias`);
         }
       } catch (error) {
-        alert(error);
+        alert('No se pudo eliminar la categoría.\nComprueba que no tenga publicaciones asociadas!');
+        navigate(`../Categorias`);
       }
     };
     if(!hasMounted.current){
