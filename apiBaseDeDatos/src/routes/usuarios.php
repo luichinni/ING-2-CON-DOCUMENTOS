@@ -75,14 +75,14 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
             return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
         } 
 
-        $existe = $userDB->exists($where,true);
+        $existe = $userDB->exists($where);
 
         if (!$existe) {
             $res->getBody()->write(json_encode($msgReturn));
             return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
         } 
 
-        $user = (array) json_decode($userDB->getFirst($where,true));
+        $user = (array) json_decode($userDB->getFirst($where));
         $user['Mensaje'] = 'Usuario encontrado';
 
         $res->getBody()->write(json_encode($user));
@@ -205,6 +205,38 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
         $res->getBody()->write(json_encode($msgReturn));
 
         return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
+    });
+
+    $group->get('/obtenerCentroVolun', function (Request $req, Response $res, $args) {
+        global $userDB, $centroVolunDB;
+        $status = 404;
+        $msgReturn = ['Mensaje' => 'Voluntario no encontrado'];
+        // obtener los parametros de la query
+        $queryParams = $req->getQueryParams();
+
+        if (!array_key_exists('voluntario',$queryParams)) {
+            $msgReturn['Mensaje'] = 'Necesita parametros para buscar';
+            $res->getBody()->write(json_encode($msgReturn));
+            return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
+        }
+
+        $existe = $centroVolunDB->exists(['voluntario'=>$queryParams['voluntario']]);
+
+        if (!$existe) {
+            $res->getBody()->write(json_encode($msgReturn));
+            return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
+        }
+
+        $user = (array) json_decode($centroVolunDB->getFirst(['voluntario' => $queryParams['voluntario']]));
+        $user['Mensaje'] = 'Voluntario encontrado';
+
+        $res->getBody()->write(json_encode($user));
+        error_log(json_encode($user));
+        $status = 200;
+
+        $msgReturn['Mensaje'] = 'Voluntario encontrado con éxito';
+
+        return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
     });
 
     $group->post('/newAdmin', function (Request $req, Response $res, $args) use ($pdo, $camposUser) {
