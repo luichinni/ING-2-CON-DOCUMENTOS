@@ -42,7 +42,7 @@ const ListarIntercambios = () => {
           setIntercambios(procesar(response.data));
         }
       } catch (error) {
-        setError('Error al obtener los intercambios.');
+        setError('No hay intercambios disponibles');
         console.error(error);
       } finally {
         setLoading(false);
@@ -76,7 +76,10 @@ const ListarIntercambios = () => {
         {loading ? (
           <h1 className='cargando'>Cargando...</h1>
         ) : error ? (
-          <h1 className='sin-publi'>{error}</h1>
+          <>
+            <br/><br/><br/>
+            <h1 className='sin-publi'>{error}</h1>
+          </>
         ) : (
           intercambios.map((intercambio) => (
             <Intercambio

@@ -1,7 +1,8 @@
-/* Publicaciones.css */
+/*dashboard{}    ACAAAAAA*/
 
 .content {
   display: flex;
+  overflow-y: auto;
   min-height: 100vh;
   background-color: #f9f9f9;
   z-index: 1;

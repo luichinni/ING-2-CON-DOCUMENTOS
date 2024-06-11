@@ -25,15 +25,14 @@ import ListarIntercambios from './pages/Intercambios/listarIntercambios';
 
 function App() {
   return (
-    <div className='body'>
+    <div>
       <BrowserRouter>
         <div>
-          <div className='contenedor'>
+          <div>
             <Header />
-            <NavBar className= 'navbar-nav' />
+            <NavBar/>
           </div>
-          <div  className='contenido'>
-            <div className='publicaciones'>
+          <div>
               <Routes>
                 <Route path={"/"} element={<Dashboard />} />
                 <Route path={"/MisPublicaciones"} element={<MisPublis />} />
@@ -59,7 +58,6 @@ function App() {
                 <Route path={"/Intercambios"} element={<ListarIntercambios />} />
 
               </Routes>
-            </div>
           </div>
         </div>
       </BrowserRouter>
