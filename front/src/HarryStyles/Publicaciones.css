@@ -5,6 +5,7 @@
   min-height: 100vh;
   background-color: #f9f9f9;
   z-index: 1;
+  max-inline-size:1550px;
 }
 
 .sidebar {
@@ -19,6 +20,7 @@
 .publi-container {
   display: flex;
   max-height: 550px;
+  max-inline-size:1400px;
   flex-wrap: wrap; /* Permite que los elementos se ajusten a la siguiente fila si no caben en la misma */
   gap: 50px; /* Espacio entre las publicaciones */
   padding: 20px;
