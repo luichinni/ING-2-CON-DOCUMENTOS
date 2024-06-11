@@ -19,6 +19,20 @@ $camposPublicacion = [
     'fecha_carga' => '?datetime'
 ];
 
+function publiValidator(array $data){
+    global $userDB;
+    $valid = ['invalido'=>''];
+    match (true){
+        (array_key_exists('nombre', $data)) && (strlen($data['nombre']) <= 1) => $valid['invalido'] = 'nombre',
+        (array_key_exists('descripcion', $data)) && ((strlen($data['descripcion']) > 255) || (strlen($data['descripcion']) < 2)) => $valid['invalido'] = 'descripcion',
+        (array_key_exists('categoria_id', $data)) && ($data['categoria_id'] == '') => $valid['invalido'] = 'categoria',
+        (array_key_exists('centro1', $data)) && ($data['centro1'] == '') => $valid['invalido'] = 'centro',
+        (!array_key_exists('centro1', $data)) => $valid['invalido'] = 'centro',
+        default => $valid = null
+    };
+    return $valid;
+}
+
 $publiDB = new bdController('publicacion',$pdo,$camposPublicacion);
 
 $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
@@ -31,7 +45,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         $bodyParams = (array) $request->getParsedBody();
         $where = $publiDB->getWhereParams($bodyParams); // esto es para los values
 
-        //error_log(json_encode($bodyParams));
+        error_log(json_encode($bodyParams));
 
         $foto = false;
         for ($i = 1; $i <= 6; $i++){
@@ -39,7 +53,16 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         }
         //error_log("hay fotos: " . json_encode($foto));
 
-        if (empty($where) || count($camposPublicacion) < count($where) || !$foto) {
+        $valid = publiValidator($bodyParams);
+
+        if (empty($where) || count($camposPublicacion) < count($where) || !$foto || $valid!=null) {
+            match(true){
+                ($valid != null && $valid['invalido']=='nombre') => $msgReturn['Mensaje'] = 'El nombre no es válido',
+                ($valid != null && $valid['invalido']== 'descripcion') => $msgReturn['Mensaje'] = 'La descripción no es válida',
+                ($valid != null && $valid['invalido']=='centro') => $msgReturn['Mensaje'] = 'Falta seleccionar un centro',
+                ($valid != null && $valid['invalido']=='categoria') => $msgReturn['Mensaje'] = 'Falta seleccionar una categoria',
+                default => $msgReturn['Mensaje']='Ups, parece que algo falló, no deberias estar viendo este mensaje :c'
+            };
             $response->getBody()->write(json_encode($msgReturn));
             return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
