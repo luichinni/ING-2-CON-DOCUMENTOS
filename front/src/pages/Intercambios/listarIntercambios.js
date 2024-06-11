@@ -11,11 +11,11 @@ const ListarIntercambios = () => {
   const [loading, setLoading] = useState(false);
   const username = localStorage.getItem('username');
   const [parametros, setParametros] = useState({
-    nombre: "",
-    user: "",
+    id: "",
     categoria_id: "",
     estado: "",
-    id: ""
+    id: "",
+    centro: ""
   });
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const ListarIntercambios = () => {
       try {
         const queryParams = new URLSearchParams({
           nombre: parametros.nombre,
-          user: username,
+          user: parametros.username,
           categoria_id: parametros.categoria_id,
           estado: parametros.estado,
           id: parametros.id
@@ -54,6 +54,12 @@ const ListarIntercambios = () => {
 
   const handleParametrosChange = (newParametros) => {
     setParametros(newParametros);
+    if(localStorage.getItem('token' == 'tokenUser')){
+      setParametros.username(localStorage.getItem('username'));
+    }
+    if(localStorage.getItem('token' == 'tokenVolunt')){
+      setParametros.centro();
+    }
   };
 
   function procesar(inter) {
