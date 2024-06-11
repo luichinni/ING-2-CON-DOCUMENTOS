@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../HarryStyles/Filtro.css';
 
-const Filtro = ({ onFiltroSubmit }) => {
+const FiltroMisPublis = ({ onFiltroSubmit }) => {
   const [categorias, setCategorias] = useState([]);
   const [filtro, setFiltro] = useState({
     nombre: "",
@@ -76,4 +76,4 @@ const Filtro = ({ onFiltroSubmit }) => {
   );
 }
 
-export default Filtro;
+export default FiltroMisPublis;

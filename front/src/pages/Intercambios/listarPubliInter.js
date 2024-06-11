@@ -9,15 +9,38 @@ const ListarPubliInter = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const username = localStorage.getItem('username')
+  const categoria = localStorage.getItem("categoriaInter")
   const [parametros, setParametros] = useState({
     nombre: "",
     user: "",
-    categoria_id: localStorage.getItem("categoriaInter"),
+    categoria_id: "",
     estado: "",
     id: "",
     like: "false"
   });
 
+  function categoria_id(categoria){
+    const fetchData = async () => {
+            function procesarcat(categorias) {
+              let cateCopy = [];
+              Object.keys(categorias).forEach(function (clave) {
+                if (!isNaN(clave)) {
+                  cateCopy[clave] = categorias[clave];
+                }
+              });
+              return cateCopy[0].id;
+            }
+      try {
+        let categoria
+        const respon = await axios.get(`http://localhost:8000/public/listarCategorias?id=&nombre=`);
+        return categoria = (procesarcat(respon.data));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }
+  
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -27,7 +50,7 @@ const ListarPubliInter = () => {
         const queryParams = new URLSearchParams({
             nombre: parametros.nombre,
             user: username,
-            categoria_id: parametros.categoria_id,
+            categoria_id: categoria_id(categoria),
             estado: parametros.estado,
             id: parametros.id,
             habilitado: 0

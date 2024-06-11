@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ButtonSubmit } from './ButtonSubmit';
 
-const Filtro = ({ onFiltroSubmit }) => {
+const FiltroCentro = ({ onFiltroSubmit }) => {
   const [filtro, setFiltro] = useState({
     key: "",
     nombre: "",
@@ -33,4 +33,4 @@ const Filtro = ({ onFiltroSubmit }) => {
   );
 }
 
-export default Filtro;
+export default FiltroCentro;
