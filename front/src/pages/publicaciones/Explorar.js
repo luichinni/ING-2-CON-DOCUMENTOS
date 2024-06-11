@@ -6,7 +6,6 @@ const Explorar = () => {
     return (
         <div className='dashboard'>
             <br /><br /><br /><br /><br /><br />
-
             <ListarPublis />
         </div>
     );

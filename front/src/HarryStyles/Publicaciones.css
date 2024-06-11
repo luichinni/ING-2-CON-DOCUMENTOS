@@ -57,10 +57,10 @@
   text-align: center; /* Centro de la imagen en el contenedor */
 }
 
-.publicacion-img img {
+.publicacion-img .img {
   max-width: 100%;
-  height: auto;
-  object-fit: contain;
+  height: 200px;
+  object-fit:cover;
 }
 
 .publicacion-info {
@@ -102,6 +102,7 @@
   font-size: 24px;
   color: #333;
   grid-column: 1 / -1;
+  white-space: pre-line;
 }
 
 .banner {

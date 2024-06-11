@@ -168,22 +168,20 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
           <p><strong>Centro:</strong> {centro}</p>
           <p><strong>Horario:</strong> {horario}</p>
           <p><strong>Estado:</strong> {estado}</p>
-        
-        {((Token === 'tokenAdmin' || Token === 'tokenVolunt'))?(
-            <>
-              <button className="detalle-button" onClick={handleValidarClick}> Validar Intercambio </button>
-            </>
-          ):( 
-          <>
-            <Link to={`/ModificarIntercambio`} >
-              <button className="detalle-button"> Modificar </button>
-            </Link>
-            <button className="detalle-button" onClick={handleRechazadoClick}> Rechazar </button>
-            { // ACA VA ALGO QUE ME DIGA SI SOY EL DUEÑO DE LA PUBLICACIÓN QUE PUEDE ACEPTAR
-            }
-            <button className="detalle-button" onClick={handleAceptadoClick}> Confirmar </button>
-          </>
-          )
+        {((estado === 'aceptado') || (estado === 'pendiente'))?(
+            ((Token === 'tokenAdmin' || Token === 'tokenVolunt'))?(
+              <>
+                <button className="detalle-button" onClick={handleValidarClick}> Validar Intercambio </button>
+              </>
+            ):( 
+              <>
+                <Link to={`/ModificarIntercambio`} >
+                  <button className="detalle-button"> Modificar </button>
+                </Link>
+                <button className="detalle-button" onClick={handleRechazadoClick}> Rechazar </button>
+                <button className="detalle-button" onClick={handleAceptadoClick}> Confirmar </button>
+              </>
+            )):(<></>)
         }
         </div>
       </div>

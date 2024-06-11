@@ -36,13 +36,13 @@ const ListarIntercambios = () => {
         const response = await axios.get(url);
         
         if (response.data.Mensaje === 'No hay intercambios disponibles') {
-          setError('No hay intercambios disponibles');
+          setError(`¡No has realizado intercambios todavía! \n Ve a explorar para poder intercambiar`);
           setIntercambios([]);
         } else {
           setIntercambios(procesar(response.data));
         }
       } catch (error) {
-        setError('No hay intercambios disponibles');
+        setError(`¡No has realizado intercambios todavía! \n Ve a explorar para poder intercambiar`);
         console.error(error);
       } finally {
         setLoading(false);
