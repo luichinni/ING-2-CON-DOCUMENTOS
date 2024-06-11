@@ -11,11 +11,11 @@ const ListarIntercambios = () => {
   const [loading, setLoading] = useState(false);
   const username = localStorage.getItem('username');
   const [parametros, setParametros] = useState({
-    id: "",
-    categoria_id: "",
+    publicacionOferta: "",
+    PublicacionOfertada: "",
     estado: "",
-    id: "",
-    centro: ""
+    centro: "",
+    horario:""
   });
 
   useEffect(() => {

@@ -65,13 +65,17 @@ const ListarCentro = () => {
       <div className='Publi-Div'>
         <FiltroCentro onFiltroSubmit={handleParametrosChange} />
         <br />
-        <div className='botonAgregar'>
-            <Link 
-              to="/AgregarCentro"
-              className="agregarBoton"> 
-              Agregar Centro
-            </Link>
-        </div>
+        {(localStorage.getItem('token') == 'tokenAdmin')?(
+        <>
+          <div className='botonAgregar'>
+              <Link 
+                to="/AgregarCentro"
+                className="agregarBoton"> 
+                Agregar Centro
+              </Link>
+          </div>
+        </>
+        ):(<></>)}
         {loading ? (
           <h1 className='Cargando'>Cargando...</h1>
         ) : error ? (

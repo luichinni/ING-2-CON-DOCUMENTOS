@@ -27,13 +27,17 @@ const Centro = (props) => {
                             <br/>
                             hora de cierre: {props.hora_cierra}
                             <br /><br />
-                            <button className="boton_editar">
-                                Editar
-                            </button>
-                            <button className="boton_eliminar">
-                                Eliminar
-                            </button>
-                            <br />
+                            {(localStorage.getItem('token') == 'tokenAdmin')?(
+                            <>
+                                <button className="boton_editar">
+                                    Editar
+                                </button>
+                                <button className="boton_eliminar">
+                                    Eliminar
+                                </button>
+                                <br />
+                            </>
+                            ):(<></>)}
                         </p>
                         </div>
                         )}

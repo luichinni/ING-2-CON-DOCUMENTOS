@@ -5,11 +5,11 @@ import "../HarryStyles/styles.css";
 
 const FiltroUsuario = ({ onFiltroSubmit }) => {
   const [filtro, setFiltro] = useState({
-    id: "",
-    nombre: "",
-    apellido: "",
-    dni: "",
-    rol: ""
+    publicacionOferta: "",
+    PublicacionOfertada: "",
+    estado: "",
+    centro: "",
+    horario:"",
   });
 
   const handleChange = (e) => {

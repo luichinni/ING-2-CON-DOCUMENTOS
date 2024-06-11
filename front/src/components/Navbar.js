@@ -53,9 +53,6 @@ export function NavBar() {
                             <Link to="/Categorias" className="botonNavBar">Categorías</Link>
                         </li>
                         <li className='buttonNavBar'>
-                            <Link to="/Centros" className="botonNavBar">Centros</Link>
-                        </li>
-                        <li className='buttonNavBar'>
                             <Link to="/Usuarios" className="botonNavBar">Usuarios</Link>
                         </li>
                         <li className='buttonNavBar'>
@@ -68,6 +65,9 @@ export function NavBar() {
                         <Link to="/Intercambios" className="botonNavBar">Intercambios</Link>
                     </li>
                 )}
+                <li className='buttonNavBar'>
+                    <Link to="/Centros" className="botonNavBar">Centros</Link>
+                </li>
                 <li className='buttonNavBar'>
                     <a href="https://caritas.org.ar/quienes-somos/" className="botonNavBar">¿Quiénes somos?</a>
                 </li>
