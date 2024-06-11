@@ -39,7 +39,7 @@ function userValidator(array $data, PDO $pdo, array $camposUser){
         // que tenga @ y que no sea utilizado por nadie
         (array_key_exists('mail', $data)) && ((strpos($data['mail'], '@') === false) || ($userDB->exists(array('mail' => $data['mail'])))) => $valid['invalido'] = 'mail',
         // que sea solo numerico
-        (array_key_exists('telefono', $data)) && (!ctype_digit($data['telefono'])) => $valid['invalido'] = 'telefono',
+        (array_key_exists('telefono', $data)) && ($data['telefono']!== '') && (!ctype_digit($data['telefono'])) => $valid['invalido'] = 'telefono',
         // rol existente
         (array_key_exists('rol', $data)) && (!in_array($data['rol'], $roles)) => $valid['invalido'] = 'rol',
         default => $valid = null
