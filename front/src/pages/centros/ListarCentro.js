@@ -35,7 +35,7 @@ const ListarCentro = () => {
           setCentros(procesar(response.data));
         }
       } catch (error) {
-        setError('Ocurrió un error al obtener los centros.');
+        setError('No hay centros disponibles');
         console.error(error);
       } finally {
         setLoading(false);

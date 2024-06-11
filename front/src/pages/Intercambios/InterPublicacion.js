@@ -1,7 +1,7 @@
 import React from 'react';
-import ListarPubliInter from './listarPubliInter';
 import '../../HarryStyles/Publicaciones.css';
 import '../../HarryStyles/styles.css';
+import ListarPubliInter from './listarPubliInter';
 
 
 const MisPublis = () => {
@@ -12,7 +12,7 @@ const MisPublis = () => {
         <h1>Seleccione el producto que desea intercambiar:</h1>
       </div>
 
-      <ListarPubliInter />
+      <ListarPubliInter/>
     </div>
   );
 }

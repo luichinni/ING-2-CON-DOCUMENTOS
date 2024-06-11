@@ -1,10 +1,10 @@
 import axios from 'axios';
 import InterPubli from '../../components/InterPubli';
-import Filtro from '../../components/Filtro';
+import FiltroInter from '../../components/FiltroPubliInter';
 import '../../HarryStyles/Publicaciones.css';
 import { useEffect, useState } from 'react';
 
-const ListarMisPublis = () => {
+const ListarPubliInter = () => {
   const [publicaciones, setPublicaciones] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -12,9 +12,10 @@ const ListarMisPublis = () => {
   const [parametros, setParametros] = useState({
     nombre: "",
     user: "",
-    categoria_id: "",
+    categoria_id: localStorage.getItem("categoriaInter"),
     estado: "",
-    id: ""
+    id: "",
+    like: "false"
   });
 
   useEffect(() => {
@@ -35,8 +36,7 @@ const ListarMisPublis = () => {
         const response = await axios.get(url);
 
         if (response.data.length === 3) {
-          setError('No tenes publicaciones de la misma categoría');
-          setPublicaciones([]); 
+          setError('No tenes publicaciones de la misma categoría.');
           console.log('disponibles')
         } else {
           setPublicaciones(procesar(response.data));
@@ -70,7 +70,7 @@ const ListarMisPublis = () => {
   return (
     <div className='content'>
       <div className='sidebar'>
-        <Filtro onFiltroSubmit={handleParametrosChange} />
+        <FiltroInter onFiltroSubmit={handleParametrosChange} />
       </div>
       <div className='publi-container'>
         {loading ? (
@@ -82,7 +82,6 @@ const ListarMisPublis = () => {
           </>
         ) : (
           publicaciones.map(publicacion => (
-            (publicacion.categoria_id === localStorage.getItem("categoriaInter"))?
             <InterPubli
               key={publicacion.id}//evita advertencia
               id={publicacion.id}
@@ -92,12 +91,12 @@ const ListarMisPublis = () => {
               categoria_id={publicacion.categoria_id}
               estado={publicacion.estado}
               imagen={publicacion.imagenes[0].archivo}
-            />:<></>
-          ))
-        )}
+            />
+          )
+        ))}
       </div>
     </div>
   );
 }
 
-export default ListarMisPublis;
+export default ListarPubliInter;
