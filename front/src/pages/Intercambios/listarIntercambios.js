@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Publicacion from '../../components/Publicacion';
-import Filtro from '../../components/Filtro';
+import FiltroIntercambio from '../../components/FiltroIntercambio';
 import '../../HarryStyles/Publicaciones.css';
 import { useEffect, useState } from 'react';
 import Intercambio from '../../components/Intercambio';
@@ -10,13 +10,14 @@ const ListarIntercambios = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const username = localStorage.getItem('username');
+  const token = localStorage.getItem('token');
   const [parametros, setParametros] = useState({
     publicacionOferta: "",
-    PublicacionOfertada: "",
+    publicacionOfertada: "",
     estado: "",
     centro: "",
     horario:""
-  });
+    });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,11 +26,11 @@ const ListarIntercambios = () => {
 
       try {
         const queryParams = new URLSearchParams({
-          nombre: parametros.nombre,
-          user: parametros.username,
-          categoria_id: parametros.categoria_id,
+          publicacionOferta: parametros.publicacionOferta,
+          publicacionOfertada: parametros.publicacionOfertada,
           estado: parametros.estado,
-          id: parametros.id
+          centro: parametros.centro,
+          horario: parametros.horario
         }).toString();
 
         const url = `http://localhost:8000/public/listarIntercambios?${queryParams}`;
@@ -50,17 +51,28 @@ const ListarIntercambios = () => {
     };
 
     fetchData();
-  }, []);
+  }, [parametros]);
 
-  const handleParametrosChange = (newParametros) => {
+  const centroUsuario = async (volun) => {
+    try {
+      const url = `http://localhost:8000/public/obtenerCentroVolun?voluntario=${volun}`;
+      const response = await axios.get(url);
+      return response;
+    } catch (error) {
+      setError(`No podes ver los intercambios disponibles \n porque no estas asociado a ningun centro`);
+      console.error(error);
+      return error;
+    }
+}
+
+const handleParametrosChange = async (newParametros) => {
+  if (token === 'tokenVolunt') {
+    const centro = await centroUsuario(username);
+    setParametros({ ...newParametros, centro: centro.data.centro });
+  } else {
     setParametros(newParametros);
-    if(localStorage.getItem('token' == 'tokenUser')){
-      ;
-    }
-    if(localStorage.getItem('token' == 'tokenVolunt')){
-      ;
-    }
-  };
+  }
+}
 
   function procesar(inter) {
     let intercambiosCopy = [];
@@ -76,7 +88,7 @@ const ListarIntercambios = () => {
   return (
     <div className='content'>
       <div className='sidebar'>
-        <Filtro onFiltroSubmit={handleParametrosChange} />
+        <FiltroIntercambio onFiltroSubmit={handleParametrosChange} />
       </div>
       <div className='publi-container'>
         {loading ? (

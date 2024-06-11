@@ -1,45 +1,43 @@
-import React, { useState } from 'react';
-import { ButtonSubmit } from '../components/ButtonSubmit';
-import "../HarryStyles/centros.css";
-import "../HarryStyles/styles.css";
+  import React, { useState } from 'react';
+  import { ButtonSubmit } from '../components/ButtonSubmit';
+  import "../HarryStyles/centros.css";
+  import "../HarryStyles/styles.css";
 
-const FiltroUsuario = ({ onFiltroSubmit }) => {
-  const [filtro, setFiltro] = useState({
-    publicacionOferta: "",
-    PublicacionOfertada: "",
-    estado: "",
-    centro: "",
-    horario:"",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFiltro({
-      ...filtro,
-      [name]: value
+  const FiltroIntercambio = ({ onFiltroSubmit }) => {
+    const [filtro, setFiltro] = useState({
+      publicacionOferta: "",
+      publicacionOfertada: "",
+      estado: "",
+      centro: "",
+      horario:""
     });
+
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFiltro({
+        ...filtro,
+        [name]: value
+      });
+    };
+
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      onFiltroSubmit(filtro);
+    };
+
+    return (
+      <><br/><br/><br/>
+      <form onSubmit={handleSubmit} className="filtro-form">
+        <label className="filtro-label">Filtrar por:</label>
+        <input type="text" name="publicacionOferta" value={filtro.publicacionOferta} onChange={handleChange} placeholder="Publicación Oferta"className="filtro-input"/>
+        <input type="text" name="publicacionOfertada" value={filtro.publicacionOfertada} onChange={handleChange} placeholder="Publicación Ofertada"className="filtro-input"/>
+        <input type="text" name="estado" value={filtro.estado} onChange={handleChange} placeholder="Estado"className="filtro-input"/>
+        <input type="text" name="centro" value={filtro.centro} onChange={handleChange} placeholder="Centro"className="filtro-input"/>
+        <input type="text" name="horario" value={filtro.horario} onChange={handleChange} placeholder="Horario"className="filtro-input"/>
+        <ButtonSubmit text="Filtrar" />
+      </form>
+      </>
+    );
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onFiltroSubmit(filtro);
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <label> Filtrar por: </label>
-      <input type="text" name="username" value={filtro.username} onChange={handleChange} placeholder="Nombre de usuario"/>
-      <input type="text" name="nombre" value={filtro.nombre} onChange={handleChange} placeholder="Nombre"/>
-      <input type="text" name="apellido" value={filtro.apellido} onChange={handleChange} placeholder="Apellido"/>
-      <input type="text" name="dni" value={filtro.dni} onChange={handleChange} placeholder="DNI" />
-      <select name="rol" value={filtro.rol} onChange={handleChange}>
-        <option value="user">Usuario</option>
-        <option value="volunt">Voluntario</option>
-        <option value="admin">Administrador</option>
-      </select>
-      <ButtonSubmit text="Filtrar" />
-    </form>
-  );
-};
-
-export default FiltroUsuario;
+  export default FiltroIntercambio;

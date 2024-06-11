@@ -33,7 +33,10 @@ const Registrarse = () => {
 		if (edad < 18){
 			setMyError(true);
 			setMsgError('Debes ser mayor de edad para registrarte.');
-		}else{
+		} else if (contraseña.length < 6){
+			setMyError(true);
+			setMsgError('La contraseña debe tener por lo menos 6 caracteres');
+		} else {
 			console.log('entro');
 			const formData = new FormData();
 			formData.append('username', username);

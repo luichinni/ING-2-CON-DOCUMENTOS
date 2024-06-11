@@ -35,14 +35,14 @@ const ListarMisPublis = () => {
         const response = await axios.get(url);
 
         if (response.data.length === 3) {
-          setError('No hay publicaciones disponibles');
+          setError('No tenes publicaciones de la misma categoría');
           setPublicaciones([]); 
           console.log('disponibles')
         } else {
           setPublicaciones(procesar(response.data));
         }
       } catch (error) {
-        setError('No hay publicaciones disponibles.');
+        setError('No tenes publicaciones de la misma categoría.');
         console.log('encontradas')
         console.error(error);
       } finally {
@@ -76,7 +76,10 @@ const ListarMisPublis = () => {
         {loading ? (
           <h1 className='cargando'>Cargando...</h1>
         ) : error ? (
+          <>
+          <br/><br/><br/><br/>
           <h1 className='sin-publi'>{error}</h1>
+          </>
         ) : (
           publicaciones.map(publicacion => (
             (publicacion.categoria_id === localStorage.getItem("categoriaInter"))?
