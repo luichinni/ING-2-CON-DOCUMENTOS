@@ -30,7 +30,7 @@ const IniciarSesion = () => {
                         "Content-Type": "application/json",
                     },
                 });
-                console.log('Success:', response.data.token);
+                console.log('Success:', response.data);
                 localStorage.setItem('token',response.data.token);
                 localStorage.setItem('username',username);
                 console.log(username);

@@ -57,6 +57,7 @@ const ListarUsuario = () => {
         usuarioCopy[clave] = usuarios[clave]
       }
     })
+    console.log(usuarioCopy)
     return usuarioCopy
   }
 

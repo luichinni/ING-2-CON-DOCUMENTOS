@@ -55,10 +55,10 @@ const ListarIntercambios = () => {
   const handleParametrosChange = (newParametros) => {
     setParametros(newParametros);
     if(localStorage.getItem('token' == 'tokenUser')){
-      setParametros.username(localStorage.getItem('username'));
+      ;
     }
     if(localStorage.getItem('token' == 'tokenVolunt')){
-      setParametros.centro();
+      ;
     }
   };
 

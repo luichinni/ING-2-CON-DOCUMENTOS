@@ -131,6 +131,14 @@ const User = (props) => {
         return cenCopy
     }
 
+    function Telefono(){
+    let Tel= 'Sin Datos'
+    if (props.telefono !== 0){
+        Tel = props.telefono
+    } 
+    return Tel;
+    }
+    
     return  <fieldset className="centro-fila">
                 <p>
                 Nombre de usuario: {props.username}
@@ -141,15 +149,15 @@ const User = (props) => {
                 {isExpanded && (
                 <div className="detallesUsuario">
                 <br />
-                nombre: {props.nombre}
+                Nombre: {props.nombre}
                 <br />
-                apellido: {props.apellido}
+                Apellido: {props.apellido}
                 <br />
-                dni: {props.dni} 
+                DNI: {props.dni} 
                 <br />
-                mail: {props.mail}
+                Mail: {props.mail}
                 <br />
-                telefono: {props.telefono}
+                Telefono: {Telefono()}
                 <br />
                 <form onSubmit={handleSubmit}>
                     <select id="rol" value={rol} onChange={(e) => setear(e)}>
