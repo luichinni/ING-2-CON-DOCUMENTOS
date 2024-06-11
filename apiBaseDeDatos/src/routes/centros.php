@@ -33,7 +33,7 @@ function validaDatos($data, $response) {
         if (!isset($data[$colum]) || empty($data[$colum])) {
             /*             $errorResponse = ['error' => 'El campo: ' . $colum . ' es requerido'];
             $response->getBody()->write(json_encode($errorResponse)); */
-            error_log('Vacio');
+            //error_log('Vacio');
             return false;
         }
     }
@@ -43,13 +43,13 @@ function validaDatos($data, $response) {
         if (isset($data[$revi]) && strlen($data[$revi]) > 255) {
             /*             $errorResponse = ['error' => 'El campo ' . $revi . ' excede los 255 caracteres permitidos'];
             $response->getBody()->write(json_encode($errorResponse)); */
-            error_log('nombre grande');
+            //error_log('nombre grande');
             return false;
         }
         if (isset($data[$revi]) && strlen($data[$revi]) < 3) {
             /*             $errorResponse = ['error' => 'El campo ' . $revi . ' debe tener al menos 3 caracteres'];
             $response->getBody()->write(json_encode($errorResponse)); */
-            error_log('nombre chico');
+            //error_log('nombre chico');
             return false;
         }
     }
@@ -60,14 +60,14 @@ function validaDatos($data, $response) {
     if (!preg_match('/^(?:2[0-3]|[0-1][0-9]):[0-5][0-9]$/', $hora_abre) || !preg_match('/^(?:2[0-3]|[0-1][0-9]):[0-5][0-9]$/', $hora_cierra)) {
         /*         $errorResponse = ['error' => 'Los campos de apertura y cierre deben estar en formato HH:MM, y estar entre los valores 00:00 y 23:59'];
         $response->getBody()->write(json_encode($errorResponse)); */
-        error_log('HORA NO EN FORMATO HH:MM');
+        //error_log('HORA NO EN FORMATO HH:MM');
         return false;
     }
 
     if ($hora_abre >= $hora_cierra) {
         /*         $errorResponse = ['error' => 'El horario de apertura debe ser menor al horario de cierre'];
         $response->getBody()->write(json_encode($errorResponse)); */
-        error_log('h_cierre <= h_abre');
+        //error_log('h_cierre <= h_abre');
         return false;
     }
 
@@ -76,7 +76,7 @@ function validaDatos($data, $response) {
 
 function tieneVoluntarios(int|string $id){
     global $centroVolunDB;
-    error_log("dentro con $id: ". $centroVolunDB->exists(['centro' => $id]));
+    //error_log("dentro con $id: ". $centroVolunDB->exists(['centro' => $id]));
     return $centroVolunDB->exists(['centro'=>$id]);
 }
 
@@ -196,9 +196,9 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         }
 
         $centroVol = (array) ((array) obtenerCentroVolun(['voluntario'=>$queryParams['voluntario']]))[0];
-        error_log(json_encode($centroVol));
+        //error_log(json_encode($centroVol));
         $centro = (array) json_decode($centroDB->getFirst(['id'=>$centroVol['centro']]));
-        error_log(json_encode($centro));
+        //error_log(json_encode($centro));
         if (empty($centro)) {
             $response->getBody()->write(json_encode($msgReturn));
             return $response->withStatus(404)->withHeader('Content-Type', 'application/json');

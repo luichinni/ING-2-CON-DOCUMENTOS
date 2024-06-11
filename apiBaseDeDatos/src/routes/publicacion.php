@@ -37,18 +37,18 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         for ($i = 1; $i <= 6; $i++){
             $foto = $foto || array_key_exists('foto'.$i,$bodyParams);
         }
-        error_log("hay fotos: " . json_encode($foto));
+        //error_log("hay fotos: " . json_encode($foto));
 
         if (empty($where) || count($camposPublicacion) < count($where) || !$foto) {
             $response->getBody()->write(json_encode($msgReturn));
             return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
 
-        error_log("Ahora intenta insertar");
+        //error_log("Ahora intenta insertar");
 
         $pudo = $publiDB->insert($bodyParams);
 
-        error_log("Insertar: " . json_encode($pudo));
+        //error_log("Insertar: " . json_encode($pudo));
 
         $msgReturn['Mensaje'] = 'Ocurrió un error al cargar la publicación';
 
@@ -160,7 +160,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         $msgReturn = ['Mensaje'=>'No se encontraron coincidencias'];
         // obtener los parametros de la query
         $queryParams = $request->getQueryParams();
-        error_log(json_encode($queryParams));
+        //error_log(json_encode($queryParams));
         if (array_key_exists('like', $queryParams)){
             $queryParams['like'] = $queryParams['like']=="true" ? true : false;
         }else{

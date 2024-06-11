@@ -4,6 +4,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
+require_once __DIR__ . '/../utilities/mailSender.php';
 require_once __DIR__ . '/../utilities/bdController.php';
 
 $camposUser = [
@@ -160,7 +161,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
         $msgReturn = ['Mensaje' => 'Faltan parametros'];
 
         $bodyParams = (array) $req->getParsedBody();
-        error_log(json_encode($bodyParams));
+        //error_log(json_encode($bodyParams));
         if (!array_key_exists('centro',$bodyParams) || !array_key_exists('username',$bodyParams)) {
             $res->getBody()->write(json_encode($msgReturn));
             return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
@@ -191,6 +192,9 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
             $status = 200;
             $centro = (array) ((array)json_decode($centroDB->getFirst(['id'=>$bodyParams['centro']])))[0];
             enviarNotificacion($bodyParams['username'],"Has sido registrado como un voluntario del centro \"" . $centro['Nombre']."\"");
+            global $mailer;
+            $user=(array)((array)json_decode($userDB->getFirst(['username'=>$bodyParams['username']])))[0];
+            $mailer->send($user['mail'],'Cambios de usuario!', "Has sido registrado como un voluntario del centro \"" . $centro['Nombre'] . "\"",true);
         }
 
         $msgReturn['Mensaje'] = $status == 200 ? 'Voluntario agregado con éxito' : 'Ocurrio un error al agregar el voluntario';
@@ -224,6 +228,9 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
         if ($pudo) {
             $status = 200;
             enviarNotificacion($bodyParams['username'], "Has sido registrado como un administrador del sistema");
+            global $mailer;
+            $user = (array)((array)json_decode($userDB->getFirst(['username' => $bodyParams['username']])))[0];
+            $mailer->send($user['mail'], 'Cambios de usuario!', "Has sido registrado como un administrador del sistema", true);
         }
 
         $msgReturn['Mensaje'] = $status == 200 ? 'Administrador agregado con éxito' : 'Ocurrio un error al asignar el rol de administrador';
@@ -267,7 +274,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
         $bodyParams = (array) $req->getParsedBody();
         $where = $userDB->getWhereParams($bodyParams);
 
-        error_log(json_encode($bodyParams));
+        //error_log(json_encode($bodyParams));
         if (empty($where) || !$userDB->exists($where)) {
             $res->getBody()->write(json_encode($msgReturn));
             return $res->withStatus($status)->withHeader('Content-Type', 'application/json');

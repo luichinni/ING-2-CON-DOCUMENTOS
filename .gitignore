@@ -2,3 +2,4 @@
 /vendor
 /apiBaseDeDatos/vendor
 /front/node_modules
+apiBaseDeDatos/src/utilities/credenciales.json

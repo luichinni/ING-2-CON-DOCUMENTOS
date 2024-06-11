@@ -26,7 +26,7 @@ $intercambioDB = new bdController('intercambio',$pdo,$camposIntercambio);
 $app->group('/public', function (RouteCollectorProxy $group) {
 
     $group->POST('/newIntercambio', function (Request $request, Response $response, $args) { //necesita en el body publicacionOferta, publicacionOfertada, centro, horario
-        global $publiDB, $intercambioDB;
+        global $publiDB, $intercambioDB, $userDB;
         $pudo = false;
         $status = 500;
         $msgReturn = ['Mensaje' => 'Faltan campos por completar'];
@@ -34,7 +34,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
         $bodyParams = (array) $request->getParsedBody();
 
         //error_log(json_encode($bodyParams));
-        error_log(json_encode($bodyParams));
+        //error_log(json_encode($bodyParams));
         if (!$publiDB->exists(['id'=>$bodyParams['publicacionOferta']]) || !$publiDB->exists(['id' => $bodyParams['publicacionOferta']])){
             $msgReturn['Mensaje'] = 'Ocurrió un error al comprobar las publicaciones';
             $response->getBody()->write(json_encode($msgReturn));
@@ -89,7 +89,16 @@ $app->group('/public', function (RouteCollectorProxy $group) {
             
             $redirect = (array) json_decode($intercambioDB->getFirst(['publicacionOferta'=>$p1['id'], 'publicacionOfertada'=>$p2['id'], 'estado'=>'pendiente']));
             $redirect = (array) $redirect[0];
-            enviarNotificacion($p2['user'], $p1['user']. " te ha ofrecido \"".$p1['nombre']."\" por \"".$p2['nombre']."\"", './intercambio/'. $redirect['id']);
+            $mensaje = $p1['user'] . " te ha ofrecido \"" . $p1['nombre'] . "\" por \"" . $p2['nombre'] . "\"";
+            enviarNotificacion($p2['user'], $mensaje, './Intercambio');
+            global $mailer;
+            $user = (array)((array)json_decode($userDB->getFirst(['username' => $p2['user']])))[0];
+            $mailer->send($user['mail'], 'Notificacion de Intercambio!', $mensaje, true);
+
+            $mensaje2 = "Has ofrecido \"" . $p1['nombre'] . "\" por \"".$p2['nombre']."\" a " . $p2['user'];
+            $user2 = (array)((array)json_decode($userDB->getFirst(['username' => $p1['user']])))[0];
+            $mailer->send($user2['mail'], 'Notificacion de Intercambio!', $mensaje2, true);
+            enviarNotificacion($p1['user'], $mensaje2, './Intercambio');
         }
 
         $msgReturn['Mensaje'] = ($pudo) ? 'Intercambio registrado con exito' : 'Ocurrió un error al registrar el intercambio';
@@ -111,7 +120,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
             $intercambio = (array) $intercambio;
             $centro = (array) json_decode($centroDB->getFirst(['id'=>$intercambio['centro']]));
             $centro = (array) $centro[0];
-            error_log(json_encode($centro));
+            //error_log(json_encode($centro));
             $intercambio['centro'] = $centro['Nombre'];
             $listado[$id] = $intercambio;
         }
@@ -119,7 +128,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
         $listado['Mensaje'] = (!empty($listado)) ? 'Intercambios listados con exito' : $msgReturn['Mensaje'];
 
         $status = (!empty($listado)) ? 200 : 404;
-        error_log(json_encode($listado));
+        //error_log(json_encode($listado));
         $response->getBody()->write(json_encode($listado));
         return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
     });
@@ -131,7 +140,6 @@ $app->group('/public', function (RouteCollectorProxy $group) {
         $msgReturn = ['Mensaje' => 'No se pudo actualizar la informacion del intercambio'];
 
         $bodyParams = (array) $req->getParsedBody();
-
         $pudo = $intercambioDB->update($bodyParams);
 
         $msgReturn['Mensaje'] = ($pudo) ? 'Actualizado correctamente' : $msgReturn['Mensaje'];
@@ -139,9 +147,11 @@ $app->group('/public', function (RouteCollectorProxy $group) {
 
         if ($pudo){ 
             //obtener ambas publis
-            $p1 = $bodyParams['publicacionOferta'];
+            $inter = (array)((array)json_decode($intercambioDB->getFirst(['id'=>$bodyParams['id']])))[0];
+            error_log("inter: ".json_encode($inter));
+            $p1 = $inter['publicacionOferta'];
             $p1 = (array) json_decode($publiDB->getFirst(['id'=>$p1]))[0];
-            $p2 = $bodyParams['publicacionOfertada'];
+            $p2 = $inter['publicacionOfertada'];
             $p2 = (array) json_decode($publiDB->getFirst(['id'=>$p2]))[0];
             //obtener ambos users
             if ($bodyParams['userMod'] == $p1['user']){
@@ -164,9 +174,17 @@ $app->group('/public', function (RouteCollectorProxy $group) {
             $status = ($pudo) ? 200 : $status;
 
             if ($pudo){
+                $mensaje = (array_key_exists('setestado',$bodyParams)) ? "El intercambio de \"$tuProducto\" por \"$elOtroProducto\" con $userActual fue ".$bodyParams['setestado']."." : "El intercambio de \"$tuProducto\" por \"$elOtroProducto\" con $userActual fue modificado.";
+                $mensaje2 = (array_key_exists('setestado',$bodyParams)) ? "El intercambio de \"$tuProducto\" por \"$elOtroProducto\" con $otroUser fue ".$bodyParams['setestado']."." : "El intercambio de \"$tuProducto\" por \"$elOtroProducto\" con $otroUser fue modificado.";
                 $redirect = (array) json_decode($intercambioDB->getFirst(['publicacionOferta' => $p1['id'], 'publicacionOfertada' => $p2['id'], 'estado' => 'pendiente']));
                 $redirect = $redirect[0];
-                enviarNotificacion($otroUser, "El intercambio de \"$tuProducto\" por \"$elOtroProducto\" con $userActual fue modificado.", './intercambio/'.$redirect['id']);
+                enviarNotificacion($otroUser, $mensaje, './Intercambio');
+                enviarNotificacion($userActual, $mensaje2, './Intercambio');
+                global $mailer;
+                $user = (array)((array)json_decode($userDB->getFirst(['username' => $otroUser])))[0];
+                $mailer->send($user['mail'], 'Notificacion de Intercambio!', $mensaje, true);
+                $user2 = (array)((array)json_decode($userDB->getFirst(['username' => $userActual])))[0];
+                $mailer->send($user2['mail'], 'Notificacion de Intercambio!', $mensaje2, true);
             }
         }
 

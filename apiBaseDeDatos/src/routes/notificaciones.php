@@ -40,7 +40,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
         foreach ($listado as $key => $noti){
             $noti = (array) $noti;
             if (array_key_exists('id',$noti)){
-                error_log("index 0 => " . $noti[0]);
+                //error_log("index 0 => " . $noti[0]);
                 verNotificacion($noti['id']);
             }
         }

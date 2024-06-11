@@ -1,6 +1,7 @@
 <?php
 require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/../src/models/db.php';
+require __DIR__ . '/../src/utilities/mailSender.php';
 use Slim\Factory\AppFactory;
 
 $app = AppFactory::create();
@@ -22,6 +23,9 @@ $app->options('/{routes:.+}', function ($request, $response, $args) {
 
 $app->addBodyParsingMiddleware();
 $app->addErrorMiddleware(true, true, true);
+
+$credenciales = (array) json_decode(file_get_contents('../src/utilities/credenciales.json'));
+$mailer = new mailSender($credenciales['Username'],$credenciales['Password'],$credenciales['mail']);
 
 require __DIR__ . '/../src/routes/usuarios.php';
 require __DIR__ . '/../src/routes/sesionActiva.php';

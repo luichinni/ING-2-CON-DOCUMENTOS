@@ -2,6 +2,12 @@
     "require": {
         "slim/slim": "4.*",
         "slim/psr7": "^1.6",
-        "hadasbro/php-streams": "^1.0"
+        "hadasbro/php-streams": "^1.0",
+        "phpmailer/phpmailer": "^6.9"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     }
 }
