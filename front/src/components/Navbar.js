@@ -40,7 +40,7 @@ export function NavBar() {
                             <Link to="/agregarPublicacion" className="botonNavBar">Subir Publicación</Link>
                         </li>
                         <li className='buttonNavBar'>
-                            <Link to="/Intercambios" className="botonNavBar">Mis Intercambios</Link>
+                            <Link to="/Intercambio" className="botonNavBar">Mis Intercambios</Link>
                         </li>
                     </>
                 )}
@@ -53,13 +53,13 @@ export function NavBar() {
                             <Link to="/Usuarios" className="botonNavBar">Usuarios</Link>
                         </li>
                         <li className='buttonNavBar'>
-                            <Link to="/Intercambios" className="botonNavBar">Intercambios</Link>
+                            <Link to="/Intercambio" className="botonNavBar">Intercambios</Link>
                         </li>
                     </>
                 )}
                 {token === 'tokenVolunt' && (
                     <li className='buttonNavBar'>
-                        <Link to="/Intercambios" className="botonNavBar">Intercambios</Link>
+                        <Link to="/Intercambio" className="botonNavBar">Intercambios</Link>
                     </li>
                 )}
                 <li className='buttonNavBar'>
@@ -92,6 +92,7 @@ export function NavBar() {
                     {menuOpen && (
                         <div className={`dropdownmenu ${menuOpen ? 'show' : ''}`}>
                             <ul>
+                                <li className='saludoUsuario'>¡Hola {localStorage.getItem('username')}!</li>
                                 <li><button className='opButton' onClick={() => console.log("Ver mi Perfil")}>Ver mi Perfil</button></li>
                                 <li><Link to="/config"><button className='opButton' onClick={toggleMenu}>Configuraciones</button></Link></li>
                                 {token === 'tokenUser' && (

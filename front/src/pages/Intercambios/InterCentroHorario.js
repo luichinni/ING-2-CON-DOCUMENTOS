@@ -105,6 +105,7 @@ const InterCentroHorario = () => {
                     },
                 })
             console.log('Success:', response);
+            alert ("se realizo con exito la oferta de intercambio intercambio")
             navigate("../Explorar");
             window.location.reload();
         } catch (error) {
