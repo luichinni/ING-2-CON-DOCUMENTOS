@@ -93,7 +93,7 @@ export function NavBar() {
                         <div className={`dropdownmenu ${menuOpen ? 'show' : ''}`}>
                             <ul>
                                 <li><button className='opButton' onClick={() => console.log("Ver mi Perfil")}>Ver mi Perfil</button></li>
-                                <li><button className='opButton' onClick={() => console.log("Configuraciones")}>Configuraciones</button></li>
+                                <li><Link to="/config"><button className='opButton' onClick={toggleMenu}>Configuraciones</button></Link></li>
                                 {token === 'tokenUser' && (
                                 <>
                                     <li className='buttonNavBar'>

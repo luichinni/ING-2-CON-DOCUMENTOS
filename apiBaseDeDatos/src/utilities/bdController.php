@@ -67,6 +67,7 @@ class bdController{
 
     public function update(array $queryParams){
         $queryUpdate = $this->generarUpdate($queryParams);
+        error_log($queryUpdate);
         return $this->pdo->query($queryUpdate)->execute();
     }
 
@@ -177,6 +178,8 @@ class bdController{
                     switch ($this->camposTabla[$key]) {
                         case '?int': // se acumula con int
                         case 'int': // si es numero
+                        case 'bool':
+                        case '?bool':
                             $queryWhere .= "`$key`=$value ";
                             break;
                         case 'time':
@@ -258,7 +261,7 @@ class bdController{
             $querySql,
             0,
             strlen($querySql) - 2
-        );
+        ) . ' ';
         $querySql .= $this->armarWhere($valuesIn, $like);
 
         return $querySql;

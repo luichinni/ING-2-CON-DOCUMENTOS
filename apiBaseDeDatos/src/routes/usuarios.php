@@ -17,6 +17,7 @@ $camposUser = [
     "telefono" => "?int",
     "fecha_registro"=>'?datetime',
     "rol" => "enum",
+    "notificacion" => "?bool"
 ];
 
 $userDB = new bdController('usuarios',$pdo,$camposUser);
@@ -195,9 +196,12 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
             $status = 200;
             $centro = (array) ((array)json_decode($centroDB->getFirst(['id'=>$bodyParams['centro']])))[0];
             enviarNotificacion($bodyParams['username'],"Has sido registrado como un voluntario del centro \"" . $centro['Nombre']."\"");
-            global $mailer;
-            $user=(array)((array)json_decode($userDB->getFirst(['username'=>$bodyParams['username']])))[0];
-            $mailer->send($user['mail'],'Cambios de usuario!', "Has sido registrado como un voluntario del centro \"" . $centro['Nombre'] . "\"",true);
+
+            $user = (array)((array)json_decode($userDB->getFirst(['username' => $bodyParams['username']])))[0];
+            if ($user['notificacion']) {
+                global $mailer;
+                $mailer->send($user['mail'], 'Cambios de usuario!', "Has sido registrado como un voluntario del centro \"" . $centro['Nombre'] . "\"", true);
+            }
         }
 
         $msgReturn['Mensaje'] = $status == 200 ? 'Voluntario agregado con éxito' : 'Ocurrio un error al agregar el voluntario';
@@ -265,9 +269,12 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
         if ($pudo) {
             $status = 200;
             enviarNotificacion($bodyParams['username'], "Has sido registrado como un administrador del sistema");
-            global $mailer;
+
             $user = (array)((array)json_decode($userDB->getFirst(['username' => $bodyParams['username']])))[0];
-            $mailer->send($user['mail'], 'Cambios de usuario!', "Has sido registrado como un administrador del sistema", true);
+            if ($user['notificacion']){
+                global $mailer;
+                $mailer->send($user['mail'], 'Cambios de usuario!', "Has sido registrado como un administrador del sistema", true);
+            }
         }
 
         $msgReturn['Mensaje'] = $status == 200 ? 'Administrador agregado con éxito' : 'Ocurrio un error al asignar el rol de administrador';
@@ -309,11 +316,19 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
         $msgReturn = ['Mensaje' => 'Faltan datos para identificar y modificar el usuario'];
 
         $bodyParams = (array) $req->getParsedBody();
-        $where = $userDB->getWhereParams($bodyParams);
+        //error_log(json_encode($bodyParams));
 
+        $where = $userDB->getWhereParams($bodyParams);
+        
         if (array_key_exists('setrol',$bodyParams)){
             if (validarCentroVolun(['voluntario' => $bodyParams['username']])) {
                 $centroVolunDB->delete(['voluntario' => $bodyParams['username']]);
+            }
+            $user = (array)((array)json_decode($userDB->getFirst(['username' => $bodyParams['username']])))[0];
+            enviarNotificacion($bodyParams['username'], "Se te asigno el rol de " . $bodyParams['setrol']);
+            if ($user['notificacion']) {
+                global $mailer;
+                $mailer->send($user['mail'], 'Cambios de usuario!', "Se te asigno el rol de ". $bodyParams['setrol'], true);
             }
         }
 
@@ -321,6 +336,14 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
         if (empty($where) || !$userDB->exists($where)) {
             $res->getBody()->write(json_encode($msgReturn));
             return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
+        }
+
+        if (array_key_exists('setnotificacion',$bodyParams) && $bodyParams['setnotificacion'] == "true"){
+            $bodyParams['setnotificacion'] = true;
+            enviarNotificacion($bodyParams['username'],"Activaste las notificaciones por mail");
+        }else if (array_key_exists('setnotificacion',$bodyParams) && $bodyParams['setnotificacion'] == "false"){
+            $bodyParams['setnotificacion'] = false;
+            enviarNotificacion($bodyParams['username'], "Desactivaste las notificaciones por mail");
         }
 
         $pudo = $userDB->update($bodyParams);

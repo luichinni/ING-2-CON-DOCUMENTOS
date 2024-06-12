@@ -93,11 +93,13 @@ $app->group('/public', function (RouteCollectorProxy $group) {
             enviarNotificacion($p2['user'], $mensaje, './Intercambio');
             global $mailer;
             $user = (array)((array)json_decode($userDB->getFirst(['username' => $p2['user']])))[0];
-            $mailer->send($user['mail'], 'Notificacion de Intercambio!', $mensaje, true);
+            
+            if ($user['notificacion']) $mailer->send($user['mail'], 'Notificacion de Intercambio!', $mensaje, true);
 
             $mensaje2 = "Has ofrecido \"" . $p1['nombre'] . "\" por \"".$p2['nombre']."\" a " . $p2['user'];
             $user2 = (array)((array)json_decode($userDB->getFirst(['username' => $p1['user']])))[0];
-            $mailer->send($user2['mail'], 'Notificacion de Intercambio!', $mensaje2, true);
+            
+            if ($user2['notificacion']) $mailer->send($user2['mail'], 'Notificacion de Intercambio!', $mensaje2, true);
             enviarNotificacion($p1['user'], $mensaje2, './Intercambio');
         }
 
@@ -229,11 +231,18 @@ $app->group('/public', function (RouteCollectorProxy $group) {
                 $redirect = $redirect[0];
                 enviarNotificacion($otroUser, $mensaje, './Intercambio');
                 enviarNotificacion($userActual, $mensaje2, './Intercambio');
-                global $mailer;
+
                 $user = (array)((array)json_decode($userDB->getFirst(['username' => $otroUser])))[0];
-                $mailer->send($user['mail'], 'Notificacion de Intercambio!', $mensaje, true);
                 $user2 = (array)((array)json_decode($userDB->getFirst(['username' => $userActual])))[0];
-                $mailer->send($user2['mail'], 'Notificacion de Intercambio!', $mensaje2, true);
+                global $mailer;
+                
+                if ($user['notificacion']){
+                    $mailer->send($user['mail'], 'Notificacion de Intercambio!', $mensaje, true);
+                }                
+                if ($user2['notificacion']){
+                    $mailer->send($user2['mail'], 'Notificacion de Intercambio!', $mensaje2, true);
+                }
+                
             }
         }
 

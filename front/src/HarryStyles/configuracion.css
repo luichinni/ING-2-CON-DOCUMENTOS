@@ -1,0 +1,63 @@
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: red;
+    transition: .4s;
+    border-radius: 34px;
+}
+.transparent-box {
+    width: 75%;
+    height: 75vh;
+    display: flex;
+    justify-content: center;
+    /* Centrado horizontal */
+    align-items: center;
+    /* Centrado vertical */
+    background-color: rgba(255, 255, 255, 0.5);
+    /* Fondo blanco semi-transparente */
+    border: 2px solid gray;
+    /* Borde gris */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Sombra */
+    border-radius: 10px;
+    /* Bordes redondeados (opcional) */
+    margin: 50px auto;
+    /* Centrar el recuadro en la página */
+    justify-content: center;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background-color: green;
+}
+
+input:checked+.slider:before {
+    transform: translateX(26px);
+}
