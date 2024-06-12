@@ -33,10 +33,11 @@ const ListarIntercambios = () => {
         const queryParams = new URLSearchParams({
           publicacionOferta: parametros.publicacionOferta,
           publicacionOfertada: parametros.publicacionOfertada,
-          estado: parametros.estado,
+          estado: token === 'tokenVolunt' ? 'aceptado' : parametros.estado,
           centro: token === 'tokenVolunt' ? centro : parametros.centro,
           username: token === 'tokenUser' ? username : parametros.username,
         }).toString();
+
         console.log(queryParams)
 
 
@@ -65,12 +66,13 @@ const ListarIntercambios = () => {
     try {
       const url = `http://localhost:8000/public/obtenerCentroVolun?voluntario=${volun}`;
       const response = await axios.get(url);
-      const centroId = response.data[0]?.centro ?? ""; // Acceder al centro ID desde la respuesta
+      const centroId = response.data[0]?.centro ?? "";
+      console.log(centroId)
       return centroId;
     } catch (error) {
       setError(`No puedes ver los intercambios disponibles \n porque no estás asociado a ningún centro`);
       console.error(error);
-      return ""; // Devuelve un valor por defecto en caso de error
+      return "";
     }
   };
 

@@ -4,7 +4,8 @@ import React from "react";
 import Publicacion from "./Publicacion";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link , useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import ModificarInter from "../pages/Intercambios/ModificarInter";
 import ValidarIntercambio from "../pages/Intercambios/ValidarIntercambio";
 
 const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horario, estado }) => {
@@ -22,9 +23,7 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
       setError('');
 
       try {
-        console.log(publicacionOferta)
         const url1 = `http://localhost:8000/public/listarPublicaciones?id=${publicacionOferta}&token=${localStorage.getItem('token')}`;
-        console.log(url1);
         const response1 = await axios.get(url1);
 
         if (response1.data.length === 3) {
@@ -32,6 +31,7 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
           setPubli1([]); 
         } else {
           setPubli1(procesar(response1.data));
+          localStorage.setItem("publica", JSON.stringify(procesar(response1.data)));
         }
       } catch (error) {
         setError('No hay publicaciones disponibles.');
@@ -120,10 +120,11 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
     }
   };
 
-/*
+
   const handleModificarClick =() =>{
-    //direccionar a ModificarIntercambio
-  }*/
+    <ModificarInter idM={id} centroM={centro} horarioM={horario} />
+    navigate ("../ModificarInter"); 
+  }
 
 
   return (
@@ -175,10 +176,9 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
               </>
             ):( 
               <>
-                <Link to={`/ModificarIntercambio`} >
-                  <button className="detalle-button"> Modificar </button>
-                </Link>
+                <button className="detalle-button" onClick={handleModificarClick}> Modificar </button>
                 <button className="detalle-button" onClick={handleRechazadoClick}> Rechazar </button>
+                ()
                 <button className="detalle-button" onClick={handleAceptadoClick}> Confirmar </button>
               </>
             )):(<></>)

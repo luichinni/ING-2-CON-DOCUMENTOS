@@ -23,6 +23,7 @@ import ListarUsuario from './pages/sesion/ListarUsuarios';
 import ValidarIntercambio from './pages/Intercambios/ValidarIntercambio';
 import ListarIntercambios from './pages/Intercambios/listarIntercambios';
 import Configuracion from './components/configuracion'
+import ModificarInter from './pages/Intercambios/ModificarInter';
 
 function App() {
   return (
@@ -57,6 +58,7 @@ function App() {
                 <Route path={"/InterSeleCentHor"} element={<InterCentroHorario />} />
                 <Route path={"/ValidarIntercambio"} element={<ValidarIntercambio />} />
                 <Route path={"/Intercambios"} element={<ListarIntercambios />} />
+                <Route path={"/ModificarInter"} element={<ModificarInter />} />
 
                 <Route path={"/config"} element={<Configuracion />} />
 

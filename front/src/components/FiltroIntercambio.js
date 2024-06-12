@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import "../HarryStyles/centros.css";
 import "../HarryStyles/styles.css";
+import axios from 'axios';
 
 const FiltroIntercambio = ({ onFiltroSubmit }) => {
+  const [centros, setCentros] = useState([]);
+  const [centrosSeleccionados, setCentrosSeleccionados] = useState([]);
   const [filtro, setFiltro] = useState({
     publicacionOferta: "",
     publicacionOfertada: "",
@@ -18,11 +21,36 @@ const FiltroIntercambio = ({ onFiltroSubmit }) => {
       [name]: value
     });
   };
+  const handleCentrosChange = (e) => {
+    const selectedValues = Array.from(e.target.selectedOptions, option => option.value);
+    setCentrosSeleccionados(selectedValues);
+};
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onFiltroSubmit(filtro);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const res = await axios.get(`http://localhost:8000/public/listarCentros?id=&nombre=&direccion=&hora_abre=&hora_cierra=`);
+            setCentros(procesarcen(res.data));
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    fetchData();
+}, []);
+function procesarcen(centros) {
+  let cenCopy = [];
+  Object.keys(centros).forEach(function (clave) {
+      if (!isNaN(clave)) {
+          cenCopy[clave] = centros[clave]
+      }
+  })
+  return cenCopy
+}
 
   return (
     <>
@@ -69,14 +97,14 @@ const FiltroIntercambio = ({ onFiltroSubmit }) => {
           <option value="concretado">Concretado</option>
         </select>
         {localStorage.getItem('token') !== 'tokenVolunt' &&
-          <input 
-            type="text" 
-            name="centro" 
-            value={filtro.centro} 
-            onChange={handleChange} 
-            placeholder="Centro"
-            className="filtro-input" 
-          />
+          <select id="centro" className='filtro-input' onChange={handleCentrosChange}>
+            <option value="">Seleccione un centro</option>
+            {centros.map((centro) => (
+                <option key={centro.id} value={centro.id}>
+                    {centro.Nombre}
+                </option>
+            ))}
+          </select>
         }
         <button className="filtro-button" type="submit">Filtrar</button>
       </form>
