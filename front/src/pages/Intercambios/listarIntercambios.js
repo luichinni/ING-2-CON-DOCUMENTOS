@@ -33,15 +33,16 @@ const ListarIntercambios = () => {
         const queryParams = new URLSearchParams({
           publicacionOferta: parametros.publicacionOferta,
           publicacionOfertada: parametros.publicacionOfertada,
-          estado: token === 'tokenVolunt' ? 'aceptado' : parametros.estado,
+          estado: ((token === 'tokenVolunt')&& (parametros.estado === "")) ? 'aceptado' : parametros.estado,
           centro: token === 'tokenVolunt' ? centro : parametros.centro,
           username: token === 'tokenUser' ? username : parametros.username,
         }).toString();
 
-        console.log(queryParams)
+        console.log(`params: ${queryParams}`)
 
 
-        const url = `http://localhost:8000/public/listarIntercambios?${queryParams}`;
+        const url = `http://localhost:8000/public/listarIntercambios?${queryParams}&token=${localStorage.getItem('token')}`;
+        console.log(`mandar: ${url}`)
         const response = await axios.get(url);
 
         if (response.data.Mensaje === 'No hay intercambios disponibles') {
