@@ -191,16 +191,17 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
                   Rechazar
                 </button>
                 {console.log(`Entro a condición de confirmar: ${userPubli} y ${userOferto}`)}
+                {((userPubli == username && ofertaAcepta == false) || (userOferto == username && ofertadaAcepta == false)) ? (
+                  <>
+                    {console.log("Entro a condición de confirmar")}
+                    <button className="detalle-button" onClick={handleAceptadoClick}>
+                    Confirmar
+                    </button>
+                  </>
+                ):(<></>)}
               </>
             )
-          ) : ((userPubli == username && ofertaAcepta == false) || (userOferto == username && ofertadaAcepta == true)) ? (
-            <>
-              {console.log("Entro a condición de confirmar")}
-              <button className="detalle-button" onClick={handleAceptadoClick}>
-                Confirmar
-              </button>
-            </>
-          ) : null}
+          ):null}
         </div>
       </div>
     </li>

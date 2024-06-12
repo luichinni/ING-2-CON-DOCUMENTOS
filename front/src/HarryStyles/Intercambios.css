@@ -129,6 +129,10 @@
   align-self: center; /* Centra los detalles horizontalmente */
 }
 
+.detalle-button{
+  margin: 10px;
+}
+
 /* Media queries para asegurar responsividad */
 @media (min-width: 768px) {
   .content {
