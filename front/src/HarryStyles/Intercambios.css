@@ -55,9 +55,7 @@
 }
 
 /* Añade esta regla CSS para los contenedores de intercambios */
-.publi-container {
-  display: flex;
-  flex-direction: column; /* Asegura que los intercambios se apilen uno sobre otro */
+.publi-container {/* Asegura que los intercambios se apilen uno sobre otro */
   gap: 20px; /* Espacio entre intercambios */
   align-items: center; /* Centra el contenido horizontalmente */
 }

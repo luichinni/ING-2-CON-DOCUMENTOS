@@ -43,12 +43,15 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
       try {
         const url2 = `http://localhost:8000/public/listarPublicaciones?id=${publicacionOfertada}&token=${localStorage.getItem('token')}`;
         const response2 = await axios.get(url2);
+        console.log(`url : ${url2}`)
+      
 
         if (response2.data.length === 3) {
           setError('No hay publicaciones disponibles.');
           setPubli2([]); 
         } else {
           setPubli2(procesar(response2.data));
+          console.log(`publi2 : ${publi2}`)
         }
       } catch (error) {
         setError('No hay publicaciones disponibles.');
