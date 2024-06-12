@@ -58,7 +58,7 @@ function App() {
                 <Route path={"/InterSeleCentHor"} element={<InterCentroHorario />} />
                 <Route path={"/ValidarIntercambio"} element={<ValidarIntercambio />} />
                 <Route path={"/Intercambio"} element={<ListarIntercambios />} />
-                <Route path={"/ModificarInter"} element={<ModificarInter />} />
+                <Route path={"/ModificarInter/:interId/:publiId"} element={<ModificarInter />} />
 
                 <Route path={"/config"} element={<Configuracion />} />
 

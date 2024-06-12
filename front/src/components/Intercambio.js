@@ -11,6 +11,7 @@ import ValidarIntercambio from "../pages/Intercambios/ValidarIntercambio";
 const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horario, estado }) => {
   const [publi1, setPubli1] = useState([]);
   const [publi2, setPubli2] = useState([]);
+  const [publiOferta, setPOfert] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate(); 
@@ -31,6 +32,7 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
           setPubli1([]); 
         } else {
           setPubli1(procesar(response1.data));
+
           localStorage.setItem("publica", JSON.stringify(procesar(response1.data)));
         }
       } catch (error) {
@@ -122,8 +124,10 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
 
 
   const handleModificarClick =() =>{
-    <ModificarInter idM={id} centroM={centro} horarioM={horario} />
-    navigate ("../ModificarInter"); 
+    /* console.log("AAAAA"+JSON.stringify(publi1)); */
+    /* console.log("BBBBB"+publi2); */
+    //<ModificarInter interId={id} publiOferta={publi1} publiOfertada={JSON.stringify(publi2)} />
+    navigate (`../ModificarInter/${id}/${publi1[0].id}`); 
   }
 
 
