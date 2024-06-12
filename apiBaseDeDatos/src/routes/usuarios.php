@@ -240,7 +240,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
     });
 
     $group->post('/newAdmin', function (Request $req, Response $res, $args) use ($pdo, $camposUser) {
-        global $userDB, $centroDB, $publiDB;
+        global $userDB, $centroDB, $publiDB, $centroVolunDB;
         $pudo = false;
         $status = 500;
         $msgReturn = ['Mensaje' => 'Faltan parametros'];
@@ -252,8 +252,10 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
             return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
 
-        $validUser = $userDB->exists(['username' => $bodyParams['username']]);
-
+        if (validarCentroVolun(['voluntario' => $bodyParams['username']])) {
+            $centroVolunDB->delete(['voluntario' => $bodyParams['username']]);
+        }
+        
         cancelarIntercambios($bodyParams['username']);
 
         $pudo = $publiDB->update(['user' => $bodyParams['username'], 'setestado' => 'baja']);
@@ -301,13 +303,19 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
     });
 
     $group->put('/updateUsuario',function(Request $req,Response $res, $args) use ($pdo,$camposUser){
-        global $userDB;
+        global $userDB , $centroVolunDB;
         $pudo = false;
         $status = 500;
         $msgReturn = ['Mensaje' => 'Faltan datos para identificar y modificar el usuario'];
 
         $bodyParams = (array) $req->getParsedBody();
         $where = $userDB->getWhereParams($bodyParams);
+
+        if (array_key_exists('setrol',$bodyParams)){
+            if (validarCentroVolun(['voluntario' => $bodyParams['username']])) {
+                $centroVolunDB->delete(['voluntario' => $bodyParams['username']]);
+            }
+        }
 
         //error_log(json_encode($bodyParams));
         if (empty($where) || !$userDB->exists($where)) {
