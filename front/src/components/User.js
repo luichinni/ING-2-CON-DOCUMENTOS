@@ -15,6 +15,7 @@ const User = (props) => {
     const roles = ["user", "volunt", "admin"]
     const [centroActual,setCentroActual] = useState("Seleccione un centro");
     const [mensajeBoton,setBotonAceptado] = useState("Cambiar rol");
+    const [visible,setVisible] = useState(true);
 
     const handleCentrosChange = (e) => {
         const selectedValues = Array.from(e.target.selectedOptions, option => option.value);
@@ -106,6 +107,7 @@ const User = (props) => {
 
     function setear (e) {
         setRol(e.target.value)
+        setVisible(true);
         setBotonAceptado('Cambiar rol');
     }
 
@@ -114,13 +116,16 @@ const User = (props) => {
             try {
                 const res = await axios.get(`http://localhost:8000/public/listarCentros?id=&nombre=&direccion=&hora_abre=&hora_cierra=`);
                 setCentros(procesarcen(res.data));
+                setVisible(false);
                 if (props.rol == "volunt"){
                     let centroActualRec = await axios.get(`http://localhost:8000/public/getCentroVolunt?voluntario=${props.username}`)
                     console.log(centroActualRec.data);
                     setCentroActual("Actual: "+centroActualRec.data.Nombre);
                     console.log(centroActual);
-                    setBotonAceptado("Guardar Cambios");
+                    setVisible(true);
                 }
+                setBotonAceptado("Guardar Cambios");
+                
             } catch (error) {
                 console.error("MI MENSAJE");
             }
@@ -187,7 +192,9 @@ const User = (props) => {
                         </select>
 
                     )}
-                    <ButtonSubmit text={mensajeBoton} />
+                    {visible === true && 
+                        <ButtonSubmit text={mensajeBoton} />
+                    }
                 </form>
 
                 </div>
