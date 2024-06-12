@@ -117,71 +117,109 @@ $app->group('/public', function (RouteCollectorProxy $group) {
         $queryParams = $request->getQueryParams();
         //error_log('QUERY PARAMS  '.json_encode($queryParams));
         $listado = [];
+        error_log("MIS QUERIES: ".json_encode($queryParams));
+        if (array_key_exists('username',$queryParams) && $queryParams['username']!=""){
+            $publisUser = (array) json_decode($publiDB->getAll(['user'=>$queryParams['username']],true));
+            error_log("PUBLIS USER: " . json_encode($publisUser));
+            foreach($publisUser as $index => $publi){
+                $publi = (array)$publi;
+                $copy = $queryParams;
+                $copy['publicacionOferta'] = $publi['id'];
 
-        if (array_key_exists('publicacionOferta',$queryParams) && $queryParams['publicacionOferta']!=""){
-            // pido todas las del nombre
-            $publisO = (array) json_decode($publiDB->getAll(['nombre'=>$queryParams['publicacionOferta']],true));
-            // pido todos los intercambios de uno por uno
-            //error_log('publisO: '.json_encode($publisO). " -- existe->".$publiDB->exists(['nombre' => $queryParams['publicacionOferta']]));
-            foreach ($publisO as $publi){
-                // los pongo en un array comun
-                $publi = (array) $publi;
-                foreach (array_values((array)json_decode($intercambioDB->getAll(['publicacionOferta' => $publi['id']]))) as $inter){
+                if(array_key_exists('publicacionOfertada',$copy)) unset($copy['publicacionOfertada']);
+
+                foreach (array_values((array)json_decode($intercambioDB->getAll($copy,true))) as $inter){
+                    $listado[] = $inter;
+                }
+
+                $copy = $queryParams;
+                $copy['publicacionOfertada'] = $publi['id'];
+
+                if (array_key_exists('publicacionOferta', $copy)) unset($copy['publicacionOferta']);
+                
+                foreach (array_values((array)json_decode($intercambioDB->getAll($copy,true))) as $inter) {
                     $listado[] = $inter;
                 }
             }
-            //error_log('listado: '.json_encode($listado));
-            
-            if (array_key_exists('publicacionOfertada',$queryParams) && $queryParams['publicacionOfertada'] != ""){
-                // pido todas las publis del nombre
-                $publisOf = (array) json_decode($publiDB->getAll(['nombre' => $queryParams['publicacionOfertada']], true));
-                // elimino los intercambios donde no aparezca como publiOfertada
-                //error_log("PUBLISOF: ". json_encode($publisOf));
-                $newListado = [];
-                foreach ($publisOf as $publi) {
-                    // los pongo en un array comun
+            if (array_key_exists('publicacionOferta', $queryParams) && $queryParams['publicacionOferta']!=""){
+                $publisO = (array) json_decode($publiDB->getAll(['nombre'=>$queryParams['publicacionOferta']],true));
+                $newList = [];
+                error_log("PUBLIS OFERTA EN USER: ". json_encode($publisO));
+                foreach($publisO as $index => $publi){
                     $publi = (array) $publi;
-                    foreach ($listado as $inter) {
+                    foreach ($listado as $inter){
                         $inter = (array) $inter;
-                        //error_log("Cumple: ".($inter['publicacionOfertada'] == $publi['id']));
-                        if ($inter['publicacionOfertada'] == $publi['id']){
-                            $newListado[] = $inter;
+                        if ($inter['publicacionOferta']==$publi['id']){
+                            $newList[] = $inter;
                         }
                     }
                 }
-                $listado = $newListado;
+                $listado = $newList;
+                if (array_key_exists('publicacionOfertada',$queryParams)&&$queryParams['publicacionOfertada']!=""){
+                    $publisOf = (array) json_decode($publiDB->getAll(['nombre' => $queryParams['publicacionOfertada']],true));
+                    $newList = [];
+                    error_log("PUBLIS OFERTADAS EN USER: " . json_encode($publisOf));
+                    foreach ($publisOf as $index => $publi) {
+                        $publi = (array) $publi;
+                        foreach ($listado as $inter) {
+                            $inter = (array) $inter;
+                            if ($inter['publicacionOfertada'] == $publi['id']) {
+                                $newList[] = $inter;
+                            }
+                        }
+                    }
+                    $listado = $newList;
+                }
             }
-            //error_log('listado2: ' . json_encode($listado));
-        } else if (array_key_exists('publicacionOfertada', $queryParams) && $queryParams['publicacionOfertada'] != "") {
-            // pido todas las del nombre
-            $publisO = (array) json_decode($publiDB->getAll(['nombre' => $queryParams['publicacionOfertada']], true));
-            // pido todos los intercambios de uno por uno
-            foreach ($publisO as $publi) {
-                // los pongo en un array comun
+        }else if (array_key_exists('publicacionOferta',$queryParams) && $queryParams['publicacionOferta']!=""){
+            $publisO = (array) json_decode($publiDB->getAll(['nombre'=>$queryParams['publicacionOferta']],true));
+            error_log("PUBLIS OFERTA SOLAS: " . json_encode($publisO));
+            foreach ($publisO as $ind => $publi){
                 $publi = (array) $publi;
-                foreach (array_values((array)json_decode($intercambioDB->getAll(['publicacionOfertada' => $publi['id']]))) as $inter) {
+                $copy = $queryParams;
+                $copy['publicacionOferta'] = $publi['id'];
+
+                if (array_key_exists('publicacionOfertada', $copy)) unset($copy['publicacionOfertada']);
+
+                foreach (array_values((array)json_decode($intercambioDB->getAll($copy,true))) as $inter){
                     $listado[] = $inter;
                 }
             }
-        }else if(array_key_exists('username',$queryParams)){
-            $publis = (array)(json_decode($publiDB->getAll(['user'=>$queryParams['username']])));
-            //error_log(json_encode($publis));
-            if (!empty($publis)){
-                foreach ($publis as $id => $publi){
-                    error_log(json_encode($publi));
-                    $publi = (array) $publi;
-                    foreach (array_values((array)json_decode($intercambioDB->getAll(['publicacionOferta'=>$publi['id']]))) as $inter){
-                        $listado[] = $inter;
+            error_log("listado antes de publi ofertda en oferta ". json_encode($listado));
+            if (array_key_exists('publicacionOfertada',$queryParams)&&$queryParams['publicacionOfertada']!=""){
+                $publisOf = (array) json_decode($publiDB->getAll(['nombre'=>$queryParams['publicacionOfertada']],true));
+                $newList = [];
+                error_log("PUBLIS OFERTADAS EN OFERTA: " . json_encode($publisOf));
+                foreach ($publisOf as $ind => $publi2){
+                    $publi2 = (array) $publi2;
+                    foreach ($listado as $inter) {
+                        $inter = (array)$inter;
+                        if ($inter['publicacionOfertada']==$publi2['id'])
+                        $newList[] = $inter;
                     }
-                    foreach (array_values((array)json_decode($intercambioDB->getAll(['publicacionOfertada'=> $publi['id']]))) as $inter) {
-                        $listado[] = $inter;
-                    }
+                }
+                $listado = $newList;
+            }
+        }else if (array_key_exists('publicacionOfertada',$queryParams) && $queryParams['publicacionOfertada']!=""){
+            $publisO = (array) json_decode($publiDB->getAll(['nombre' => $queryParams['publicacionOfertada']],true));
+            error_log("PUBLIS OFERTADAS SOLAS: " . json_encode($publisO));
+            foreach ($publisO as $ind => $publi) {
+                $publi = (array) $publi;
+                $copy = $queryParams;
+                $copy['publicacionOfertada'] = $publi['id'];
+
+                if (array_key_exists('publicacionOferta', $copy)) unset($copy['publicacionOferta']);
+
+                foreach (array_values((array)json_decode($intercambioDB->getAll($copy,true))) as $inter) {
+                    $listado[] = $inter;
                 }
             }
         }else{
-            $listado = (array) json_decode($intercambioDB->getAll($queryParams));
+            $listado = (array) json_decode($intercambioDB->getAll($queryParams,true));
         }
         
+        error_log("MI LISTADO: ".json_encode($listado));
+
         foreach ($listado as $id => $intercambio){
             $intercambio = (array) $intercambio;
             $centro = (array) json_decode($centroDB->getFirst(['id'=>$intercambio['centro']]));
