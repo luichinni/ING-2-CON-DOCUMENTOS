@@ -93,6 +93,8 @@ const InterCentroHorario = () => {
         const formData = new FormData();
         formData.append(`publicacionOferta`, id_publi1)
         formData.append(`publicacionOfertada`, id_publi2)
+        formData.append(`ofertaAcepta`, 0)
+        formData.append(`ofertadaAcepta`, 1)
         formData.append(`horario`, horarioEnFormato)
         formData.append(`centro`, centroSeleccionado)
 
