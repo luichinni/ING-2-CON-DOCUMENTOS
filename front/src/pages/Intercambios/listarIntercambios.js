@@ -16,8 +16,8 @@ const ListarIntercambios = () => {
     publicacionOfertada: "",
     estado: "",
     centro: "",
-    horario:""
-    });
+    horario: ""
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,22 +25,31 @@ const ListarIntercambios = () => {
       setError('');
 
       try {
+        let centro = "";
+        if (token === 'tokenVolunt') {
+          centro = await obtenerCentroUsuario(username);
+        }
+
         const queryParams = new URLSearchParams({
           publicacionOferta: parametros.publicacionOferta,
           publicacionOfertada: parametros.publicacionOfertada,
           estado: parametros.estado,
-          centro: parametros.centro,
+          centro: token === 'tokenVolunt' ? centro : parametros.centro,
           horario: parametros.horario
         }).toString();
 
         const url = `http://localhost:8000/public/listarIntercambios?${queryParams}`;
         const response = await axios.get(url);
-        
+
         if (response.data.Mensaje === 'No hay intercambios disponibles') {
           setError(`¡No has realizado intercambios todavía! \n Ve a explorar para poder intercambiar`);
           setIntercambios([]);
         } else {
-          setIntercambios(procesar(response.data));
+          let intercambiosList = procesar(response.data);
+          if (token === 'tokenUser') {
+            intercambiosList = await Mispublicaciones(intercambiosList);
+          }
+          setIntercambios(intercambiosList);
         }
       } catch (error) {
         setError(`¡No has realizado intercambios todavía! \n Ve a explorar para poder intercambiar`);
@@ -51,28 +60,57 @@ const ListarIntercambios = () => {
     };
 
     fetchData();
-  }, [parametros]);
+  }, [parametros, username, token]); // Añadir `token` a la dependencia
 
-  const centroUsuario = async (volun) => {
+  const obtenerCentroUsuario = async (volun) => {
     try {
       const url = `http://localhost:8000/public/obtenerCentroVolun?voluntario=${volun}`;
       const response = await axios.get(url);
-      return response;
+      const centroId = response.data[0]?.centro ?? ""; // Acceder al centro ID desde la respuesta
+      return centroId;
     } catch (error) {
-      setError(`No podes ver los intercambios disponibles \n porque no estas asociado a ningun centro`);
+      setError(`No puedes ver los intercambios disponibles \n porque no estás asociado a ningún centro`);
       console.error(error);
-      return error;
+      return ""; // Devuelve un valor por defecto en caso de error
     }
-}
+  };
 
-const handleParametrosChange = async (newParametros) => {
-  if (token === 'tokenVolunt') {
-    const centro = await centroUsuario(username);
-    setParametros({ ...newParametros, centro: centro.data.centro });
-  } else {
-    setParametros(newParametros);
-  }
-}
+  const Mispublicaciones = async (intercambios) => {
+    try {
+      const userPublicacionesIds = [];
+
+      for (const intercambio of intercambios) {
+        const ids = [intercambio.publicacionOferta, intercambio.publicacionOfertada];
+        for (const id of ids) {
+          const url = `http://localhost:8000/public/listarPublicaciones?id=${id}&token=${localStorage.getItem('token')}`;
+          const response = await axios.get(url);
+          const publicacion = response.data[0];
+          if (publicacion.user === username) {
+            userPublicacionesIds.push(publicacion.id);
+          }
+        }
+      }
+
+      const intercambiosFiltrados = intercambios.filter(
+        intercambio => userPublicacionesIds.includes(intercambio.publicacionOferta) || userPublicacionesIds.includes(intercambio.publicacionOfertada)
+      );
+
+      return intercambiosFiltrados;
+    } catch (error) {
+      setError(`Error al filtrar tus intercambios`);
+      console.error(error);
+      return [];
+    }
+  };
+
+  const handleParametrosChange = async (newParametros) => {
+    if (token === 'tokenVolunt') {
+      const centro = await obtenerCentroUsuario(username);
+      setParametros({ ...newParametros, centro });
+    } else {
+      setParametros(newParametros);
+    }
+  };
 
   function procesar(inter) {
     let intercambiosCopy = [];
@@ -81,7 +119,6 @@ const handleParametrosChange = async (newParametros) => {
         intercambiosCopy[clave] = inter[clave];
       }
     });
-    console.log(intercambiosCopy)
     return intercambiosCopy;
   }
 
@@ -95,7 +132,7 @@ const handleParametrosChange = async (newParametros) => {
           <h1 className='cargando'>Cargando...</h1>
         ) : error ? (
           <>
-            <br/><br/><br/>
+            <br /><br /><br />
             <h1 className='sin-publi'>{error}</h1>
           </>
         ) : (

@@ -28,7 +28,7 @@ const ListarPubliInter = () => {
         const queryParams = new URLSearchParams({
             nombre: parametros.nombre,
             user: username,
-            categoria_id: parametros.categoria_id,
+            categoria_id: categoria,
             id: parametros.id,
             habilitado: 0
         }).toString();
@@ -82,7 +82,7 @@ const ListarPubliInter = () => {
           </>
         ) : (
           publicaciones.map(publicacion => (
-            (publicacion.categoria_id === categoria)?(
+            
             <InterPubli
               key={publicacion.id}//evita advertencia
               id={publicacion.id}
@@ -92,10 +92,7 @@ const ListarPubliInter = () => {
               categoria_id={publicacion.categoria_id}
               estado={publicacion.estado}
               imagen={publicacion.imagenes[0].archivo}
-            />):(
-              <> No tenes publicaciones de la misma categoría </>
-             )
-
+              />
           )
         ))}
       </div>

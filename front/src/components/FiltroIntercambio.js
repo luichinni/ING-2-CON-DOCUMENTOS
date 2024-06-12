@@ -34,7 +34,7 @@
         <input type="text" name="estado" value={filtro.estado} onChange={handleChange} placeholder="Estado"className="filtro-input"/>
         <input type="text" name="centro" value={filtro.centro} onChange={handleChange} placeholder="Centro"className="filtro-input"/>
         <input type="text" name="horario" value={filtro.horario} onChange={handleChange} placeholder="Horario"className="filtro-input"/>
-        <ButtonSubmit text="Filtrar" />
+        <button className="filtro-button" type="submit">Filtrar</button>
       </form>
       </>
     );
