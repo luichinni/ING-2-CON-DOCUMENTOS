@@ -16,7 +16,7 @@ const ListarIntercambios = () => {
     publicacionOfertada: "",
     estado: "",
     centro: "",
-    horario: ""
+    username: ""
   });
 
   useEffect(() => {
@@ -35,8 +35,10 @@ const ListarIntercambios = () => {
           publicacionOfertada: parametros.publicacionOfertada,
           estado: parametros.estado,
           centro: token === 'tokenVolunt' ? centro : parametros.centro,
-          horario: parametros.horario
+          username: token === 'tokenUser' ? username : parametros.username,
         }).toString();
+        console.log(queryParams)
+
 
         const url = `http://localhost:8000/public/listarIntercambios?${queryParams}`;
         const response = await axios.get(url);
@@ -46,9 +48,6 @@ const ListarIntercambios = () => {
           setIntercambios([]);
         } else {
           let intercambiosList = procesar(response.data);
-          if (token === 'tokenUser') {
-            intercambiosList = await Mispublicaciones(intercambiosList);
-          }
           setIntercambios(intercambiosList);
         }
       } catch (error) {
@@ -60,7 +59,7 @@ const ListarIntercambios = () => {
     };
 
     fetchData();
-  }, [parametros, username, token]); // Añadir `token` a la dependencia
+  }, [parametros, username, token]);
 
   const obtenerCentroUsuario = async (volun) => {
     try {
@@ -75,34 +74,6 @@ const ListarIntercambios = () => {
     }
   };
 
-  const Mispublicaciones = async (intercambios) => {
-    try {
-      const userPublicacionesIds = [];
-
-      for (const intercambio of intercambios) {
-        const ids = [intercambio.publicacionOferta, intercambio.publicacionOfertada];
-        for (const id of ids) {
-          const url = `http://localhost:8000/public/listarPublicaciones?id=${id}&token=${localStorage.getItem('token')}`;
-          const response = await axios.get(url);
-          const publicacion = response.data[0];
-          if (publicacion.user === username) {
-            userPublicacionesIds.push(publicacion.id);
-          }
-        }
-      }
-
-      const intercambiosFiltrados = intercambios.filter(
-        intercambio => userPublicacionesIds.includes(intercambio.publicacionOferta) || userPublicacionesIds.includes(intercambio.publicacionOfertada)
-      );
-
-      return intercambiosFiltrados;
-    } catch (error) {
-      setError(`Error al filtrar tus intercambios`);
-      console.error(error);
-      return [];
-    }
-  };
-
   const handleParametrosChange = async (newParametros) => {
     if (token === 'tokenVolunt') {
       const centro = await obtenerCentroUsuario(username);
@@ -113,12 +84,20 @@ const ListarIntercambios = () => {
   };
 
   function procesar(inter) {
-    let intercambiosCopy = [];
-    Object.keys(inter).forEach(function (clave) {
+    // Convertir la respuesta en una lista única de intercambios
+    const intercambiosCopy = [];
+    const seenIds = new Set();
+
+    Object.keys(inter).forEach((clave) => {
       if (!isNaN(clave)) {
-        intercambiosCopy[clave] = inter[clave];
+        const intercambio = inter[clave];
+        if (!seenIds.has(intercambio.id)) {
+          seenIds.add(intercambio.id);
+          intercambiosCopy.push(intercambio);
+        }
       }
     });
+
     return intercambiosCopy;
   }
 
