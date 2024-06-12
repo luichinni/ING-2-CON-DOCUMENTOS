@@ -7,7 +7,8 @@ CREATE TABLE Usuarios (
     mail varchar (255),
     telefono int NULL,
     fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
-    rol ENUM('user', 'volunt', 'admin')
+    rol ENUM('user', 'volunt', 'admin'),
+    notificacion BOOLEAN DEFAULT TRUE
 )
 
 CREATE TABLE Categoria (
