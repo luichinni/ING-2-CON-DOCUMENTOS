@@ -36,8 +36,6 @@ const ValidarIntercambio = () => {
 				console.log('estado');
 				formData.append('setdonacion', donacion);
 				console.log('donacion');
-				/*formData.append('montoDonacion', montoDonacion);
-				formData.append('objetoDonado', objetoDonado);*/
 				formData.append('setdescripcion', comentario);
 				console.log(comentario);
 				console.log(`formData:${formData}`)
@@ -63,14 +61,14 @@ const ValidarIntercambio = () => {
 		<form onSubmit={handleSubmit}>
 			<h3> Valida el intercambio! </h3>  <br /> 			
             <label>
-				<select id="estado" onChange={handleEstadoChange}>
+				<select id="estado" onChange={handleEstadoChange} required> 
                     <option value="">Seleccione el estado del intercambio</option>
 					<option value="concretado">Confirmado</option>
 					<option value="cancelado">Cancelado</option>
 					<option value="rechazado">Rechazado</option>
 				</ select>
 				<br/><br/>
-				<select id="donacion" onChange={handleDonacionChange}>
+				<select id="donacion" onChange={handleDonacionChange} required >
                     <option value="">¿Se obtuvo alguna donación?</option>
 					<option value="1">Si</option>
 					<option value="0">No</option>
@@ -78,7 +76,7 @@ const ValidarIntercambio = () => {
 				<br /> <br/>
             </label>
 
-			<textarea NameClass="textarea" value={comentario} onChange={handleComentarioChange} maxLength="255" placeholder="Comentario del intercambio (Máximo 255 caracteres)" required></textarea>
+			<textarea NameClass="textarea" value={comentario} onChange={handleComentarioChange} maxLength="255" placeholder="Comentario del intercambio (Máximo 255 caracteres)" ></textarea>
             <br /><br />
 
 			<ButtonSubmit text="Subir la validación" />
