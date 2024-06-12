@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Publicacion from '../../components/Publicacion';
-import FiltroMisPublis from '../../components/FiltroMisPublis';
+import Filtro from '../../components/Filtro';
 import '../../HarryStyles/Publicaciones.css';
 import { useEffect, useState } from 'react';
 
@@ -27,7 +27,6 @@ const ListarMisPublis = () => {
             nombre: parametros.nombre,
             user: username,
             categoria_id: parametros.categoria_id,
-            estado: parametros.estado,
             id: parametros.id,
             habilitado: 0
         }).toString();
@@ -70,7 +69,7 @@ const ListarMisPublis = () => {
   return (
     <div className='content'>
       <div className='sidebar'>
-        <FiltroMisPublis onFiltroSubmit={handleParametrosChange} />
+        <Filtro onFiltroSubmit={handleParametrosChange} />
       </div>
       <div className='publi-container'>
         {loading ? (

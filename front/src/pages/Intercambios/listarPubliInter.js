@@ -18,29 +18,7 @@ const ListarPubliInter = () => {
     id: "",
     like: "false"
   });
-
-  function categoria_id(categoria){
-    const fetchData = async () => {
-            function procesarcat(categorias) {
-              let cateCopy = [];
-              Object.keys(categorias).forEach(function (clave) {
-                if (!isNaN(clave)) {
-                  cateCopy[clave] = categorias[clave];
-                }
-              });
-              return cateCopy[0].id;
-            }
-      try {
-        let categoria
-        const respon = await axios.get(`http://localhost:8000/public/listarCategorias?id=&nombre=`);
-        return categoria = (procesarcat(respon.data));
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchData();
-  }
-  
+ 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -50,8 +28,7 @@ const ListarPubliInter = () => {
         const queryParams = new URLSearchParams({
             nombre: parametros.nombre,
             user: username,
-            categoria_id: categoria_id(categoria),
-            estado: parametros.estado,
+            categoria_id: parametros.categoria_id,
             id: parametros.id,
             habilitado: 0
         }).toString();
@@ -105,6 +82,7 @@ const ListarPubliInter = () => {
           </>
         ) : (
           publicaciones.map(publicacion => (
+            (publicacion.categoria_id === categoria)?(
             <InterPubli
               key={publicacion.id}//evita advertencia
               id={publicacion.id}
@@ -114,7 +92,10 @@ const ListarPubliInter = () => {
               categoria_id={publicacion.categoria_id}
               estado={publicacion.estado}
               imagen={publicacion.imagenes[0].archivo}
-            />
+            />):(
+              <> {setError('No tenes publicaciones de la misma categoría.')} </>
+             )
+
           )
         ))}
       </div>
