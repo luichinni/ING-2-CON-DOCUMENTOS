@@ -126,7 +126,7 @@ const ListarIntercambios = () => {
               publicacionOferta={intercambio.publicacionOferta}
               publicacionOfertada={intercambio.publicacionOfertada}
               ofertaAcepta={intercambio.ofertaAcepta}
-              ofertaAceptada={intercambio.ofertaAceptada}
+              ofertadaAcepta={intercambio.ofertadaAcepta}
               horario={intercambio.horario}
               estado={intercambio.estado}
               descripcion={intercambio.descripcion}

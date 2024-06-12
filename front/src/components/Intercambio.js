@@ -1,20 +1,19 @@
 import "../HarryStyles/Intercambios.css";
 import "../HarryStyles/Publicaciones.css"
-import React from "react";
-import Publicacion from "./Publicacion";
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
-import ModificarInter from "../pages/Intercambios/ModificarInter";
-import ValidarIntercambio from "../pages/Intercambios/ValidarIntercambio";
+import Publicacion from "./Publicacion";
 
-const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horario, estado }) => {
+const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horario, estado, ofertaAcepta, ofertadaAcepta }) => {
   const [publi1, setPubli1] = useState([]);
   const [publi2, setPubli2] = useState([]);
-  const [publiOferta, setPOfert] = useState('');
+  const [userPubli, setUserPubli] = useState('');
+  const [userOferto, setUserOferto] = useState('');
   const [error, setError] = useState('');
+  const username = localStorage.getItem('username');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const Token = localStorage.getItem('token');
 
@@ -24,16 +23,20 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
       setError('');
 
       try {
-        const url1 = `http://localhost:8000/public/listarPublicaciones?id=${publicacionOferta}&token=${localStorage.getItem('token')}`;
+        console.log(`oferta acepta${ofertaAcepta}`)
+        console.log(`ofertada acepta${ofertadaAcepta}`)
+        console.log(`username: ${username}`)
+        const url1 = `http://localhost:8000/public/listarPublicaciones?id=${publicacionOferta}&token=${Token}`;
         const response1 = await axios.get(url1);
-
-        if (response1.data.length === 3) {
-          setError('No hay publicaciones disponibles.');
-          setPubli1([]); 
+        
+        if (response1.data) {
+          const publicaciones = procesar(response1.data);
+          setPubli1(publicaciones);
+          setUserPubli(publicaciones[0]?.user || '');
+          console.log(`userPubli: ${userPubli}`)
         } else {
-          setPubli1(procesar(response1.data));
-
-          localStorage.setItem("publica", JSON.stringify(procesar(response1.data)));
+          setError('No hay publicaciones disponibles.');
+          setPubli1([]);
         }
       } catch (error) {
         setError('No hay publicaciones disponibles.');
@@ -41,17 +44,17 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
       }
 
       try {
-        const url2 = `http://localhost:8000/public/listarPublicaciones?id=${publicacionOfertada}&token=${localStorage.getItem('token')}`;
+        const url2 = `http://localhost:8000/public/listarPublicaciones?id=${publicacionOfertada}&token=${Token}`;
         const response2 = await axios.get(url2);
-        console.log(`url : ${url2}`)
-      
 
-        if (response2.data.length === 3) {
-          setError('No hay publicaciones disponibles.');
-          setPubli2([]); 
+        if (response2.data) {
+          const publicaciones = procesar(response2.data);
+          setPubli2(publicaciones);
+          setUserOferto(publicaciones[0]?.user || '');
+          console.log(`userOferto: ${userOferto}`)
         } else {
-          setPubli2(procesar(response2.data));
-          console.log(`publi2 : ${publi2}`)
+          setError('No hay publicaciones disponibles.');
+          setPubli2([]);
         }
       } catch (error) {
         setError('No hay publicaciones disponibles.');
@@ -62,60 +65,36 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
     };
 
     fetchData();
-  }, [publicacionOferta, publicacionOfertada]);
+  }, [publicacionOferta, publicacionOfertada, Token]);
 
   function procesar(publicaciones) {
     let publisCopy = [];
     Object.keys(publicaciones).forEach(function (clave) {
       if (!isNaN(clave)) {
-        publisCopy[clave] = publicaciones[clave]
+        publisCopy.push(publicaciones[clave]);
       }
     });
     return publisCopy;
   }
 
+  const handleValidarClick = () => {
+    localStorage.setItem('idValidar', id);
+    navigate("../ValidarIntercambio");
+  };
 
-  const handleValidarClick = async (e) =>{
-    localStorage.setItem('idValidar',id)
-    navigate ("../ValidarIntercambio")
-  }
-  const handleRechazadoClick = async(e) =>{
-    try{
-      console.log("apretado Rechazar")
+  const handleRechazadoClick = async () => {
+    try {
       const formData = new FormData();
-      formData.append('id',id)
+      formData.append('id', id);
       formData.append('setestado', 'rechazado');
-      const respon = await axios.put(`http://localhost:8000/public/updateIntercambio`, formData,
-        {
-          headers: {
-              "Content-Type": "application/json",
-          },
-        });
-      if (respon.data.length === 3) {
-        setError('No se realizo la modificacion.');
-      } else {
-        window.location.reload();
-      }
-    } catch (error) {
-      setError('No se pudo rechazar el intercambio.');
-      console.error(error);
-    }
-  };
-
-  const handleAceptadoClick = async(e) =>{
-    try{
-      console.log("apretado Confirmar")
-      const formData = new FormData();
-      formData.append('id',id)
-      formData.append('setestado', 'aceptado');
-      const respon = await axios.put(`http://localhost:8000/public/updateIntercambio`, formData,
-        {
-          headers: {
-              "Content-Type": "application/json",
-          },
+      const respon = await axios.put(`http://localhost:8000/public/updateIntercambio`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
+
       if (respon.data.length === 3) {
-        setError('No se realizo la modificacion.');
+        setError('No se realizo la modificación.');
       } else {
         window.location.reload();
       }
@@ -125,25 +104,42 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
     }
   };
 
+  const handleAceptadoClick = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('id', id);
+      formData.append('setestado', 'aceptado');
+      const respon = await axios.put(`http://localhost:8000/public/updateIntercambio`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-  const handleModificarClick =() =>{
-    /* console.log("AAAAA"+JSON.stringify(publi1)); */
-    /* console.log("BBBBB"+publi2); */
-    //<ModificarInter interId={id} publiOferta={publi1} publiOfertada={JSON.stringify(publi2)} />
-    navigate (`../ModificarInter/${id}/${publi1[0].id}`); 
-  }
+      if (respon.data.length === 3) {
+        setError('No se realizo la modificación.');
+      } else {
+        window.location.reload();
+      }
+    } catch (error) {
+      setError('No se pudo aceptar el intercambio.');
+      console.error(error);
+    }
+  };
 
+  const handleModificarClick = () => {
+    navigate(`../ModificarInter/${id}/${publi1[0]?.id}`);
+  };
 
   return (
     <li className="intercambio-item">
-      <br/><br/><br/><br/>
+      <br /><br /><br /><br />
       <div className="intercambio-content">
-        <div className="publicaciones-container"> 
+        <div className="publicaciones-container">
           <div className="publicacion">
             Publicacion
             {publi1.map(publicacion => (
               <Publicacion
-                key={publicacion.id} //para que no llore react
+                key={publicacion.id} // para que no llore react
                 id={publicacion.id}
                 nombre={publicacion.nombre}
                 descripcion={publicacion.descripcion}
@@ -156,7 +152,7 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
             ))}
           </div>
           <div className="publicacion">
-            oferta Recibida
+            Oferta Recibida
             {publi2.map(publicacion => (
               <Publicacion
                 key={publicacion.id}
@@ -167,7 +163,7 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
                 categoria_id={publicacion.categoria_id}
                 estado={publicacion.estado}
                 imagen={publicacion.imagenes[0]?.archivo}
-		            centros={publicacion.centros}
+                centros={publicacion.centros}
               />
             ))}
           </div>
@@ -176,20 +172,30 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
           <p><strong>Centro:</strong> {centro}</p>
           <p><strong>Horario:</strong> {horario}</p>
           <p><strong>Estado:</strong> {estado}</p>
-        {((estado === 'aceptado') || (estado === 'pendiente'))?(
-            ((Token === 'tokenAdmin' || Token === 'tokenVolunt'))?(
+          {estado === 'aceptado' || estado === 'pendiente' ? (
+            Token === 'tokenAdmin' || Token === 'tokenVolunt' ? (
+              <button className="detalle-button" onClick={handleValidarClick}>
+                Validar Intercambio
+              </button>
+            ) : (
               <>
-                <button className="detalle-button" onClick={handleValidarClick}> Validar Intercambio </button>
+                <button className="detalle-button" onClick={handleModificarClick}>
+                  Modificar
+                </button>
+                <button className="detalle-button" onClick={handleRechazadoClick}>
+                  Rechazar
+                </button>
+                {((userPubli === username && ofertaAcepta === '0') || (userOferto === username && ofertadaAcepta === '0')) && (
+                  <>
+                  {console.log("entro")}
+                  <button className="detalle-button" onClick={handleAceptadoClick}>
+                    Confirmar
+                  </button>
+                  </>
+                )}
               </>
-            ):( 
-              <>
-                <button className="detalle-button" onClick={handleModificarClick}> Modificar </button>
-                <button className="detalle-button" onClick={handleRechazadoClick}> Rechazar </button>
-                ()
-                <button className="detalle-button" onClick={handleAceptadoClick}> Confirmar </button>
-              </>
-            )):(<></>)
-        }
+            )
+          ) : null}
         </div>
       </div>
     </li>
