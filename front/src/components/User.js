@@ -14,6 +14,7 @@ const User = (props) => {
     const [msgError, setMsgError] = useState('No deberías estar viendo este mensaje');
     const roles = ["user", "volunt", "admin"]
     const [centroActual,setCentroActual] = useState("Seleccione un centro");
+    const [mensajeBoton,setBotonAceptado] = useState("Cambiar rol");
 
     const handleCentrosChange = (e) => {
         const selectedValues = Array.from(e.target.selectedOptions, option => option.value);
@@ -44,10 +45,11 @@ const User = (props) => {
                     });
                 console.log('Success:', response);
                 alert(`Rol cambiado con Exito`);
+                setBotonAceptado("Guardar Cambios");
             } catch (error) {
                 console.error('Error:', error.response.data.Mensaje);
                 setMsgError(error.response.data.Mensaje);
-                alert (msgError);
+                alert ("No se puede asignar un voluntario sin centro");
             }
         } else if (rol == "admin"){
             formData.append('username',props.username)
@@ -61,10 +63,11 @@ const User = (props) => {
                     });
                 console.log('Success:', response);
                 alert(`Rol cambiado con Exito`);
+                setBotonAceptado("Guardar Cambios");
             } catch (error) {
                 console.error('Error:', error.response.data.Mensaje);
                 setMsgError(error.response.data.Mensaje);
-                alert (msgError);
+                alert ("No es posible asignar administrador al usuario");
             }
         } else {
                 formData.append('username',props.username)
@@ -79,10 +82,11 @@ const User = (props) => {
                         });
                     console.log('Success:', response);
                     alert(`Rol cambiado con Exito`);
+                    setBotonAceptado("Guardar Cambios");
                 } catch (error) {
                     console.error('Error:', error.response.data.Mensaje);
                     setMsgError(error.response.data.Mensaje);
-                    alert (msgError);
+                    alert ("No fue posible convertir en usuario común al voluntario/administrador");
                 }
         }
     };
@@ -102,6 +106,7 @@ const User = (props) => {
 
     function setear (e) {
         setRol(e.target.value)
+        setBotonAceptado('Cambiar rol');
     }
 
     useEffect(() => {
@@ -114,9 +119,10 @@ const User = (props) => {
                     console.log(centroActualRec.data);
                     setCentroActual("Actual: "+centroActualRec.data.Nombre);
                     console.log(centroActual);
+                    setBotonAceptado("Guardar Cambios");
                 }
             } catch (error) {
-                console.error(error);
+                console.error("MI MENSAJE");
             }
         };
         fetchData();
@@ -181,7 +187,7 @@ const User = (props) => {
                         </select>
 
                     )}
-                    <ButtonSubmit text="Cambiar Rol" />
+                    <ButtonSubmit text={mensajeBoton} />
                 </form>
 
                 </div>
