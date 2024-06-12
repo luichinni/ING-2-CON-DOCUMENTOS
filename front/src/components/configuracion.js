@@ -9,6 +9,13 @@ const Configuracion = (props) => {
 
     useEffect(() => {
         const fetchData = async () => {
+        try{
+            const response = await axios.get(`http://localhost:8000/public/obtenerUsuario?username=${localStorage.getItem('username')}`);
+            console.log(response.data[0].notificacion)
+            setRecibe(response.data[0].notificacion);
+        }catch (err){
+            window.location.reload();
+        }
         /* try {
             const respon = await axios.get(`http://localhost:8000/public/listarCategorias?id=&nombre=`);
             setCategorias(procesarcat(respon.data));
@@ -60,12 +67,12 @@ const Configuracion = (props) => {
             <br></br>
             <br></br>
             <div class="transparent-box">
-            {recibeNotis && 
-                <button value={false} style={estiloRed} onClick={switchHandler}>Desactivar notificaciones al mail</button>
-            }
-            {!recibeNotis &&
-                <button value={true} style={estiloBlue} onClick={switchHandler}>Activar notificaciones al mail</button>
-            }
+                {recibeNotis == true && 
+                    <button value={false} style={estiloRed} onClick={switchHandler}>Desactivar notificaciones al mail</button>
+                }
+                {recibeNotis == false &&
+                    <button value={true} style={estiloBlue} onClick={switchHandler}>Activar notificaciones al mail</button>
+                }
             </div>
         </>
     )
