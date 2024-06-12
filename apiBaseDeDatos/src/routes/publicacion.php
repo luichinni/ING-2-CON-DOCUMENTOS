@@ -183,7 +183,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         $msgReturn = ['Mensaje'=>'No se encontraron coincidencias'];
         // obtener los parametros de la query
         $queryParams = $request->getQueryParams();
-        if (array_key_exists('categoria_id',$queryParams) && !ctype_digit($queryParams['categoria_id'])){
+        if (array_key_exists('categoria_id',$queryParams) && !ctype_digit($queryParams['categoria_id']) && $queryParams['categoria_id']!=""){
             if($categoriaDB->exists(['nombre'=>$queryParams['categoria_id']])){
                 $cate =(array)((array)json_decode($categoriaDB->getFirst(['nombre'=>$queryParams['categoria_id']])))[0];
                 $queryParams['categoria_id'] = $cate['id'];
