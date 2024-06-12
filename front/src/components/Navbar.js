@@ -40,7 +40,7 @@ export function NavBar() {
                             <Link to="/agregarPublicacion" className="botonNavBar">Subir Publicación</Link>
                         </li>
                         <li className='buttonNavBar'>
-                            <Link to="/Intercambio" className="botonNavBar">Mis Intercambios</Link>
+                            <Link to="/Intercambios" className="botonNavBar">Mis Intercambios</Link>
                         </li>
                     </>
                 )}
@@ -53,13 +53,13 @@ export function NavBar() {
                             <Link to="/Usuarios" className="botonNavBar">Usuarios</Link>
                         </li>
                         <li className='buttonNavBar'>
-                            <Link to="/Intercambio" className="botonNavBar">Intercambios</Link>
+                            <Link to="/Intercambios" className="botonNavBar">Intercambios</Link>
                         </li>
                     </>
                 )}
                 {token === 'tokenVolunt' && (
                     <li className='buttonNavBar'>
-                        <Link to="/Intercambio" className="botonNavBar">Intercambios</Link>
+                        <Link to="/Intercambios" className="botonNavBar">Intercambios</Link>
                     </li>
                 )}
                 <li className='buttonNavBar'>

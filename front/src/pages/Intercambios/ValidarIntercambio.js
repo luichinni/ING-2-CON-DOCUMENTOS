@@ -48,7 +48,7 @@ const ValidarIntercambio = () => {
 					});
 				console.log('Success:', response);
 				alert('Intercambio validado con éxito');
-				navigate("../Intercambio"); //No se donde tiene que ir 
+				navigate("../Intercambios"); //No se donde tiene que ir 
 			} catch (error) {
 				console.error('Error:', error.response.data.Mensaje);
 				setMyError(true);
