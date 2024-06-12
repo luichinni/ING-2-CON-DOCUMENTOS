@@ -93,7 +93,7 @@ const ListarPubliInter = () => {
               estado={publicacion.estado}
               imagen={publicacion.imagenes[0].archivo}
             />):(
-              <> {setError('No tenes publicaciones de la misma categoría.')} </>
+              <> No tenes publicaciones de la misma categoría </>
              )
 
           )
