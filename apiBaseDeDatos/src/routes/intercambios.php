@@ -163,6 +163,21 @@ $app->group('/public', function (RouteCollectorProxy $group) {
                     $listado[] = $inter;
                 }
             }
+        }else if(array_key_exists('username',$queryParams)){
+            $publis = (array)(json_decode($publiDB->getAll(['user'=>$queryParams['username']])));
+            //error_log(json_encode($publis));
+            if (!empty($publis)){
+                foreach ($publis as $id => $publi){
+                    error_log(json_encode($publi));
+                    $publi = (array) $publi;
+                    foreach (array_values((array)json_decode($intercambioDB->getAll(['publicacionOferta'=>$publi['id']]))) as $inter){
+                        $listado[] = $inter;
+                    }
+                    foreach (array_values((array)json_decode($intercambioDB->getAll(['publicacionOfertada'=> $publi['id']]))) as $inter) {
+                        $listado[] = $inter;
+                    }
+                }
+            }
         }else{
             $listado = (array) json_decode($intercambioDB->getAll($queryParams));
         }
@@ -242,7 +257,17 @@ $app->group('/public', function (RouteCollectorProxy $group) {
                 if ($user2['notificacion']){
                     $mailer->send($user2['mail'], 'Notificacion de Intercambio!', $mensaje2, true);
                 }
-                
+                if (array_key_exists('setestado',$bodyParams) && $bodyParams['setestado']=="concretado"){
+                    try{
+                        // esta parte no manda notificaciones, habria que refactorizar un cacho
+                        $intercambioDB->update(['publicacionOferta' => $p1['id'], 'estado'=>'pendiente', 'setestado' => 'cancelado']);
+                        $intercambioDB->update(['publicacionOfertada' => $p2['id'], 'estado' => 'pendiente','setestado' => 'cancelado']);
+                        $intercambioDB->update(['publicacionOferta' => $p2['id'], 'setestado' => 'cancelado', 'estado' => 'pendiente']);
+                        $intercambioDB->update(['publicacionOfertada' => $p1['id'], 'setestado' => 'cancelado', 'estado' => 'pendiente']);
+                    }catch (Exception $e){
+                        error_log($e);
+                    }
+                }
             }
         }
 
