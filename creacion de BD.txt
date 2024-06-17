@@ -71,6 +71,7 @@ CREATE TABLE Comentario (
     id INT AUTO_INCREMENT PRIMARY KEY,
     publicacion int,
     user varchar (50),
+    texto TEXT,
     respondeA int NULL,
     fecha_publicacion DATETIME DEFAULT CURRENT_TIMESTAMP,
     fecha_modificado DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -106,4 +107,14 @@ CREATE TABLE Notificacion (
     url TEXT,
     fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user) REFERENCES Usuarios(username)
+)
+
+CREATE TABLE Valoraciones (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userValorado varchar(50),
+    userValorador varchar(50),
+    puntos FLOAT,
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (userValorado) REFERENCES Usuarios(username),
+    FOREIGN KEY (userValorador) REFERENCES Usuarios(username)
 )

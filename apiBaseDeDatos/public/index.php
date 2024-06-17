@@ -37,6 +37,8 @@ require __DIR__ . '/../src/routes/imagen.php';
 require __DIR__ . '/../src/routes/publicacion.php';
 require __DIR__ . '/../src/routes/middlewares.php';
 require __DIR__ . '/../src/routes/intercambios.php';
+require __DIR__ . '/../src/routes/comentarios.php';
+require __DIR__ . '/../src/routes/valoraciones.php';
 
 $app->run();
 ?>
