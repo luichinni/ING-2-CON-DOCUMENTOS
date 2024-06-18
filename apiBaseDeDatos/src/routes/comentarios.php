@@ -32,7 +32,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
 
         $bodyParams = (array) $req->getParsedBody();
 
-        if (!array_key_exists('texto',$bodyParams) || (array_key_exists('texto',$bodyParams)&&!empty(trim($bodyParams['texto'])))){
+        if (!array_key_exists('texto',$bodyParams) || (array_key_exists('texto',$bodyParams)&&empty(trim($bodyParams['texto'])))){
             $msgReturn['Mensaje'] = 'El comentario no puede estar vacio';
             $res->getBody()->write(json_encode($msgReturn));
             return $res->withStatus($status)->withHeader('Content-Type', 'application/json');

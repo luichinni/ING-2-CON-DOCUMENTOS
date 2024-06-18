@@ -1,0 +1,53 @@
+/* styles.css */
+
+.Content {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .Publi-Div {
+    margin: 20px 0;
+  }
+  
+  .Cargando {
+    text-align: center;
+    color: #666;
+  }
+  
+  .SinComentarios {
+    text-align: center;
+    color: #999;
+  }
+  
+  .Comentario {
+    margin: 10px 0;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+  }
+
+  
+  /* Comentario.css */
+
+.agregarBoton {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #9b9b9b; /* Color verde */
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .agregarBoton:hover {
+    background-color: #838383; /* Color verde más oscuro */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  }
+  

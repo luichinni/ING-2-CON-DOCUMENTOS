@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../../HarryStyles/PubliDetalle.css"; 
 import { Link } from "react-router-dom";
+import ListarComentarios from "../Comentarios/ListarComentarios";
 
 const PubliDetalle = () => {
     const Token = localStorage.getItem('token');
@@ -61,6 +62,9 @@ const PubliDetalle = () => {
                     </Link>
                 </>
                 ):(<></>)}
+                <ListarComentarios
+                    publicacion={publicacion.id}
+                />
             </div>
         </div>
     );
