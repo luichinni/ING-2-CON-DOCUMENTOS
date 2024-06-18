@@ -31,7 +31,7 @@ const AgregarComentario = (props) =>{
                     },
                 });
             console.log('realizado:', response);
-            
+            window.location.reload();
         } catch (error) {
             setMyError(true);
             setMsgError(error.response.data.Mensaje);
