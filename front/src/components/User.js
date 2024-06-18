@@ -149,6 +149,14 @@ const User = (props) => {
     } 
     return Tel;
     }
+
+    function obtenerPuntuacion(){
+        try{
+
+        }catch (error){
+
+        }
+    }
     
     return  <fieldset className="centro-fila">
                 <p>
@@ -169,6 +177,8 @@ const User = (props) => {
                 Mail: {props.mail}
                 <br />
                 Telefono: {Telefono()}
+                <br />
+                puntuacion: {obtenerPuntuacion()}
                 <br />
                 <form onSubmit={handleSubmit}>
                     <select id="rol" value={rol} onChange={(e) => setear(e)}>
@@ -198,6 +208,11 @@ const User = (props) => {
                 </form>
 
                 </div>
+                )}
+                {(msgError)&& (
+                    <>
+                        {msgError}
+                    </>
                 )}
             </fieldset>
 
