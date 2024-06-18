@@ -9,7 +9,7 @@ CREATE TABLE Usuarios (
     fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
     rol ENUM('user', 'volunt', 'admin'),
     notificacion BOOLEAN DEFAULT TRUE
-)
+);
 
 CREATE TABLE Categoria (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -34,7 +34,7 @@ CREATE TABLE Centros (
     direccion varchar (255),
     hora_abre TIME,
     hora_cierra TIME
- )
+ );
 
 CREATE TABLE publi_centro (
     publicacion int,
@@ -42,14 +42,14 @@ CREATE TABLE publi_centro (
     PRIMARY KEY (publicacion, centro),
     FOREIGN KEY (publicacion) REFERENCES Publicacion (id),
     FOREIGN KEY (centro) REFERENCES Centros (id)
-)
+);
 
 CREATE TABLE imagen (
     id INT AUTO_INCREMENT PRIMARY KEY,
     archivo mediumtext,
     publicacion int,
     FOREIGN KEY (publicacion) REFERENCES publicacion (id)
-)
+);
 
 CREATE TABLE centro_volun (
     centro int,
@@ -57,7 +57,7 @@ CREATE TABLE centro_volun (
     PRIMARY KEY (centro, voluntario),
     FOREIGN KEY (centro) REFERENCES centros(id),
     FOREIGN KEY (voluntario) REFERENCES usuarios (username)
-)
+);
 
 CREATE TABLE SesionActiva (
     user varchar(50) PRIMARY KEY,
@@ -65,7 +65,7 @@ CREATE TABLE SesionActiva (
     ultimaAccion timestamp,
     fechaInicio timestamp DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user) REFERENCES Usuarios(username)
-)
+);
 
 CREATE TABLE Comentario (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -77,7 +77,7 @@ CREATE TABLE Comentario (
     fecha_modificado DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user) REFERENCES Usuarios(username),
     FOREIGN KEY (respondeA) REFERENCES Comentario(id)
-)
+);
 
 CREATE TABLE Intercambio (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -97,7 +97,7 @@ CREATE TABLE Intercambio (
     FOREIGN KEY (publicacionOferta) REFERENCES Publicacion(id),
     FOREIGN KEY (publicacionOfertada) REFERENCES Publicacion(id),
     FOREIGN KEY (centro) REFERENCES Centros(id)
-)
+);
 
 CREATE TABLE Notificacion (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -107,7 +107,7 @@ CREATE TABLE Notificacion (
     url TEXT,
     fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user) REFERENCES Usuarios(username)
-)
+);
 
 CREATE TABLE Valoraciones (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -117,4 +117,4 @@ CREATE TABLE Valoraciones (
     fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (userValorado) REFERENCES Usuarios(username),
     FOREIGN KEY (userValorador) REFERENCES Usuarios(username)
-)
+);
