@@ -29,8 +29,8 @@
 
 .publicacion {
   flex: 1 1 400px; /* Establece un tamaño mínimo y permite crecer */
-  max-width: 400px;
-  max-height: 500px; /* Asegura que no excedan este tamaño */
+  max-width: 30%;
+  max-height: 200%; /* Asegura que no excedan este tamaño */
   background-color: #ffffff;
   border: 1px solid #ddd;
   border-radius: 8px;
