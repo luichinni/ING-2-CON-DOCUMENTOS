@@ -137,6 +137,7 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
 
   return (
     <li className="intercambio-item">
+      <br/><br/><br/><br/>
       <div className="intercambio-content">
         <div className="publicaciones-container">
           <div className="publicacion">
