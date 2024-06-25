@@ -214,7 +214,7 @@ class bdController{
      * @return bool
      */
     public function exists(array $whereParams, bool $like = false){
-        $querySelect = $this->generarSelect($whereParams, false, null, $like);
+        $querySelect = $this->generarSelect($whereParams, null, $like);
         error_log($querySelect);
         $opSql = $this->pdo->query($querySelect);
         $existe = false;
@@ -378,8 +378,8 @@ class bdController{
      * ]```
      * @param bool $like define si en el where se compara por exactos o coincidencias %valor%
      */
-    public function getAll(array $whereParams, bool $include = false, bool $like = false){
-        $querySelect = $this->generarSelect($whereParams, $include, null, $like);
+    public function getAll(array $whereParams, bool $like = false){
+        $querySelect = $this->generarSelect($whereParams, null, $like);
         //error_log($querySelect);
         $result = $this->pdo->query($querySelect)->fetchAll();
         if ($result == false) {
@@ -436,13 +436,14 @@ class bdController{
                 if ($value == "null") { // si es null en la query
                     $queryWhere .= "`$key` IS NULL ";
                 } else {
-                    if ($this->camposTabla[$key]['comparador'] == "like") $queryWhere .= "`$key` " . $this->camposTabla[$key]['comparador'] . " '$value' ";
-                    else $queryWhere .= "`$key` " . $this->camposTabla[$key]['comparador'] . " $value ";
+                    $queryWhere .= "`$key` " . $this->camposTabla[$key]['comparador'];
+                    if ($this->camposTabla[$key]['comparador'] == "like") $queryWhere .= " '$value' ";
+                    else $queryWhere .= " $value ";
                 }
                 $queryWhere .= "AND ";
             }
         }
-        $queryWhere = substr($queryWhere,0,strlen($queryWhere)-4);
+        if($querySize < strlen($queryWhere)) $queryWhere = substr($queryWhere,0,strlen($queryWhere)-4);
 
         if (strlen($queryWhere) <= $querySize) {
             $queryWhere = "";
@@ -462,12 +463,10 @@ class bdController{
      * @param ?int $limit define la cantidad de lineas a retornar
      * @param int $offset numero de pagina arrancando en 0
      */
-    private function generarSelect(array $whereParams, bool $include=false, ?int $limit = 1,bool $like = false, int $offset = 0)
+    private function generarSelect(array $whereParams, ?int $limit = 1,bool $like = false, int $offset = 0)
     {
         // SELECT * FROM `usuarios` WHERE params LIMIT 1
         $querySql = "SELECT * FROM $this->tableName ";
-
-        if ($include) $querySql .= $this->getFkJoin();
 
         $querySql .= $this->armarWhere($whereParams, $like);
 
@@ -475,24 +474,6 @@ class bdController{
             $querySql .= "LIMIT $limit OFFSET " . ($offset * $limit);
         }
         return $querySql;
-    }
-
-    private function getFkJoin(){
-        $queryJoin = "";
-        foreach ($this->camposTabla as $campo => $opciones){
-            if (array_key_exists('fk',$opciones)){
-                $queryJoin .= "INNER JOIN " . $opciones['fk']['tabla'] . " ON $this->tableName.$campo " . $opciones['comparador'] . " " . $opciones['fk']['tabla'] . "." . $opciones['fk']['campo'] . " ";
-            }
-        }
-        return $queryJoin;
-    }
-
-    private function getPkArray(){
-        $pkArr = [];
-        foreach ($this->camposTabla as $campo => $opciones){
-            if (array_key_exists('pk',$opciones)) $pkArr[] = $campo;
-        }
-        return $pkArr;
     }
 
     /**
