@@ -27,7 +27,6 @@ export function NavBar() {
     return (
         <div className='navbar'>
             <div className='navbarItems'>
-                <img style={{ position: "absolute", left: "0", "maxHeight": "95px", width: "auto" }} src='./truecaLogo.webp' alt='Logo' />
                 <li className='buttonNavBar'>
                     <Link to="/" className="botonNavBar">Inicio</Link>
                 </li>
@@ -53,7 +52,7 @@ export function NavBar() {
                             <Link to="/Usuarios" className="botonNavBar">Usuarios</Link>
                         </li>
                         <li className='buttonNavBar'>
-                            <Link to="/Intercambios" className="botonNavBar">Intercambios</Link>
+                            <Link to="/Estadisticas" className="botonNavBar">Estadisticas</Link>
                         </li>
                     </>
                 )}

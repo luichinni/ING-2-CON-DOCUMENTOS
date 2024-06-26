@@ -1,0 +1,186 @@
+import "../HarryStyles/Intercambios.css";
+import "../HarryStyles/Publicaciones.css"
+import React, { useEffect, useState } from "react";
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+import Publicacion from "./Publicacion";
+
+const Estadistica = ({ id, publicacionOferta, publicacionOfertada, centro, horario, estado, ofertaAcepta, ofertadaAcepta }) => {
+  const [publi1, setPubli1] = useState([]);
+  const [publi2, setPubli2] = useState([]);
+  const [userPubli, setUserPubli] = useState('');
+  const [userOferto, setUserOferto] = useState('');
+  const [error, setError] = useState('');
+  const username = localStorage.getItem('username');
+  const navigate = useNavigate();
+
+  const Token = localStorage.getItem('token');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setError('');
+
+      try {
+        console.log(`oferta acepta ${ofertaAcepta}`);
+        console.log(`ofertada acepta ${ofertadaAcepta}`);
+        console.log(`username: ${username}`);
+        
+        const url1 = `http://localhost:8000/public/listarPublicaciones?id=${publicacionOferta}&token=${Token}`;
+        const response1 = await axios.get(url1);
+        
+        if (response1.data) {
+          const publicaciones = procesar(response1.data);
+          setPubli1(publicaciones);
+          const userPub = publicaciones[0]?.user || 'nop';
+          setUserPubli(userPub);
+          console.log(`userPubli: ${userPub}`);
+        } else {
+          setError('No hay publicaciones disponibles.');
+          setPubli1([]);
+          setUserPubli('nop');
+        }
+      } catch (error) {
+        setError('No hay publicaciones disponibles.');
+        console.error(error);
+      }
+
+      try {
+        const url2 = `http://localhost:8000/public/listarPublicaciones?id=${publicacionOfertada}&token=${Token}`;
+        const response2 = await axios.get(url2);
+
+        if (response2.data) {
+          const publicaciones = procesar(response2.data);
+          setPubli2(publicaciones);
+          const userOfer = publicaciones[0]?.user || 'nop';
+          setUserOferto(userOfer);
+          console.log(`userOferto: ${userOfer}`);
+        } else {
+          setError('No hay publicaciones disponibles.');
+          setPubli2([]);
+          setUserOferto('nop');
+        }
+      } catch (error) {
+        setError('No hay publicaciones disponibles.');
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, [publicacionOferta, publicacionOfertada, Token]);
+
+  function procesar(publicaciones) {
+    let publisCopy = [];
+    Object.keys(publicaciones).forEach(function (clave) {
+      if (!isNaN(clave)) {
+        publisCopy.push(publicaciones[clave]);
+      }
+    });
+    return publisCopy;
+  }
+
+  const handleValidarClick = () => {
+    localStorage.setItem('idValidar', id);
+    navigate("../ValidarIntercambio");
+  };
+
+  const handleRechazadoClick = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('id', id);
+      formData.append('setestado', 'rechazado');
+      const respon = await axios.put(`http://localhost:8000/public/updateIntercambio`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (respon.data.length === 3) {
+        setError('No se realizó la modificación.');
+      } else {
+        window.location.reload();
+      }
+    } catch (error) {
+      setError('No se pudo rechazar el intercambio.');
+      console.error(error);
+    }
+  };
+
+  const handleAceptadoClick = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('id', id);
+      formData.append('setestado', 'aceptado');
+      const respon = await axios.put(`http://localhost:8000/public/updateIntercambio`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (respon.data.length === 3) {
+        setError('No se realizó la modificación.');
+      } else {
+        window.location.reload();
+      }
+    } catch (error) {
+      setError('No se pudo aceptar el intercambio.');
+      console.error(error);
+    }
+  };
+
+  const handleModificarClick = () => {
+    navigate(`../ModificarInter/${id}/${publi1[0]?.id}`);
+  };
+
+  return (
+    <li className="intercambio-item">
+      <br/><br/><br/><br/>
+      <div className="intercambio-content">
+        <div className="publicaciones-container">
+          <div className="publicacion">
+            publicacion ofertada : {publi1.nombre}
+            usuario ofertado: {publi1.user}
+          </div>
+          <div className="publicacion">
+            publicacion ofertante : {publi2.nombre}
+            usuario ofertante: {publi2.user}
+          </div>
+
+        </div>
+        <div className="detalles">
+          <p><strong>categoria</strong> {publi1.categoria_id}</p>
+          <p><strong>Centro:</strong> {centro}</p>
+          <p><strong>Horario:</strong> {horario}</p>
+          <p><strong>Estado:</strong> {estado}</p>
+  
+          {estado === 'aceptado' || estado === 'pendiente' ? (
+            Token === 'tokenAdmin' || Token === 'tokenVolunt' ? (
+              <button className="detalle-button" onClick={handleValidarClick}>
+                Validar Intercambio
+              </button>
+            ) : (
+              <>
+                <button className="detalle-button" onClick={handleModificarClick}>
+                  Modificar
+                </button>
+                <button className="detalle-button" onClick={handleRechazadoClick}>
+                  Rechazar
+                </button>
+                {console.log(`Entro a condición de confirmar: ${userPubli} y ${userOferto}`)}
+                {((userPubli === username && ofertaAcepta === false) || (userOferto === username && ofertadaAcepta === false)) ? (
+                  <>
+                    {console.log("Entro a condición de confirmar")}
+                    <button className="detalle-button" onClick={handleAceptadoClick}>
+                    Confirmar
+                    </button>
+                  </>
+                ):(<></>)}
+              </>
+            )
+          ):null}
+        </div>
+      </div>
+    </li>
+  );
+}  
+
+export default Estadistica;

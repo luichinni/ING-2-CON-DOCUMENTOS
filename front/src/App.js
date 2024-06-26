@@ -24,6 +24,7 @@ import ValidarIntercambio from './pages/Intercambios/ValidarIntercambio';
 import ListarIntercambios from './pages/Intercambios/listarIntercambios';
 import Configuracion from './components/configuracion'
 import ModificarInter from './pages/Intercambios/ModificarInter';
+import IntercambiosEstats from './pages/Estadisticas/IntercambiosEstats';
 
 function App() {
   return (
@@ -31,7 +32,7 @@ function App() {
       <BrowserRouter>
         <div>
           <div>
-            <Header />
+            <Header/>
             <NavBar/>
           </div>
           <div>
@@ -61,6 +62,7 @@ function App() {
                 <Route path={"/ModificarInter/:interId/:publiId"} element={<ModificarInter />} />
 
                 <Route path={"/config"} element={<Configuracion />} />
+                <Route path={"/Estadisticas"} element={<IntercambiosEstats />} />
 
               </Routes>
           </div>

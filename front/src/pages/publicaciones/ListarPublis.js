@@ -69,7 +69,7 @@ const ListarPublis = () => {
         ) : error ? (
           <h1 className='sin-publi'>{error}</h1>
         ) : (
-          publicaciones.map(publicacion => (
+          publicaciones.filter(publicacion => (publicacion.estado === 'alta')).map(publicacion => (
             <Publicacion
               key={publicacion.id} //para que no llore react
               id={publicacion.id}
