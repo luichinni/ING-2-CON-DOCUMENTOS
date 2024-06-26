@@ -7,17 +7,63 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 require_once __DIR__ . '/../utilities/mailSender.php';
 require_once __DIR__ . '/../utilities/bdController.php';
 
+/*
+CREATE TABLE Usuarios (
+    username varchar (50) PRIMARY KEY,
+    clave varchar (50),
+    nombre varchar (255),
+    apellido varchar (255),
+    dni int(8),
+    mail varchar (255),
+    telefono int NULL,
+    fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
+    rol ENUM('user', 'volunt', 'admin'),
+    notificacion BOOLEAN DEFAULT TRUE
+);
+*/
+
 $camposUser = [
-    "username" => "varchar",
-    "clave" => "varchar",
-    "nombre" => "varchar",
-    "apellido" => "varchar",
-    "dni" => "int",
-    "mail" => "varchar",
-    "telefono" => "?int",
-    "fecha_registro"=>'?datetime',
-    "rol" => "enum",
-    "notificacion" => "?bool"
+    "username" => [
+        "pk" => true,
+        "tipo" => "varchar (50)",
+        "comparador" => "like",
+     ],
+    "clave" => [
+        "tipo" => "varchar (50)",
+        "comparador" => "like",
+    ],
+    "nombre" => [
+        "tipo" => "varchar (255)",
+        "comparador" => "like",
+    ],
+    "apellido" => [
+        "tipo" => "varchar (255)",
+        "comparador" => "like",
+    ],
+    "dni" => [
+        "tipo" => "int(8)",
+        "comparador" => "=",
+    ],
+    "mail" => [
+        "tipo" => "varchar (255)",
+        "comparador" => "like"
+    ],
+    "telefono" => [
+        "tipo" => "int",
+        "comparador" => "=",
+        "opcional" => true
+    ],
+    /* "fecha_registro"=>'?datetime',  aparece como created_at*/
+    "rol" => [
+        "tipo" => "ENUM('user', 'volunt', 'admin')",
+        "comparador" => "like"
+    ],
+    "notificacion" => [
+        "tipo" => "BOOLEAN",
+        "comparador" => "=",
+        "opcional" => true,
+        "default" => "TRUE"
+    ]
 ];
 
 $userDB = new bdController('usuarios',$pdo,$camposUser);
@@ -50,7 +96,7 @@ function userValidator(array $data, PDO $pdo, array $camposUser){
 
 function cancelarIntercambios(string $user){
     global $intercambioDB, $publiDB;
-    $publis = (array) json_decode($publiDB->getAll(['user'=>$user]));
+    $publis = (array) $publiDB->getAll(['user'=>$user]);
     //error_log(json_encode($publis));
     foreach ($publis as $public){
         $publi = (array) $public;
@@ -83,7 +129,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
             return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
         } 
 
-        $user = (array) json_decode($userDB->getFirst($where));
+        $user = (array) $userDB->getFirst($where);
         $user['Mensaje'] = 'Usuario encontrado';
 
         $res->getBody()->write(json_encode($user));
@@ -111,7 +157,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
 
         $offset = (array_key_exists('pag',$queryParams)) ? $queryParams['pag'] : 0;
 
-        $user = json_decode($userDB->getFirst($where,true,20, $offset));
+        $user = $userDB->getFirst($where,true,20, $offset);
 
         $user['Mensaje'] = 'Usuarios encontrados con éxito';
 
@@ -194,10 +240,10 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
 
         if ($pudo){
             $status = 200;
-            $centro = (array) ((array)json_decode($centroDB->getFirst(['id'=>$bodyParams['centro']])))[0];
+            $centro = (array) ((array)$centroDB->getFirst(['id'=>$bodyParams['centro']]))[0];
             enviarNotificacion($bodyParams['username'],"Has sido registrado como un voluntario del centro \"" . $centro['Nombre']."\"");
 
-            $user = (array)((array)json_decode($userDB->getFirst(['username' => $bodyParams['username']])))[0];
+            $user = (array)((array)$userDB->getFirst(['username' => $bodyParams['username']]))[0];
             if ($user['notificacion']) {
                 global $mailer;
                 $mailer->send($user['mail'], 'Cambios de usuario!', "Has sido registrado como un voluntario del centro \"" . $centro['Nombre'] . "\"", true);
@@ -231,7 +277,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
             return $res->withHeader('Content-Type', 'application/json')->withStatus($status);
         }
 
-        $user = (array) json_decode($centroVolunDB->getFirst(['voluntario' => $queryParams['voluntario']]));
+        $user = (array) $centroVolunDB->getFirst(['voluntario' => $queryParams['voluntario']]);
         $user['Mensaje'] = 'Voluntario encontrado';
 
         $res->getBody()->write(json_encode($user));
@@ -270,7 +316,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
             $status = 200;
             enviarNotificacion($bodyParams['username'], "Has sido registrado como un administrador del sistema");
 
-            $user = (array)((array)json_decode($userDB->getFirst(['username' => $bodyParams['username']])))[0];
+            $user = (array)((array)$userDB->getFirst(['username' => $bodyParams['username']]))[0];
             if ($user['notificacion']){
                 global $mailer;
                 $mailer->send($user['mail'], 'Cambios de usuario!', "Has sido registrado como un administrador del sistema", true);
@@ -324,7 +370,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
             if (validarCentroVolun(['voluntario' => $bodyParams['username']])) {
                 $centroVolunDB->delete(['voluntario' => $bodyParams['username']]);
             }
-            $user = (array)((array)json_decode($userDB->getFirst(['username' => $bodyParams['username']])))[0];
+            $user = (array)((array)$userDB->getFirst(['username' => $bodyParams['username']]))[0];
             enviarNotificacion($bodyParams['username'], "Se te asigno el rol de " . $bodyParams['setrol']);
             if ($user['notificacion']) {
                 global $mailer;

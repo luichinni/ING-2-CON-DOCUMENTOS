@@ -3,12 +3,34 @@
 // obtener
 // eliminar
 require_once __DIR__ . '/../utilities/bdController.php';
+/*
+CREATE TABLE imagen (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    archivo mediumtext,
+    publicacion int,
+    FOREIGN KEY (publicacion) REFERENCES publicacion (id)
+);
+*/
 
 $camposImg = [
-    'archivo' => 'mediumtext',
-    'publicacion' => 'int',
-/*     'tipo_imagen' => 'varchar', */
-    'id' => '?int'
+    "id" => [
+        "pk" => true,
+        "tipo" => "int",
+        "autoincrement" => true,
+        "comparador" => "="
+    ],
+    'archivo' => [
+        "tipo" => "mediumtext",
+        "comparador" => "like"
+    ],
+    'publicacion' => [
+        "tipo" => "int",
+        "comparador" => "like",
+        "fk" => [
+            "tabla" => "publicacion",
+            "campo" => "id"
+        ]
+    ]
 ];
 
 $imgDB = new bdController('imagen',$pdo,$camposImg);
@@ -24,12 +46,12 @@ function agregarImg(array $valueParams){
 
 function listarImg(array $whereParams){
     global $imgDB;
-    return json_decode($imgDB->getAll($whereParams));
+    return $imgDB->getAll($whereParams);
 }
 
 function obtenerImg(array $whereParams){
     global $imgDB;
-    return json_decode($imgDB->getFirst($whereParams));
+    return $imgDB->getFirst($whereParams);
 }
 
 function eliminarImg(array $whereParams){

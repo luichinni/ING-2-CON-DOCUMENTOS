@@ -11,9 +11,36 @@ require_once __DIR__ . '/../utilities/bdController.php';
 // //agregar, 
 // listar SOLUCIONADO EN EL OBTENER CON LIMIT
 // CentroVolun = ((centro(FK),voluntario(FK))(PK))
+
+/*
+CREATE TABLE publi_centro (
+    publicacion int,
+    centro int,
+    PRIMARY KEY (publicacion, centro),
+    FOREIGN KEY (publicacion) REFERENCES Publicacion (id),
+    FOREIGN KEY (centro) REFERENCES Centros (id)
+);
+*/
+
 $campoPubliCentro = [
-    "publicacion" => "int",
-    "centro" => "int"
+    "publicacion" => [
+        "pk" => true,
+        "tipo" => "int",
+        "comparador" => "=",
+        "fk" => [
+            "tabla" => "publicacion",
+            "campo" => "id"
+        ]
+    ],
+    "centro" => [
+        "pk" => true,
+        "tipo" => "int",
+        "comparador" => "=",
+        "fk" => [
+            "tabla" => "centros",
+            "campo" => "id"
+        ]
+    ]
 ];
 
 $publiCentroDB = new bdController('publi_centro',$pdo,$campoPubliCentro);
@@ -48,7 +75,7 @@ function obtenerPubliCentros(array $valuesWhere, ?int $limit=1){
         $ret = $publiCentroDB->getAll($valuesWhere);
     }
 
-    return ($ret == false) ? json_decode('{}') : json_decode($ret);
+    return ($ret == false) ? json_decode('{}') : $ret;
 }
 
 function agregarPubliCentros(array $datosIn, PDO $pdo){

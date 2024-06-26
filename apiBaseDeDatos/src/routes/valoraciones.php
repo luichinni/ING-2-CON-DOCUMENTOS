@@ -12,12 +12,34 @@ require_once __DIR__ . '/../utilities/bdController.php';
 // es opcional el "respondeA" que es id del comentario al que responde
 
 $camposValoraciones = [
-    'id' => '?int',
-    'userValorado' => 'varchar',
-    'userValorador' => 'varchar',
-    'puntos' => 'float',
-    'fecha' => '?datetime',
-    'fecha_modificado' => '?datetime'
+    'id' => [
+        "pk" => true,
+        "tipo" => "int",
+        "autoincrement" => true,
+        "comparador" => "="
+    ],
+    'userValorado' => [
+        "tipo" => "varchar (50)",
+        "comparador" => "like",
+        "fk" => [
+            "tabla" => "usuarios",
+            "campo" => "username"
+        ]
+    ],
+    'userValorador' => [
+        "tipo" => "varchar (50)",
+        "comparador" => "like",
+        "fk" => [
+            "tabla" => "usuarios",
+            "campo" => "username"
+        ]
+    ],
+    'puntos' => [
+        "tipo" => "float",
+        "comparador" => "="
+    ],
+    /* 'fecha' => '?datetime', created_at
+    'fecha_modificado' => '?datetime'   updated_at      */
 ];
 
 $valoracionesDB = new bdController('valoraciones', $pdo, $camposValoraciones);
@@ -66,7 +88,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
             return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
 
-        $valoraciones = (array)json_decode($valoracionesDB->getAll($queryParams));
+        $valoraciones = (array)$valoracionesDB->getAll($queryParams);
 
         $total = 0;
 

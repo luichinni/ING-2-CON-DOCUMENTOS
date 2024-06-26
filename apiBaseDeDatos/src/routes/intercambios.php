@@ -5,20 +5,95 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 require_once __DIR__ . '/notificaciones.php';
 
+/* CREATE TABLE Intercambio (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    voluntario varchar (50),
+    publicacionOferta int,
+    publicacionOfertada int,
+    ofertaAcepta BOOLEAN,
+    ofertadaAcepta BOOLEAN,
+    horario DATETIME,
+    estado ENUM('pendiente','cancelado','rechazado','aceptado','concretado'),
+    descripcion TEXT,
+    donacion BOOLEAN,
+    centro int,
+    fecha_propuesta DATETIME DEFAULT CURRENT_TIMESTAMP,
+    fecha_modificado DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (voluntario) REFERENCES Usuarios(username),
+    FOREIGN KEY (publicacionOferta) REFERENCES Publicacion(id),
+    FOREIGN KEY (publicacionOfertada) REFERENCES Publicacion(id),
+    FOREIGN KEY (centro) REFERENCES Centros(id)
+); */
+
 $camposIntercambio = [
-    'id' => '?int',
-    'voluntario' => '?varchar',
-    'publicacionOferta' => 'int', // quien publicó
-    'publicacionOfertada' => 'int', // quien ofertó
-    'ofertaAcepta' => '?bool',
-    'ofertadaAcepta' => 'bool',
-    'horario' => 'DATETIME',
-    'estado' => 'varchar',
-    'descripcion' => '?TEXT',
-    'donacion' => '?bool',
-    'centro' => 'int',
-    'fecha_propuesta' => '?DATETIME',
-    'fecha_modificado' => '?DATETIME'
+    'id' => [
+        "pk" => true,
+        "tipo" => "int",
+        "autoincrement" => true,
+        "comparador" => "="
+    ],
+    'voluntario' => [
+        "tipo" => "varchar(50)",
+        "comparador" => "like",
+        "fk" => [
+            "tabla" => "usuarios",
+            "campo" => "username"
+        ]
+    ],
+    'publicacionOferta' => [
+        "tipo" => "int",
+        "comparador" => "=",
+        "fk" => [
+            "tabla" => "intercambio",
+            "campo" => "id"
+        ]
+    ], // quien publicó
+    'publicacionOfertada' => [
+        "tipo" => "int",
+        "comparador" => "=",
+        "fk" => [
+            "tabla" => "intercambio",
+            "campo" => "id"
+        ]
+    ], // quien ofertó
+    'ofertaAcepta' => [
+        "tipo" => "boolean",
+        "comparador" => "=",
+        "opcional" => true
+    ],
+    'ofertadaAcepta' => [
+        "tipo" => "boolean",
+        "comparador" => "=",
+        "default" => "true"
+    ],
+    'horario' => [
+        "tipo" => "datetime",
+        "comparador" => "="
+    ],
+    'estado' => [
+        "tipo" => "ENUM('pendiente','cancelado','rechazado','aceptado','concretado')",
+        "comparador" => "like"
+    ],
+    'descripcion' => [
+        "tipo" => "text",
+        "comparador" => "like",
+        "opcional" => true
+    ],
+    'donacion' => [
+        "tipo" => "boolean",
+        "comparador" => "=",
+        "opcional" => true,
+    ],
+    'centro' => [
+        "tipo" => "int",
+        "comparador" => "=",
+        "fk" => [
+            "tabla" => "centros",
+            "campo" => "id"
+        ]
+    ],
+    /* 'fecha_propuesta' => '?DATETIME', created_at
+    'fecha_modificado' => '?DATETIME'   updated_at    */
 ];
 
 $intercambioDB = new bdController('intercambio',$pdo,$camposIntercambio);
@@ -41,8 +116,8 @@ $app->group('/public', function (RouteCollectorProxy $group) {
             return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
         
-        $intercambio1 = (array) json_decode($intercambioDB->getFirst(['publicacionOferta' => $bodyParams['publicacionOferta'], 'publicacionOfertada' => $bodyParams['publicacionOfertada']]));
-        $intercambio2 = (array) json_decode($intercambioDB->getFirst(['publicacionOferta' => $bodyParams['publicacionOfertada'], 'publicacionOfertada' => $bodyParams['publicacionOferta']]));
+        $intercambio1 = (array) $intercambioDB->getFirst(['publicacionOferta' => $bodyParams['publicacionOferta'], 'publicacionOfertada' => $bodyParams['publicacionOfertada']]);
+        $intercambio2 = (array) $intercambioDB->getFirst(['publicacionOferta' => $bodyParams['publicacionOfertada'], 'publicacionOfertada' => $bodyParams['publicacionOferta']]);
 
         //error_log(json_encode($intercambio1));
         //error_log(json_encode($intercambio2));
@@ -61,9 +136,9 @@ $app->group('/public', function (RouteCollectorProxy $group) {
         }
 
         // medio atado con alambre esta parte jaja
-        $p1 = json_decode($publiDB->getFirst(['id'=>$bodyParams['publicacionOferta']]));
+        $p1 = $publiDB->getFirst(['id'=>$bodyParams['publicacionOferta']]);
         $p1 = (array) $p1[0];
-        $p2 = json_decode($publiDB->getFirst(['id'=>$bodyParams['publicacionOfertada']]));
+        $p2 = $publiDB->getFirst(['id'=>$bodyParams['publicacionOfertada']]);
         $p2 = (array) $p2[0];
 
         if ($p1['categoria_id'] != $p2['categoria_id']){
@@ -82,22 +157,22 @@ $app->group('/public', function (RouteCollectorProxy $group) {
         if ($pudo) {
             //obtener ambas publis
             $p1 = $bodyParams['publicacionOferta'];
-            $p1 = (array) json_decode($publiDB->getFirst(['id' => $p1]))[0];
+            $p1 = (array) $publiDB->getFirst(['id' => $p1])[0];
             $p2 = $bodyParams['publicacionOfertada'];
-            $p2 = (array) json_decode($publiDB->getFirst(['id' => $p2]))[0];
+            $p2 = (array) $publiDB->getFirst(['id' => $p2])[0];
             //obtener ambos users
             
-            $redirect = (array) json_decode($intercambioDB->getFirst(['publicacionOferta'=>$p1['id'], 'publicacionOfertada'=>$p2['id'], 'estado'=>'pendiente']));
+            $redirect = (array) $intercambioDB->getFirst(['publicacionOferta'=>$p1['id'], 'publicacionOfertada'=>$p2['id'], 'estado'=>'pendiente']);
             $redirect = (array) $redirect[0];
             $mensaje = $p1['user'] . " te ha ofrecido \"" . $p1['nombre'] . "\" por \"" . $p2['nombre'] . "\"";
             enviarNotificacion($p2['user'], $mensaje, './Intercambio');
             global $mailer;
-            $user = (array)((array)json_decode($userDB->getFirst(['username' => $p2['user']])))[0];
+            $user = (array)($userDB->getFirst(['username' => $p2['user']]))[0];
             
             if ($user['notificacion']) $mailer->send($user['mail'], 'Notificacion de Intercambio!', $mensaje, true);
 
             $mensaje2 = "Has ofrecido \"" . $p1['nombre'] . "\" por \"".$p2['nombre']."\" a " . $p2['user'];
-            $user2 = (array)((array)json_decode($userDB->getFirst(['username' => $p1['user']])))[0];
+            $user2 = (array)($userDB->getFirst(['username' => $p1['user']]))[0];
             
             if ($user2['notificacion']) $mailer->send($user2['mail'], 'Notificacion de Intercambio!', $mensaje2, true);
             enviarNotificacion($p1['user'], $mensaje2, './Intercambio');
@@ -119,7 +194,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
         $listado = [];
         error_log("MIS QUERIES: ".json_encode($queryParams));
         if (array_key_exists('username',$queryParams) && $queryParams['username']!=""){
-            $publisUser = (array) json_decode($publiDB->getAll(['user'=>$queryParams['username']],true));
+            $publisUser = (array) $publiDB->getAll(['user'=>$queryParams['username']],true);
             error_log("PUBLIS USER: " . json_encode($publisUser));
             foreach($publisUser as $index => $publi){
                 $publi = (array)$publi;
@@ -128,7 +203,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
 
                 if(array_key_exists('publicacionOfertada',$copy)) unset($copy['publicacionOfertada']);
 
-                foreach (array_values((array)json_decode($intercambioDB->getAll($copy,true))) as $inter){
+                foreach (array_values($intercambioDB->getAll($copy,true)) as $inter){
                     $listado[] = $inter;
                 }
 
@@ -137,12 +212,12 @@ $app->group('/public', function (RouteCollectorProxy $group) {
 
                 if (array_key_exists('publicacionOferta', $copy)) unset($copy['publicacionOferta']);
                 
-                foreach (array_values((array)json_decode($intercambioDB->getAll($copy,true))) as $inter) {
+                foreach (array_values((array)$intercambioDB->getAll($copy,true)) as $inter) {
                     $listado[] = $inter;
                 }
             }
             if (array_key_exists('publicacionOferta', $queryParams) && $queryParams['publicacionOferta']!=""){
-                $publisO = (array) json_decode($publiDB->getAll(['nombre'=>$queryParams['publicacionOferta']],true));
+                $publisO = (array) $publiDB->getAll(['nombre'=>$queryParams['publicacionOferta']],true);
                 $newList = [];
                 error_log("PUBLIS OFERTA EN USER: ". json_encode($publisO));
                 foreach($publisO as $index => $publi){
@@ -156,7 +231,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
                 }
                 $listado = $newList;
                 if (array_key_exists('publicacionOfertada',$queryParams)&&$queryParams['publicacionOfertada']!=""){
-                    $publisOf = (array) json_decode($publiDB->getAll(['nombre' => $queryParams['publicacionOfertada']],true));
+                    $publisOf = (array) $publiDB->getAll(['nombre' => $queryParams['publicacionOfertada']],true);
                     $newList = [];
                     error_log("PUBLIS OFERTADAS EN USER: " . json_encode($publisOf));
                     foreach ($publisOf as $index => $publi) {
@@ -172,7 +247,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
                 }
             }
         }else if (array_key_exists('publicacionOferta',$queryParams) && $queryParams['publicacionOferta']!=""){
-            $publisO = (array) json_decode($publiDB->getAll(['nombre'=>$queryParams['publicacionOferta']],true));
+            $publisO = (array) $publiDB->getAll(['nombre'=>$queryParams['publicacionOferta']],true);
             error_log("PUBLIS OFERTA SOLAS: " . json_encode($publisO));
             foreach ($publisO as $ind => $publi){
                 $publi = (array) $publi;
@@ -181,13 +256,13 @@ $app->group('/public', function (RouteCollectorProxy $group) {
 
                 if (array_key_exists('publicacionOfertada', $copy)) unset($copy['publicacionOfertada']);
 
-                foreach (array_values((array)json_decode($intercambioDB->getAll($copy,true))) as $inter){
+                foreach (array_values($intercambioDB->getAll($copy,true)) as $inter){
                     $listado[] = $inter;
                 }
             }
             error_log("listado antes de publi ofertda en oferta ". json_encode($listado));
             if (array_key_exists('publicacionOfertada',$queryParams)&&$queryParams['publicacionOfertada']!=""){
-                $publisOf = (array) json_decode($publiDB->getAll(['nombre'=>$queryParams['publicacionOfertada']],true));
+                $publisOf = (array) $publiDB->getAll(['nombre'=>$queryParams['publicacionOfertada']],true);
                 $newList = [];
                 error_log("PUBLIS OFERTADAS EN OFERTA: " . json_encode($publisOf));
                 foreach ($publisOf as $ind => $publi2){
@@ -201,7 +276,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
                 $listado = $newList;
             }
         }else if (array_key_exists('publicacionOfertada',$queryParams) && $queryParams['publicacionOfertada']!=""){
-            $publisO = (array) json_decode($publiDB->getAll(['nombre' => $queryParams['publicacionOfertada']],true));
+            $publisO = (array) $publiDB->getAll(['nombre' => $queryParams['publicacionOfertada']],true);
             error_log("PUBLIS OFERTADAS SOLAS: " . json_encode($publisO));
             foreach ($publisO as $ind => $publi) {
                 $publi = (array) $publi;
@@ -210,19 +285,19 @@ $app->group('/public', function (RouteCollectorProxy $group) {
 
                 if (array_key_exists('publicacionOferta', $copy)) unset($copy['publicacionOferta']);
 
-                foreach (array_values((array)json_decode($intercambioDB->getAll($copy,true))) as $inter) {
+                foreach (array_values((array)$intercambioDB->getAll($copy,true)) as $inter) {
                     $listado[] = $inter;
                 }
             }
         }else{
-            $listado = (array) json_decode($intercambioDB->getAll($queryParams,true));
+            $listado = (array) $intercambioDB->getAll($queryParams,true);
         }
         
         error_log("MI LISTADO: ".json_encode($listado));
 
         foreach ($listado as $id => $intercambio){
             $intercambio = (array) $intercambio;
-            $centro = (array) json_decode($centroDB->getFirst(['id'=>$intercambio['centro']]));
+            $centro = (array) $centroDB->getFirst(['id'=>$intercambio['centro']]);
             $centro = (array) $centro[0];
             //error_log(json_encode($centro));
             $intercambio['centro'] = $centro['Nombre'];
@@ -251,12 +326,12 @@ $app->group('/public', function (RouteCollectorProxy $group) {
 
         if ($pudo){ 
             //obtener ambas publis
-            $inter = (array)((array)json_decode($intercambioDB->getFirst(['id'=>$bodyParams['id']])))[0];
+            $inter = (array)((array)$intercambioDB->getFirst(['id'=>$bodyParams['id']]))[0];
             error_log("inter: ".json_encode($inter));
             $p1 = $inter['publicacionOferta'];
-            $p1 = (array) json_decode($publiDB->getFirst(['id'=>$p1]))[0];
+            $p1 = (array) $publiDB->getFirst(['id'=>$p1])[0];
             $p2 = $inter['publicacionOfertada'];
-            $p2 = (array) json_decode($publiDB->getFirst(['id'=>$p2]))[0];
+            $p2 = (array) $publiDB->getFirst(['id'=>$p2])[0];
             //obtener ambos users
             if ($bodyParams['userMod'] == $p1['user']){
                 $otroUser = $p2['user'];
@@ -280,13 +355,13 @@ $app->group('/public', function (RouteCollectorProxy $group) {
             if ($pudo){
                 $mensaje = (array_key_exists('setestado',$bodyParams)) ? "El intercambio de \"$tuProducto\" por \"$elOtroProducto\" con $userActual fue ".$bodyParams['setestado']."." : "El intercambio de \"$tuProducto\" por \"$elOtroProducto\" con $userActual fue modificado.";
                 $mensaje2 = (array_key_exists('setestado',$bodyParams)) ? "El intercambio de \"$tuProducto\" por \"$elOtroProducto\" con $otroUser fue ".$bodyParams['setestado']."." : "El intercambio de \"$tuProducto\" por \"$elOtroProducto\" con $otroUser fue modificado.";
-                $redirect = (array) json_decode($intercambioDB->getFirst(['publicacionOferta' => $p1['id'], 'publicacionOfertada' => $p2['id'], 'estado' => 'pendiente']));
+                $redirect = (array) $intercambioDB->getFirst(['publicacionOferta' => $p1['id'], 'publicacionOfertada' => $p2['id'], 'estado' => 'pendiente']);
                 $redirect = $redirect[0];
                 enviarNotificacion($otroUser, $mensaje, './Intercambio');
                 enviarNotificacion($userActual, $mensaje2, './Intercambio');
 
-                $user = (array)((array)json_decode($userDB->getFirst(['username' => $otroUser])))[0];
-                $user2 = (array)((array)json_decode($userDB->getFirst(['username' => $userActual])))[0];
+                $user = (array)((array)$userDB->getFirst(['username' => $otroUser]))[0];
+                $user2 = (array)((array)$userDB->getFirst(['username' => $userActual]))[0];
                 global $mailer;
                 
                 if ($user['notificacion']){

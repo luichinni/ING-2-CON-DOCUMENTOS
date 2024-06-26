@@ -9,14 +9,56 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 require_once __DIR__ . '/../utilities/bdController.php';
 
+/*
+CREATE TABLE Publicacion (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255),
+    descripcion TEXT,
+    user varchar (50),
+    categoria_id INT,
+    estado VARCHAR(50),
+    fecha_carga DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user) REFERENCES Usuarios(username),
+    FOREIGN KEY (categoria_id) REFERENCES Categoria(id)
+);
+*/
+
 $camposPublicacion = [
-    'id' => '?int',
-    'nombre' => 'varchar',
-    'descripcion' => 'text',
-    'user' => 'varchar',
-    'categoria_id' => 'int',
-    'estado' => 'varchar',
-    'fecha_carga' => '?datetime'
+    'id' => [
+        "pk" => true,
+        "tipo" => "int",
+        "autoincrement" => true,
+        "comparador" => "="
+    ],
+    'nombre' => [
+        "tipo" => "varchar (255)",
+        "comparador" => "like"
+    ],
+    'descripcion' => [
+        "tipo" => "text",
+        "comparador" => "like"
+    ],
+    'user' => [
+        "tipo" => "varchar (50)",
+        "comparador" => "like",
+        "fk" => [
+            "tabla" => "usuarios",
+            "campo" => "username"
+        ]
+    ],
+    'categoria_id' => [
+        "tipo" => "int",
+        "comparador" => "=",
+        "fk" => [
+            "tabla" => "categoria",
+            "campo" => "id"
+        ]
+    ],
+    'estado' => [
+        "tipo" => "varchar (50)",
+        "comparador" => "like"
+    ],
+    /* 'fecha_carga' => '?datetime'  created_at*/
 ];
 
 function publiValidator(array $data){
@@ -80,7 +122,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
             return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
 
-        $publiID = (array)((json_decode($publiDB->getFirst($where)))[0]);
+        $publiID = (array)(($publiDB->getFirst($where))[0]);
         $publiID = $publiID[0];
         $bodyParams['publicacion'] = $publiID;
 
@@ -185,7 +227,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         $queryParams = $request->getQueryParams();
         if (array_key_exists('categoria_id',$queryParams) && !ctype_digit($queryParams['categoria_id']) && $queryParams['categoria_id']!=""){
             if($categoriaDB->exists(['nombre'=>$queryParams['categoria_id']])){
-                $cate =(array)((array)json_decode($categoriaDB->getFirst(['nombre'=>$queryParams['categoria_id']])))[0];
+                $cate =(array)((array)$categoriaDB->getFirst(['nombre'=>$queryParams['categoria_id']]))[0];
                 $queryParams['categoria_id'] = $cate['id'];
             }
         }
@@ -205,7 +247,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
 
         $offset = (array_key_exists('pag', $queryParams)) ? $queryParams['pag'] : 0;
 
-        $publis = json_decode($publiDB->getAll($where, $queryParams['like']));
+        $publis = $publiDB->getAll($where, $queryParams['like']);
 
         if(!array_key_exists('habilitado',$queryParams) || (array_key_exists('habilitado',$queryParams) && $queryParams['habilitado'] == '1')){
             $collector = Collector::of(Collector::TO_FLAT_ARRAY,fn($obj)=>$obj);
@@ -215,13 +257,13 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
                 global $publiCentroDB, $centroVolunDB;
                 $publi = (array) $publi;
                 $valido = true;
-                $centros = (array) json_decode($publiCentroDB->getAll(['publicacion'=>$publi['id']]));
+                $centros = (array) $publiCentroDB->getAll(['publicacion'=>$publi['id']]);
                 //error_log(json_encode($centros));
                 foreach ($centros as $key){
                     $id = (array) $key;
                     $id = $id['centro'];
                     //error_log('Centro '.$id.': '. $centroVolunDB->getFirst(['centro'=>$id]));
-                    $valido = $valido && !empty((array)json_decode($centroVolunDB->getFirst(['centro' => $id])));
+                    $valido = $valido && !empty((array)$centroVolunDB->getFirst(['centro' => $id]));
                     //error_log('valid='.((!$valido)?'true':'false'));
                 }
                 return !$valido;
@@ -232,7 +274,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         foreach($publis as $key => $value){
             $value = (array) $value;
 
-            $miCategoria = (array) json_decode($categoriaDB->getFirst(array('id' => $value['categoria_id'])));
+            $miCategoria = (array) $categoriaDB->getFirst(array('id' => $value['categoria_id']));
             $value['categoria_id'] = ((array) $miCategoria[0])['nombre'];
 
             $where = [
@@ -244,7 +286,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
             for ($i = 0; $i < count($publiCent); $i++){
                 $tempArr = (array) $publiCent[$i];
                 $wherCentro = ['id' => $tempArr['centro']];
-                $value['centros'][$i] = ((array)json_decode($centroDB->getFirst($wherCentro)))[0];
+                $value['centros'][$i] = ((array)$centroDB->getFirst($wherCentro))[0];
             }
             
             //error_log(json_encode($value));

@@ -13,15 +13,32 @@ CREATE TABLE Centros (
     direccion varchar (255),
     hora_abre TIME,
     hora_cierra TIME
- )
+ );
 */
 
 $camposCentro = [
-    'id' => '?int',
-    'nombre' => 'varchar',
-    'direccion' => 'varchar',
-    'hora_abre' => 'time',
-    'hora_cierra' => 'time'
+    'id' => [
+        "pk" => true,
+        "tipo" => "int",
+        "autoincrement" => true,
+        "comparador" => "="
+    ],
+    'nombre' => [
+        "tipo" => "varchar (255)",
+        "comparador" => "like"
+    ],
+    'direccion' => [
+        "tipo" => "varchar (255)",
+        "comparador" => "like"
+    ],
+    'hora_abre' => [
+        "tipo" => "time",
+        "comparador" => "=" // revisar
+    ],
+    'hora_cierra' => [
+        "tipo" => "tipo del campo",
+        "comparador" => "="
+    ]
 ];
 
 $centroDB = new bdController('centros',$pdo,$camposCentro);
@@ -171,7 +188,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
 
         $queryParams = $request->getQueryParams();
 
-        $centros = json_decode($centroDB->getAll($queryParams,true));
+        $centros = $centroDB->getAll($queryParams,true);
 
         if (empty($centros)){
             $response->getBody()->write(json_encode($msgReturn));
@@ -197,7 +214,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
 
         $centroVol = (array) ((array) obtenerCentroVolun(['voluntario'=>$queryParams['voluntario']]))[0];
         //error_log(json_encode($centroVol));
-        $centro = (array) json_decode($centroDB->getFirst(['id'=>$centroVol['centro']]));
+        $centro = (array) $centroDB->getFirst(['id'=>$centroVol['centro']]);
         //error_log(json_encode($centro));
         if (empty($centro)) {
             $response->getBody()->write(json_encode($msgReturn));

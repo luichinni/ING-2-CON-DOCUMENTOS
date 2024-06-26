@@ -11,9 +11,36 @@ require_once __DIR__ . '/../utilities/bdController.php';
 // //agregar, 
 // listar SOLUCIONADO EN EL OBTENER CON LIMIT
 // CentroVolun = ((centro(FK),voluntario(FK))(PK))
+
+/*
+CREATE TABLE centro_volun (
+    centro int,
+    voluntario varchar(50),
+    PRIMARY KEY (centro, voluntario),
+    FOREIGN KEY (centro) REFERENCES centros(id),
+    FOREIGN KEY (voluntario) REFERENCES usuarios (username)
+);
+*/
+
 $camposCentroVolun = [
-    "voluntario" => "varchar",
-    "centro" => "int"
+    "voluntario" => [
+        "pk" => true,
+        "tipo" => "varchar (50)",
+        "comparador" => "like",
+        "fk" => [
+            "tabla" => "usuarios",
+            "campo" => "username"
+        ]
+    ],
+    "centro" => [
+        "pk" => true,
+        "tipo" => "int",
+        "comparador" => "=",
+        "fk" => [
+            "tabla" => "centros",
+            "campo" => "id"
+        ]
+    ]
 ];
 
 $centroVolunDB = new bdController('centro_volun',$pdo,$camposCentroVolun);
@@ -45,7 +72,7 @@ function obtenerCentroVolun(array $valuesWhere, ?int $limit = 1){
         $retCV = $centroVolunDB->getAll($valuesWhere);
     }
     
-    return json_decode($retCV);
+    return $retCV;
 }
 
 function agregarCentroVolun(array $datosIn){

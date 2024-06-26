@@ -5,12 +5,34 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 $camposNotificacion = [
-    'id'=>'?int',
-    'user'=>'varchar',
-    'texto'=>'text',
-    'fecha'=>'?datetime',
-    'visto'=>'?bool',
-    'url' => 'texto'
+    'id'=> [
+        "pk" => true,
+        "tipo" => "int",
+        "autoincrement" => true,
+        "comparador" => "="
+    ],
+    'user'=> [
+        "tipo" => "varchar(50)",
+        "comparador" => "like",
+        "fk" => [
+            "tabla" => "usuarios",
+            "campo" => " username"
+        ]
+    ],
+    'texto'=> [
+        "tipo" => "text",
+        "comparador" => "like"
+    ],
+    /* 'fecha'=>'?datetime', created_at  */
+    'visto'=> [
+        "tipo" => "boolean",
+        "comparador" => "=",
+        "default" => "FALSE"
+    ],
+    'url' => [
+        "tipo" => "text",
+        "comparador" => "like"
+    ]
 ];
 
 $notificacionDB = new bdController('notificacion',$pdo,$camposNotificacion);
@@ -33,7 +55,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
 
         $queryParams = $request->getQueryParams();
 
-        $listado = (array) json_decode($notificacionDB->getAll($queryParams));
+        $listado = (array) $notificacionDB->getAll($queryParams);
 
         $listado['Mensaje'] = (!empty($listado)) ? 'Notificaciones listadas con exito' : $msgReturn['Mensaje'];
 

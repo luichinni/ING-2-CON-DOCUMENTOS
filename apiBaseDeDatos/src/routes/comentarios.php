@@ -11,14 +11,58 @@ require_once __DIR__ . '/../utilities/bdController.php';
 // texto del coment como "texto"
 // es opcional el "respondeA" que es id del comentario al que responde
 
+/*
+CREATE TABLE Comentario (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    publicacion int,
+    user varchar (50),
+    texto TEXT,
+    respondeA int NULL,
+    fecha_publicacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+    fecha_modificado DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user) REFERENCES Usuarios(username),
+    FOREIGN KEY (respondeA) REFERENCES Comentario(id)
+);
+*/
+
 $camposComentarios = [
-    'id' => '?int',
-    'publicacion' => 'id',
-    'user'=>'varchar',
-    'texto'=>'text',
-    'respondeA'=>'?int',
-    'fecha_publicacion'=>'?datetime',
-    'fecha_modificado'=>'?datetime'
+    'id' => [
+        "pk" => true,
+        "tipo" => "int",
+        "autoincrement" => true,
+        "comparador" => "="
+    ],
+    'publicacion' => [
+        "tipo" => "int",
+        "comparador" => "=",
+        "fk" => [
+            "tabla" => "publicacion",
+            "campo" => "id"
+        ]
+    ],
+    'user'=> [
+        "tipo" => "varchar (50)",
+        "comparador" => "like",
+        "fk" => [
+            "tabla" => "usuarios",
+            "campo" => "username"
+        ]
+    ],
+    'texto'=> [
+        "tipo" => "text",
+        "comparador" => "like"
+    ],
+    'respondeA'=> [
+        "tipo" => "int",
+        "comparador" => "=",
+        "opcional" => true,
+        "fk" => [
+            "tabla" => "comentario",
+            "campo" => "id"
+        ]
+    ],
+/*     'fecha_publicacion'=>'?datetime',  created_at
+    'fecha_modificado'=>'?datetime'  updated_at */
 ];
 
 $comentariosDB = new bdController('comentario', $pdo, $camposComentarios);
@@ -59,7 +103,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
             return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
 
-        $ret = (array) json_decode($comentariosDB->getAll($queryParams));
+        $ret = (array) $comentariosDB->getAll($queryParams);
 
         $status = 200;
         $ret['Mensaje'] = 'Comentarios listados con éxito';
@@ -84,7 +128,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
             return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
         }
 
-        $comment =(array)((array)json_decode($comentariosDB->getFirst($queryParams))[0]);
+        $comment =(array)($comentariosDB->getFirst($queryParams)[0]);
         /* error_log(json_encode($comment)); */
         if (array_key_exists('userMod',$queryParams)&&$queryParams['userMod']!=$comment['user']){
             $msgReturn['Mensaje'] = "No puedes eliminar un comentario que no es tuyo";
