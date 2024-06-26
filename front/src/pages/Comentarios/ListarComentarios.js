@@ -17,8 +17,8 @@ const ListarComentarios = (props) => {
     user: '',
     texto: '',
     respondeA: '',
-    fecha_publicacion: '',
-    fecha_modificado: ''
+    created_at: '',
+    updated_at: ''
   });
 
     const fetchData = async () => {
@@ -99,7 +99,7 @@ const ListarComentarios = (props) => {
               user={comentario.user}
               texto={comentario.texto}
               respondeA={comentario.respondeA}
-              fecha_publicacion={comentario.fecha_publicacion}
+              fecha_publicacion={comentario.created_at}
             />
           ))
         )}

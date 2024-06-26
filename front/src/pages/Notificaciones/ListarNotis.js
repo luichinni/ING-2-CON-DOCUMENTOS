@@ -60,7 +60,7 @@ const ListarNotis = () => {
             key={notificacion.id} //para que no llore react
             user={notificacion.user}
             texto={notificacion.texto}
-            fecha={notificacion.fecha}
+            fecha={notificacion.created_at}
             url={notificacion.url}
             visto={notificacion.visto}
           />
