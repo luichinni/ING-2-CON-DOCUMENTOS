@@ -23,43 +23,7 @@ CREATE TABLE Publicacion (
 );
 */
 
-$camposPublicacion = [
-    'id' => [
-        "pk" => true,
-        "tipo" => "int",
-        "autoincrement" => true,
-        "comparador" => "="
-    ],
-    'nombre' => [
-        "tipo" => "varchar (255)",
-        "comparador" => "like"
-    ],
-    'descripcion' => [
-        "tipo" => "text",
-        "comparador" => "like"
-    ],
-    'user' => [
-        "tipo" => "varchar (50)",
-        "comparador" => "like",
-        "fk" => [
-            "tabla" => "usuarios",
-            "campo" => "username"
-        ]
-    ],
-    'categoria_id' => [
-        "tipo" => "int",
-        "comparador" => "=",
-        "fk" => [
-            "tabla" => "categoria",
-            "campo" => "id"
-        ]
-    ],
-    'estado' => [
-        "tipo" => "varchar (50)",
-        "comparador" => "like"
-    ],
-    /* 'fecha_carga' => '?datetime'  created_at*/
-];
+require_once __DIR__ . '/../models/publiDb.php';
 
 function publiValidator(array $data){
     global $userDB;
@@ -74,8 +38,6 @@ function publiValidator(array $data){
     };
     return $valid;
 }
-
-$publiDB = new bdController('publicacion',$pdo,$camposPublicacion);
 
 $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
     $group->POST('/newPublicacion', function ($request, $response, $args) use ($pdo){

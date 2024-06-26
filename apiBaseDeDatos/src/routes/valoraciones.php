@@ -11,38 +11,7 @@ require_once __DIR__ . '/../utilities/bdController.php';
 // puntos que es un float ej: 3.3
 // es opcional el "respondeA" que es id del comentario al que responde
 
-$camposValoraciones = [
-    'id' => [
-        "pk" => true,
-        "tipo" => "int",
-        "autoincrement" => true,
-        "comparador" => "="
-    ],
-    'userValorado' => [
-        "tipo" => "varchar (50)",
-        "comparador" => "like",
-        "fk" => [
-            "tabla" => "usuarios",
-            "campo" => "username"
-        ]
-    ],
-    'userValorador' => [
-        "tipo" => "varchar (50)",
-        "comparador" => "like",
-        "fk" => [
-            "tabla" => "usuarios",
-            "campo" => "username"
-        ]
-    ],
-    'puntos' => [
-        "tipo" => "float",
-        "comparador" => "="
-    ],
-    /* 'fecha' => '?datetime', created_at
-    'fecha_modificado' => '?datetime'   updated_at      */
-];
-
-$valoracionesDB = new bdController('valoraciones', $pdo, $camposValoraciones);
+require_once __DIR__ . '/../models/valoracionDb.php';
 
 $app->group('/public', function (RouteCollectorProxy $group) {
 

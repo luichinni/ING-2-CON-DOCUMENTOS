@@ -1,7 +1,7 @@
 <?php
-require __DIR__ . '/../vendor/autoload.php';
-require __DIR__ . '/../src/models/db.php';
-require __DIR__ . '/../src/utilities/mailSender.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../src/models/db.php';
+require_once __DIR__ . '/../src/utilities/mailSender.php';
 use Slim\Factory\AppFactory;
 
 $app = AppFactory::create();
@@ -27,18 +27,20 @@ $app->addErrorMiddleware(true, true, true);
 $credenciales = (array) json_decode(file_get_contents('../src/utilities/credenciales.json'));
 $mailer = new mailSender($credenciales['Username'],$credenciales['Password'],$credenciales['mail']);
 
-require __DIR__ . '/../src/routes/usuarios.php';
-require __DIR__ . '/../src/routes/sesionActiva.php';
-require __DIR__ . '/../src/routes/centros.php';
-require __DIR__ . '/../src/routes/centroVolun.php';
-require __DIR__ . '/../src/routes/publi_centro.php';
-require __DIR__ . '/../src/routes/cetegorias.php';
-require __DIR__ . '/../src/routes/imagen.php';
-require __DIR__ . '/../src/routes/publicacion.php';
-require __DIR__ . '/../src/routes/middlewares.php';
-require __DIR__ . '/../src/routes/intercambios.php';
-require __DIR__ . '/../src/routes/comentarios.php';
-require __DIR__ . '/../src/routes/valoraciones.php';
+require_once __DIR__ . '/../src/routes/sesionActiva.php';
+require_once __DIR__ . '/../src/routes/middlewares.php';
+
+require_once __DIR__ . '/../src/routes/usuarios.php';
+require_once __DIR__ . '/../src/routes/cetegorias.php';
+require_once __DIR__ . '/../src/routes/centros.php';
+require_once __DIR__ . '/../src/routes/publicacion.php';
+require_once __DIR__ . '/../src/routes/publi_centro.php';
+require_once __DIR__ . '/../src/routes/imagen.php';
+require_once __DIR__ . '/../src/routes/centroVolun.php';
+require_once __DIR__ . '/../src/routes/comentarios.php';
+require_once __DIR__ . '/../src/routes/intercambios.php';
+require_once __DIR__ . '/../src/routes/notificaciones.php';
+require_once __DIR__ . '/../src/routes/valoraciones.php';
 
 $app->run();
 ?>

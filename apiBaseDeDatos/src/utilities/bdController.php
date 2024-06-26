@@ -45,7 +45,7 @@ class bdController
             "comparador" => "like",
             "opcional" => true
         ];
-
+        //error_log($tableName);
         $this->initTable($dropTable);
 
         $this->validador  = Closure::fromCallable(function (array $campos, bool $comprobarTodos = false) {
@@ -184,8 +184,9 @@ class bdController
             $createQuery = substr($createQuery, 0, strlen($createQuery) - 1);
         }
         $createQuery .= ")";
-        error_log($createQuery);
+        //error_log($createQuery);
         $var = $pdo->prepare($createQuery)->execute();
+        //error_log('TABLA CREADA');
         //error_log("Agregado? $var");
         return $var;
     }

@@ -12,28 +12,7 @@ CREATE TABLE imagen (
 );
 */
 
-$camposImg = [
-    "id" => [
-        "pk" => true,
-        "tipo" => "int",
-        "autoincrement" => true,
-        "comparador" => "="
-    ],
-    'archivo' => [
-        "tipo" => "mediumtext",
-        "comparador" => "like"
-    ],
-    'publicacion' => [
-        "tipo" => "int",
-        "comparador" => "like",
-        "fk" => [
-            "tabla" => "publicacion",
-            "campo" => "id"
-        ]
-    ]
-];
-
-$imgDB = new bdController('imagen',$pdo,$camposImg);
+require_once __DIR__ . '/../models/imgDb.php';
 
 function agregarImg(array $valueParams){
     global $imgDB;

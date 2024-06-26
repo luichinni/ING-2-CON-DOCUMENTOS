@@ -13,20 +13,7 @@ CREATE TABLE Categoria (
 );
 */
 
-$camposCategorias = [
-    'id' => [
-        "pk" => true,
-        "tipo" => "int",
-        "autoincrement" => true,
-        "comparador" => "="
-    ],
-    'nombre' => [
-        "tipo" => "varchar (255)",
-        "comparador" => "like"
-    ]
-];
-
-$categoriaDB = new bdController('categoria',$pdo,$camposCategorias);
+require_once __DIR__ . '/../models/categoriaDb.php';
 
 // LE TUVE QUE SACAR ESTO PORQ DABA ERROR, LUEGO HAY QUE MIRARLO
 //funcion de validaciones
