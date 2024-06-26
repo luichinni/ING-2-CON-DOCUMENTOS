@@ -26,14 +26,10 @@ $camposComentarios = [
         "tipo" => "text",
         "comparador" => "like"
     ],
-    'respondeA' => [
-        "tipo" => "int",
-        "comparador" => "=",
-        "opcional" => true,
-        "fk" => [
-            "tabla" => "comentario",
-            "campo" => "id"
-        ]
+    'respuesta' => [
+        "tipo" => "text",
+        "comparador" => "like",
+        "opcional" => true
     ],
     /*     'fecha_publicacion'=>'?datetime',  created_at
     'fecha_modificado'=>'?datetime'  updated_at */

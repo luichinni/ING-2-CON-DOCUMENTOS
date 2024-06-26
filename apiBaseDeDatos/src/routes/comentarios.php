@@ -113,4 +113,23 @@ $app->group('/public', function (RouteCollectorProxy $group) {
         return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
     });
 
+    $group->delete('/updateComentario', function (Request $req, Response $res){
+        global $comentariosDB;
+        $status = 500;
+        $msgReturn = ['Mensaje' => 'No existe el comentario'];
+
+        $bodyParams = (array) $req->getParsedBody();
+        if (!array_key_exists('id', $bodyParams) || !$comentariosDB->exists($bodyParams) || (array_key_exists('id', $bodyParams) && empty(trim($bodyParams['id'])))) {
+            $res->getBody()->write(json_encode($msgReturn));
+            return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
+        }
+
+        if ($comentariosDB->update($bodyParams)){
+            $status=200;
+            $msgReturn['Mensaje'] = 'Comentario actualizado con éxito';
+        }
+        
+        $res->getBody()->write(json_encode($msgReturn));
+        return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
+    });
 });
