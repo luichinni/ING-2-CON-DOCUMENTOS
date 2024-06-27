@@ -62,15 +62,17 @@ const User = (props) => {
         try {
             const url = `http://localhost:8000/public/getValoracion?userValorado=${props.username}&token=${localStorage.getItem('token')}`;
             console.log(`llegue, url: ${url}`)
+            console.log(props.username)
+            console.log(localStorage.getItem('token'));
             const response = await axios.get(url);
             console.log(`llegue2, response:${response.data}`)
 
-            if (!response.data || response.data.valoracion === undefined) {
+            if (!response.data || response.data.Valoracion === undefined) {
                 setError('No hay valoraciones disponibles');
                 setValoraciones('Sin valoraciones');
                 console.log(`entre por error de undefined`)
             } else {
-                setValoraciones(response.data.valoracion);
+                setValoraciones(response.data.Valoracion);
                 console.log(`entre a gurdar datos`)
             }
         } catch (error) {
