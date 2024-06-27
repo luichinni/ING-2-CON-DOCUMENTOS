@@ -1,6 +1,7 @@
 import "../HarryStyles/centros.css"
 import "../HarryStyles/styles.css"
 import React, { useState } from "react";
+import {Link} from "react-router-dom";
 
 const Centro = (props) => {
         const [isExpanded, setIsExpanded]= useState(false);
@@ -32,9 +33,7 @@ const Centro = (props) => {
                                 <button className="boton_editar">
                                     Editar
                                 </button>
-                                <button className="boton_eliminar">
-                                    Eliminar
-                                </button>
+                                <Link to={"/deleteCentro/" + props.Id} className="botonEliminar"> Eliminar </Link>
                                 <br />
                             </>
                             ):(<></>)}

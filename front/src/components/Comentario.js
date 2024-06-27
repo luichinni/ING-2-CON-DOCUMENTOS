@@ -11,6 +11,10 @@ const Comentario = ({ id, user, texto, respondeA, fecha_publicacion }) => {
           <p className="respondeA">Responde a: {respondeA}</p>
         )}
         <p className="fecha">Publicado el: {new Date(fecha_publicacion).toLocaleDateString()}</p>
+
+        {token === 'tokenAdmin' && (// si soy un admin, el dueño de la publicación o la persona que comento
+          <Link to={"/deleteComentario/" + props.Id} className="botonEliminar"> Eliminar </Link>
+        )}
       </div>
     </fieldset>
   );
