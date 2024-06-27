@@ -154,7 +154,7 @@ const InterCentroHorario = () => {
                     <option value="">Seleccione un centro</option>
                     {centros.map((centro) => (
                         <option key={centro.id} value={centro.id}>
-                            {centro.Nombre}
+                            {centro.nombre}
                         </option>
                     ))}
                 </select>
