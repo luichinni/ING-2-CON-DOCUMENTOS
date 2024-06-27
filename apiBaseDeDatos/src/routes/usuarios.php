@@ -197,13 +197,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
         if ($pudo){
             $status = 200;
             $centro = (array) ((array)$centroDB->getFirst(['id'=>$bodyParams['centro']]))[0];
-            enviarNotificacion($bodyParams['username'],"Has sido registrado como un voluntario del centro \"" . $centro['Nombre']."\"");
-
-            $user = (array)((array)$userDB->getFirst(['username' => $bodyParams['username']]))[0];
-            if ($user['notificacion']) {
-                global $mailer;
-                $mailer->send($user['mail'], 'Cambios de usuario!', "Has sido registrado como un voluntario del centro \"" . $centro['Nombre'] . "\"", true);
-            }
+            enviarNotificacion($bodyParams['username'],"Eres voluntario!","Has sido registrado como un voluntario del centro \"" . $centro['Nombre']."\"");
         }
 
         $msgReturn['Mensaje'] = $status == 200 ? 'Voluntario agregado con éxito' : 'Ocurrio un error al agregar el voluntario';
@@ -270,7 +264,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
 
         if ($pudo) {
             $status = 200;
-            enviarNotificacion($bodyParams['username'], "Has sido registrado como un administrador del sistema");
+            enviarNotificacion($bodyParams['username'],'Eres administrador!', "Has sido registrado como un administrador del sistema");
 
             $user = (array)((array)$userDB->getFirst(['username' => $bodyParams['username']]))[0];
             if ($user['notificacion']){
@@ -327,7 +321,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
                 $centroVolunDB->delete(['voluntario' => $bodyParams['username']]);
             }
             $user = (array)((array)$userDB->getFirst(['username' => $bodyParams['username']]))[0];
-            enviarNotificacion($bodyParams['username'], "Se te asigno el rol de " . $bodyParams['setrol']);
+            enviarNotificacion($bodyParams['username'],'Cambios de usuario!' ,"Se te asigno el rol de " . $bodyParams['setrol']);
             if ($user['notificacion']) {
                 global $mailer;
                 $mailer->send($user['mail'], 'Cambios de usuario!', "Se te asigno el rol de ". $bodyParams['setrol'], true);
@@ -342,10 +336,10 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
 
         if (array_key_exists('setnotificacion',$bodyParams) && $bodyParams['setnotificacion'] == "true"){
             $bodyParams['setnotificacion'] = true;
-            enviarNotificacion($bodyParams['username'],"Activaste las notificaciones por mail");
+            enviarNotificacion($bodyParams['username'],'Cambios en notificaciones!',"Activaste las notificaciones por mail");
         }else if (array_key_exists('setnotificacion',$bodyParams) && $bodyParams['setnotificacion'] == "false"){
             $bodyParams['setnotificacion'] = false;
-            enviarNotificacion($bodyParams['username'], "Desactivaste las notificaciones por mail");
+            enviarNotificacion($bodyParams['username'], 'Cambios en notificaciones!',"Desactivaste las notificaciones por mail");
         }
 
         $pudo = $userDB->update($bodyParams);

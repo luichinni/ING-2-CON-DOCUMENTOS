@@ -172,4 +172,183 @@ Intercambios:
         sino, return listado
 
     updateIntercambio
+        obtengo body
+        si no existe return error
+
+        obtengo el intercambio
+
+        si estado pendiente y mandaron setestado
+            intento actualizar
+            si actualiza bien
+                rechazar todos los intercambios que hayan quedado pendiente de ambas publis
+                notifico users del cambio
+            sino, return error
+        sino, si estado aceptado
+            invierto las confirmaciones
+
+            intento actualizar
+            si actualiza bien
+                notifico ambos usuarios del cambio
+                return ok
+            sino, return error
+
+Notificaciones:
+    listarNotificaciones
+        obtengo query params
+        obtengo las notificaciones
+        marcar como vistas las que no hayan sido vistas
+        si listado vacio, return 404
+        sino, return listado
+
+Publicaciones:
+    newPublicacion
+        obtengo body
+        si no tiene al menos una foto, return error
+
+        valido los datos, return error si algo falla
+
+        intento insertar
+        si inserta mal, return error
         
+        obtengo publicacion id
+        por cada centro cargar asociacion
+        por cada foto cargar asociacion
+
+        si todo se cargó bien, return ok
+        sino, return error
+
+    updatePublicacion
+        obtengo body
+        si no existe return error
+
+        intento actualizar
+        si actualiza bien, return ok
+        sino, return error
+
+    deletePublicacion
+        obtengo params
+        si no existe rturn error
+        
+        intento borrar
+        si borra bien, return ok
+        sino, return error
+
+    listarPublicaciones
+        obtengo params
+        si no existe categoria nombre, return error
+
+        si no existe publi, return 404
+
+        obtengo todas las publis
+        si solo publis con centros habilitados, filtrar publis
+
+        por cada publi
+            cambiar categoria id por nombre
+            listar fotos
+            listar centros
+
+        return listado
+
+Usuarios:
+    obtenerUsuario
+        obtengo params
+        si no hay datos, return error
+
+        si no existe, return 404
+
+        return user
+
+    listarUsuarios
+        obtengo params
+
+        si no hay users, return 404
+
+        sino, return listado
+
+    newUsuario
+        obtengo body
+        si no hay datos, return error
+
+        si son invalidos, return error
+
+        intentar insertar
+        si inserta bien, return ok
+        sino, return error
+
+    newVoluntario
+        obtengo body
+        si no existe centro o usuario, return error
+
+        si user ya existe en ese centro, return error
+
+        si user es voluntario de otro centro, cambiar de centro
+
+        si tiene publis, darlas de baja
+
+        si tiene intercambios darlos de baja
+
+        notificar user que ahora es voluntario
+
+        return ok
+
+    newAdmin
+        obtengo body
+        si no existe usuario, return error
+
+        si user es voluntario de algun centro, dar de baja
+
+        si tiene publis, darlas de baja
+
+        si tiene intercambios darlos de baja
+
+        notificar user que ahora es admin
+
+        return ok
+
+    getCentroVolunt
+        obtengo params
+        si no existe voluntario, return error
+
+        intento obtener
+        return centrovolun
+
+    deleteUsuario
+        obtengo params
+
+        si no existe, return error
+
+        intento borrar
+        si borra, return ok
+        sino, return error
+
+    updateUsuario
+        obtengo body
+
+        intenta actualizar
+        si actualiza
+            se notifican los cambios
+            return ok
+        sino, return error
+
+Valoraciones:
+    newValoracion
+        obtengo body
+
+        si no existe usuario valorado y valorador, return error
+
+        si los puntos no es numerico, return error
+
+        intento insertar
+        si inserta bien, return ok
+        sino, return error
+
+    getValoracion
+        obtengo params
+
+        si no existe user, return error
+
+        obtengo valoraciones
+        si tiene
+            saco promedio
+            return promedio
+        sino, return sin valoraciones
