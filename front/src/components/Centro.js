@@ -13,7 +13,7 @@ const Centro = (props) => {
         return  <fieldset className="centro-fila">
                     <div className="div">
                         <p className="nombre">
-                            centro {props.Id}:  {props.Nombre}
+                            centro {props.Id}:  {props.nombre}
                             <button onClick={handleToggle} className="toggle-button">
                                 {isExpanded ? "ocultar Detalles" : "Mostrar Detalles" }
                             </button>

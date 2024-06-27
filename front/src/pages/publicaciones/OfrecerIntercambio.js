@@ -140,7 +140,7 @@ const OfrecerIntercambio = () => {
                     <option value="">Selecciona el centro donde te gustaria hacer el intercambio</option>
                     {centros.map((centro) => (
                         <option key={centro.id} value={centro.id}>
-                            {centro.Nombre}
+                            {centro.nombre}
                         </option>
                     ))}
                 </select>

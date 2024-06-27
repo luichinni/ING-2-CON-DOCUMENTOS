@@ -67,6 +67,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
         }
 
         $total = $total / count($valoraciones);
+        $status = 200;
 
         $msgReturn['Mensaje'] = 'Valoraciones contadas con éxito';
         $msgReturn['Valoracion'] = $total;

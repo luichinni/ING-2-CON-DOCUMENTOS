@@ -19,7 +19,7 @@ const PubliDetalle = () => {
         console.log(`Datos parseados:`, publicacionObj);
 
         let nuevoArr = [];
-        publicacionObj.centros.forEach((centro)=> nuevoArr.push(centro.Nombre));
+        publicacionObj.centros.forEach((centro)=> nuevoArr.push(centro.nombre));
         publicacionObj.centros = nuevoArr;
 
         const idNumero = Number(id);
