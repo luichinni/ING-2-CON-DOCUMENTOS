@@ -77,11 +77,13 @@ const ListarComentarios = (props) => {
     <div className='Content'>
       <div className='Publi-Div'>
       <div>
+        {(localStorage.getItem('token') === 'tokenUser')?(
           <button className='agregarBoton' onClick={toggleFormulario}>
             {mostrarFormulario ? 'Cancelar' : 'Comentar'}
           </button>
+        ):(<></>)}
         </div>
-        {mostrarFormulario && (
+        {mostrarFormulario && (localStorage.getItem('token') === 'tokenUser') && (
           <AgregarComentario 
             publicacion={props.publicacion}
             onComentarioAgregado={handleComentarioAgregado}

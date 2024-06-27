@@ -2,6 +2,7 @@ import "../HarryStyles/Publicaciones.css";
 import React from "react";
 import { Link } from "react-router-dom";
 import axios from 'axios';
+import { MdEdit } from "react-icons/md";
 
 const Publicacion = (props) => {
 
@@ -23,6 +24,10 @@ const Publicacion = (props) => {
             console.error('Error:', error.response.data.Mensaje);
             alert(error.response.data.Mensaje || "Ocurrió un error");
         }
+    }
+
+    const Modificar = async () =>{
+        localStorage.setItem('id', props.id)
     }
 
     return (
@@ -52,14 +57,21 @@ const Publicacion = (props) => {
                     </>
                 )}
                 {(props.user === 'misPublis') && (
-                    (props.estado === 'baja')?(
-                    <>
-                        <button className="botonEstado botonAlta" onClick={cambiarEstado}> Dar de Alta </button>
-                    </>):(
-                    <>
-                        <button className="botonEstado botonBaja" onClick={cambiarEstado}> Dar de Baja </button>
-                    </>
-                    )
+                    <div className="boton">
+                        {(props.estado === 'baja')?(
+                        <>
+                            <button className="botonEstado botonAlta" onClick={cambiarEstado}> Dar de Alta </button>
+                        </>):(
+                        <>
+                            <button className="botonEstado botonBaja" onClick={cambiarEstado}> Dar de Baja </button>
+                        </>
+                            )}
+                        <>
+                        <Link to={`/ModificarPublicacion/${props.id}`} onClick={Modificar}>
+                            <button className="botonEstado botonEditar"> <MdEdit className="editar" size={20}/>  </button>
+                        </Link>
+                        </>
+                    </div>
                 )}
                 <Link to={`/PubliDetalle/${props.id}`} onClick={handleDetalleClick}>
                     <button className="detalle-button">Ver Detalle</button>

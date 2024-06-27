@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom';
+import { CiTrash } from 'react-icons/ci'; 
 import '../HarryStyles/Comentario.css';
+import '../HarryStyles/Notificaciones.css';
 import DeleteComentario from '../pages/Comentarios/DeleteComentario';
 import { useEffect, useState } from 'react';
 
@@ -27,7 +28,7 @@ const Comentario = ({ id, user, texto, respondeA, fecha_publicacion }) => {
         <p className="fecha">Publicado el: {new Date(fecha_publicacion).toLocaleDateString()}</p>
 
         {// si soy un admin, el dueño de la publicación o la persona que comento
-          <button onClick={handleBorrar}> Eliminar </button>
+          <button onClick={handleBorrar} className='botonCampanita'> <CiTrash size={26} className='botonCampanita' /> </button>
         }
         {ELIMINAR && (
           <DeleteComentario 

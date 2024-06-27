@@ -64,7 +64,6 @@ input:focus, textarea:focus, select:focus {
 button {
   color: #61677C;
   font-weight: bold;
-  box-shadow: -5px -5px 20px var(--color-white), 5px 5px 20px var(--color-shadow);
   transition: all 0.2s ease-in-out;
   cursor: pointer;
   font-weight: 600;

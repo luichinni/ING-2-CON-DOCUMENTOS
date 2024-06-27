@@ -8,6 +8,10 @@
   z-index: 1;
 }
 
+.editar{
+  color: #000000;
+}
+
 .sidebar {
   width: 370px;
   padding: 20px;
@@ -87,7 +91,6 @@
   color: #fff;
   background-color: #007bff;
   border: none;
-  border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -138,13 +141,20 @@
   height: 400px; /* Ajusta la altura según sea necesario */
 }
 
+.botones {
+  display: flex;
+}
+
 .botonEstado {
   padding: 10px 15px;
-  font-size: 14px;
+  gap: 15px;
+  font-size: 15px;
+  height: 75%;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  gap: 15px;
 }
 
 .botonAlta {
@@ -163,4 +173,13 @@
 
 .botonBaja:hover {
   background-color: #c82333;
+}
+
+.botonEditar {
+  color: #fff;
+  background-color: #d8cc1e;
+}
+
+.botonEditar:hover {
+  background-color: #96a728;
 }

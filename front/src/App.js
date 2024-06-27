@@ -27,6 +27,7 @@ import ModificarInter from './pages/Intercambios/ModificarInter';
 import IntercambiosEstats from './pages/Estadisticas/IntercambiosEstats';
 import DeleteCentro from './pages/centros/DeleteCentro';
 import DeleteComentario from './pages/Comentarios/DeleteComentario';
+import ModificarPublicacion from './pages/publicaciones/ModificarPublicacion';
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
                 <Route path={"/MisPublicaciones"} element={<MisPublis />} />
                 <Route path={"/PubliDetalle/:id"} element={<PubliDetalle/>} />
                 <Route path={"/Explorar"} element={<Explorar/>} />
+                <Route path={"/ModificarPublicacion/:id"} element={<ModificarPublicacion/>} />
 
                 <Route path={"/Registrarse"} element={<Registrarse />} />
                 <Route path={"/IniciarSesion"} element={<IniciarSesion />} />

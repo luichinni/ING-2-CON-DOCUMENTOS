@@ -74,8 +74,8 @@ export function NavBar() {
                 ) : (
                 <>
                     <li className='notiIcon'>
-                        <button onClick={toggleNotificaciones}>
-                            <CiBellOn />
+                        <button onClick={toggleNotificaciones} className='botonCampanita'>
+                            <CiBellOn size={32} className='botonCampanita'/>
                         </button>
                         {notiOpen && (
                             <div className={`dropdownmenuNoti ${notiOpen ? 'showNoti' : ''}`}>

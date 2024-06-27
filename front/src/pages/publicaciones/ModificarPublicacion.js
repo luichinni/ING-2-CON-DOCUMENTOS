@@ -1,13 +1,13 @@
 import { ButtonSubmit } from "../../components/ButtonSubmit";
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from 'axios';
 import "../../HarryStyles/Intercambios.css"
 import "../../HarryStyles/estilos.css";
 
 // idpubli1(publico), idpubli2(oferto), horario, centro
 
-const InterCentroHorario = () => {
+const ModificarPublicacion = (props) => {
     const [centros, setCentros] = useState([]);
     const [centroSeleccionado, setCentroSeleccionado] = useState("");
     const [horario, setHorario] = useState ("");
@@ -16,6 +16,13 @@ const InterCentroHorario = () => {
     const [anio, setAnio] = useState ("");
     const [myError, setMyError] = useState(false);
     const [msgError, setMsgError] = useState('No deberías estar viendo este mensaje');
+    const [publi1, setPubli1] = useState('');
+    const {interId, publiId} = useParams();
+    const [fechaActual,setFechaActual] = useState('');
+    const [horarioActual,setHorarioActual] = useState('');
+    const [centroActual,setCentroActual] = useState('');
+    const [fechaConstActual, setFechaConst] = useState('');
+
     const dias = Array.from({ length: 31 }, (_, i) => i + 1);
     const meses = [
         { value: 1, nombre: "Enero" },
@@ -38,9 +45,6 @@ const InterCentroHorario = () => {
         "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
         "21:00", "21:30","22:00", "22:30","23:00", "23:30"];
 
-    const id_publi1 = localStorage.getItem("publicacionOferta");
-    const id_publi2 = localStorage.getItem("publicacionOfertada");
-
     const navigate = useNavigate();    
     const handleCentrosChange = (e) => {
         setCentroSeleccionado(e.target.value);
@@ -61,72 +65,101 @@ const InterCentroHorario = () => {
     }
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if(!dia){
-            setMyError(true);
-            setMsgError("Debe seleccionar un Dia.");
-            return;
-        } else if(!mes){
-            setMyError(true);
-            setMsgError("Debe seleccionar un mes.");
-            return;
-        } else if (!anio) {
-            setMyError(true);
-            setMsgError("Debe seleccionar un anio.");
-            return;
-        } else if(!horario){
-            setMyError(true);
-            setMsgError("Debe seleccionar un horario.");
-            return;
+        let cambiaFecha = false;
+        if(dia || mes || anio)
+        {
+            if(!dia){
+                setMyError(true);
+                setMsgError("Debe seleccionar un Dia.");
+                return;
+            } else if(!mes){
+                setMyError(true);
+                setMsgError("Debe seleccionar un mes.");
+                return;
+            } else if (!anio) {
+                setMyError(true);
+                setMsgError("Debe seleccionar un anio.");
+                return;
+            }
+            cambiaFecha=true;
         }
+        const fechaFormat = `${anio}-${mes.padStart(2,'0')}-${dia.padStart(2,'0')}`;
         const horarioEnFormato = `${anio}-${mes.padStart(2,'0')}-${dia.padStart(2,'0')} ${horario}`
+
+        if (fechaConstActual == fechaFormat){
+            cambiaFecha=true;
+        }
 
         const fechaSeleccionada = new Date(`${anio}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}T${horario}:00`);
         const fechaActual = new Date();
 
-        if (fechaSeleccionada <= fechaActual) {
+        if (cambiaFecha && !(fechaConstActual == fechaFormat) && fechaSeleccionada <= fechaActual) {
             setMyError(true);
             setMsgError("La fecha y hora deben ser posteriores a la fecha y hora actuales.");
             return;
         }
 
         const formData = new FormData();
-        formData.append(`publicacionOferta`, id_publi1)
-        formData.append(`publicacionOfertada`, id_publi2)
-        formData.append(`ofertaAcepta`, 0)
-        formData.append(`ofertadaAcepta`, 1)
-        formData.append(`horario`, horarioEnFormato)
-        formData.append(`centro`, centroSeleccionado)
+        formData.append(`id`,interId);
+        formData.append(`userMod`,localStorage.getItem('username'));
+        if (cambiaFecha || centroSeleccionado!=""){
+            if(cambiaFecha) formData.append(`sethorario`, horarioEnFormato)
+            if(centroSeleccionado!="" && centroSeleccionado.id != centroActual.id) formData.append(`setcentro`, centroSeleccionado)
 
-        try {
-            const response = await axios.post(`http://localhost:8000/public/newIntercambio?token=${localStorage.getItem('token')}`, formData,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                })
-            console.log('Success:', response);
-            alert ("se realizo con exito la oferta de intercambio intercambio")
-            navigate("../Explorar");
-            window.location.reload();
-        } catch (error) {
-            setMyError(true);
-            setMsgError(error.response.data.Mensaje);
+            try {
+                console.log(`formData: ${formData}`)
+                const response = await axios.put(`http://localhost:8000/public/updateIntercambio`, formData,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    })
+                console.log('Success:', response);
+                navigate("../Intercambio");
+                window.location.reload();
+            } catch (error) {
+                setMyError(true);
+                setMsgError(error.response.data.Mensaje);
+            }
+        }else{
+            navigate("../Intercambio");
         }
+        
     };
+
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                const publicacionGuardada = localStorage.getItem("publicacion");
-                console.log(`Datos sin procesar del localStorage: ${publicacionGuardada}`);
+            try { /* <ModificarInter interId={id} publiOferta={publi1} publiOfertada={publi2} /> */
 
-                const publicacionObj = JSON.parse(publicacionGuardada);
-                console.log(`Datos parseados:`, publicacionObj);
+                //console.log(`Datos sin procesar del localStorage: ${publiOferta}`);
+                console.log("PUBLI " + publiId);
+                console.log("ID " + interId);
+
+                let url = `http://localhost:8000/public/listarPublicaciones?id=${publiId}&token=${localStorage.getItem('token')}`;
+                let response = await axios.get(url);
+                console.log(response.data[0]);
 
                 let nuevoArr = [];
-                publicacionObj.centros.forEach((centro)=> nuevoArr.push(centro));
-                setCentros(publicacionObj.centros);
-                console.log(`centros: ${centros}`)
+                response.data[0].centros.forEach((centro)=> nuevoArr.push(centro));
+                
+
+                url = `http://localhost:8000/public/listarIntercambios?id=${interId}&token=${localStorage.getItem('token')}`;
+                response = await axios.get(url);
+
+                console.log(response.data[0]);
+                let fecha = response.data[0].horario.split(' ')[0];
+                setFechaConst(fecha);
+                let hora = response.data[0].horario.split(' ')[1];
+                console.log('fecha -> '+ fecha);
+                console.log('hora -> '+hora);
+                console.log(meses.find(mes => mes.value == fecha.split('-')[1]).nombre);
+                fecha = fecha.split('-')[0]+' - '+meses.find(mes => mes.value == fecha.split('-')[1]).nombre+' - '+fecha.split('-')[2]
+                setFechaActual(fecha);
+                setHorarioActual(hora);
+                setCentroActual(response.data[0].centro);
+                setHorario(hora.split(':')[0]+':'+hora.split(':')[1]);
+                setCentros(nuevoArr);
+                
             } catch (error) {
                 console.error(error);
             }
@@ -147,8 +180,9 @@ const InterCentroHorario = () => {
 
     return (
         <div>
-            <br /><br /><br /><br /><br /><br />
+            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
             <form onSubmit={handleSubmit}>
+                <label>Centro actual: {centroActual}</label>
                 <select id="centro" onChange={handleCentrosChange}>
                     <option value="">Seleccione un centro</option>
                     {centros.map((centro) => (
@@ -158,8 +192,7 @@ const InterCentroHorario = () => {
                     ))}
                 </select>
                 <br /><br />
-                {(centroSeleccionado != "") && (
-                <>
+                <label>Horario actual: {horarioActual}</label>
                 <select id="Horario" value={horario} onChange={handleHorarioChange}>
                     <option value="">Seleccione un horario</option>
                         {horariosDisponibles.map(hora => (
@@ -168,6 +201,7 @@ const InterCentroHorario = () => {
                 </select>
                 <br/><br/>
                 <div className="fecha-container">
+                    <label>Fecha actual: {fechaActual}</label>
                     <label>Seleccione una fecha:</label>
                     <div className="fecha-selectores">
                         <select id="dia" value={dia} onChange={handleDiaChange}>
@@ -191,9 +225,7 @@ const InterCentroHorario = () => {
                     </div>
                 </div>
                 <br/><br/>
-                <ButtonSubmit text="Ofrecer Intercambio" /> 
-                </>
-                )}
+                <ButtonSubmit text="Modificar Intercambio" /> 
             </form>
             {myError &&
                 <p style={{ backgroundColor: "red", color: "white", textAlign: "center" }}>{msgError}</p>
@@ -202,4 +234,4 @@ const InterCentroHorario = () => {
     );
 };
 
-export default InterCentroHorario;
+export default ModificarPublicacion;
