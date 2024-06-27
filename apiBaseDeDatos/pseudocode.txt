@@ -1,0 +1,175 @@
+Centros:
+    newCentro
+        obtengo body
+        valido los datos
+            si no son validos return error
+        
+        inserto en tabla centros
+        si inserta bien
+            return ok
+        sino
+            return error
+
+    updateCentro
+        obtengo body
+        compruebo q exista
+            si no existe return error
+        
+        valido los datos
+            si no son validos return error
+        
+        intento actualizar
+        si actualiza bien
+            return ok
+        sino
+            return error
+
+    deleteCentro
+        obtengo queryparams
+        compruebo q exista
+            si no existe return error
+        
+        compruebo si tiene voluntarios
+            si tiene return error
+        
+        para cada publicacion en ese centro
+            dar de baja
+            notificar usuario
+            para cada intercambio activo en ese centro
+                cancelar y notificar usuarios
+
+        intento borrar
+        si borra bien 
+            return ok
+        sino
+            return error
+
+    listarCentros
+        obtengo query params
+        obtengo todos los centros que cumplen una descripcion
+
+        si no obtuve nada return error
+        sino return centros
+
+    getCentroVolunt
+        obtengo query params
+        si no existe centro con ese voluntario return error
+        sino return centro del voluntario
+
+Categorias:
+    newCategoria
+        obtengo body
+        si ya existe categoria con ese nombre return error
+        
+        intento insertar
+        si inserta bien
+            return ok
+        sino
+            return error
+
+    updateCategoria
+        obtengo body
+        si no existe categoria return error
+
+        intento actualizar
+        si actualiza bien, return ok
+        sino, return error
+
+    deleteCategoria
+        obtengo query params
+        si no existe categoria, tiene publicaciones asociadas o es la ultima
+            return error
+
+        intento eliminar
+        si elimina bien, return ok
+        sino, return error
+
+    listarCategorias
+        obtengo query params
+        si no existe ninguna categoria similar, return error
+
+        obtengo todas las categoria que cumplan
+        return listado
+
+Comentarios:
+    newComentario
+        obtengo body
+        si no existe texto, return error
+
+        intento insertar
+        si inserta bien, return ok
+        sino, return error
+
+    listarComentarios
+        obtengo query params
+        si no existe la publicacion return error
+
+        listar comentarios de la publicacion
+        si es vacio, return error 404
+        sino, return listado
+
+    deleteComentario
+        obtengo query params
+        si no existe comentario return error
+
+        si el user que borra no es el que comentó, return error
+
+        intento borrar
+        si borra bien, return ok
+        sino, return error
+
+    updateComentario
+        obtengo body
+        si no existe comentario return error
+
+        intento actualizar
+        si actualiza bien, return ok
+        sino, return error
+
+Intercambios:
+    newIntercambio
+        obtengo body
+        si alguna de las publicaciones no es valida, return error
+
+        si el intercambio entre ambas publicaciones ya existe, return error
+
+        si las publicaciones no son de la misma categoria, return error
+
+        estado = pendiente
+        ofertadaAceptada = true
+
+        intento insertar
+        si inserta bien
+            notifico ambos usuarios
+            return ok
+        sino
+            return error
+
+    listarIntercambios
+        obtengo query params
+
+        si es por username
+            obtengo todas las publicaciones del user
+            por cada publicacion
+                obtengo los intercambios de la publicacion
+                agrego los intercambios a una lista comun
+                si filtra por oferta
+                    del listado quita todas las que la oferta no sea la puesta
+                si filtra por ofertada
+                    del listado quita todas las que la ofertada no sea la puesta
+        si es por oferta
+            lista las que la oferta sea la puesta
+            y si filtra tambien por ofertada
+                del listado quita todas las que ofertada no sea la puesta
+        si es por ofertada
+            lista las que la ofertada sea la puesta
+        si no es por nada de eso
+            lista con el resto de filtros
+
+        a cada intercambio le cambia el centro id por el nomrbe del centro
+
+        si listado es vacio, return 404
+        sino, return listado
+
+    updateIntercambio
+        

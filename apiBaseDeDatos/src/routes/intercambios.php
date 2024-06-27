@@ -94,17 +94,9 @@ $app->group('/public', function (RouteCollectorProxy $group) {
             $redirect = (array) $intercambioDB->getFirst(['publicacionOferta'=>$p1['id'], 'publicacionOfertada'=>$p2['id'], 'estado'=>'pendiente']);
             $redirect = (array) $redirect[0];
             $mensaje = $p1['user'] . " te ha ofrecido \"" . $p1['nombre'] . "\" por \"" . $p2['nombre'] . "\"";
-            enviarNotificacion($p2['user'], $mensaje, './Intercambio');
-            global $mailer;
-            $user = (array)($userDB->getFirst(['username' => $p2['user']]))[0];
-            
-            if ($user['notificacion']) $mailer->send($user['mail'], 'Notificacion de Intercambio!', $mensaje, true);
-
+            enviarNotificacion($p2['user'], 'Notificacion de Intercambio!' ,$mensaje, './Intercambio');
             $mensaje2 = "Has ofrecido \"" . $p1['nombre'] . "\" por \"".$p2['nombre']."\" a " . $p2['user'];
-            $user2 = (array)($userDB->getFirst(['username' => $p1['user']]))[0];
-            
-            if ($user2['notificacion']) $mailer->send($user2['mail'], 'Notificacion de Intercambio!', $mensaje2, true);
-            enviarNotificacion($p1['user'], $mensaje2, './Intercambio');
+            enviarNotificacion($p1['user'], 'Notificacion de Intercambio!' ,$mensaje2, './Intercambio');
         }
 
         $msgReturn['Mensaje'] = ($pudo) ? 'Intercambio registrado con exito' : 'Ocurrió un error al registrar el intercambio';
@@ -286,19 +278,8 @@ $app->group('/public', function (RouteCollectorProxy $group) {
                 $mensaje2 = (array_key_exists('setestado',$bodyParams)) ? "El intercambio de \"$tuProducto\" por \"$elOtroProducto\" con $otroUser fue ".$bodyParams['setestado']."." : "El intercambio de \"$tuProducto\" por \"$elOtroProducto\" con $otroUser fue modificado.";
                 $redirect = (array) $intercambioDB->getFirst(['publicacionOferta' => $p1['id'], 'publicacionOfertada' => $p2['id'], 'estado' => 'pendiente']);
                 $redirect = $redirect[0];
-                enviarNotificacion($otroUser, $mensaje, './Intercambio');
-                enviarNotificacion($userActual, $mensaje2, './Intercambio');
-
-                $user = (array)((array)$userDB->getFirst(['username' => $otroUser]))[0];
-                $user2 = (array)((array)$userDB->getFirst(['username' => $userActual]))[0];
-                global $mailer;
-                
-                if ($user['notificacion']){
-                    $mailer->send($user['mail'], 'Notificacion de Intercambio!', $mensaje, true);
-                }                
-                if ($user2['notificacion']){
-                    $mailer->send($user2['mail'], 'Notificacion de Intercambio!', $mensaje2, true);
-                }
+                enviarNotificacion($otroUser, 'Notificacion de Intercambio!' ,$mensaje, './Intercambio');
+                enviarNotificacion($userActual, 'Notificacion de Intercambio!', $mensaje2, './Intercambio');
                 if (array_key_exists('setestado',$bodyParams) && $bodyParams['setestado']=="concretado"){
                     try{
                         // esta parte no manda notificaciones, habria que refactorizar un cacho

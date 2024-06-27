@@ -127,7 +127,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
     });
 
     $group->DELETE('/deleteCentro', function (Request $request, Response $response, $args){
-        global $centroDB;
+        global $centroDB, $publiCentroDB, $publiDB, $userDB, $intercambioDB;
         //
         //FALTA VERIFICAR SI NO TIENE VOLUNTARIOS
         //FALTA VERIFICAR SI NO TIENE ASIGNADO ALGUN INTERCAMBIO (MENSAJE PARA LA PROXIMA)
@@ -146,6 +146,17 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
             $msgReturn['Mensaje'] = 'No se pudo eliminar, el centro tiene voluntarios asociados';
             $response->getBody()->write(json_encode($msgReturn));
             return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
+        }
+
+        $centro = (array)((array)$centroDB->getFirst(['id'=>$queryParams['id']]))[0];
+        $publicent = (array)$publiCentroDB->getAll(['centro'=>$queryParams['id']]);
+        foreach ($publicent as $id => $datos){
+            $datos = (array) $datos;
+            $publiDB->update(['id'=>$datos['publicacion'],'setestado'=>'baja']);
+            $publi = (array)((array)$publiDB->getFirst(['id'=>$datos['publicacion']]))[0];
+            $msj = 'El centro ' . $centro['nombre'] . ' ya no está disponible, tu publicación "' . $publi['nombre'] . '" fue dada de baja para que puedas editarla';
+            enviarNotificacion($publi['user'],'Cambios en centros que afectan tus publicaciones!',$msj);
+
         }
 
         $status = $centroDB->delete($queryParams) ? 200 : $status;

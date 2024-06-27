@@ -6,8 +6,13 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 require_once __DIR__ . '/../models/notificacionDb.php';
 
-function enviarNotificacion(string $user,string $contenido,string $url = ""){
-    global $notificacionDB;
+function enviarNotificacion(string $user,string $titulo,string $contenido,string $url = ""){
+    global $notificacionDB,$userDB,$mailer;
+
+    $user = (array)($userDB->getFirst(['username'=>$user]))[0];
+
+    if ($user['notificacion']) $mailer->send($user['mail'], $titulo, $contenido, true);
+
     return $notificacionDB->insert(['user'=>$user,'texto'=>$contenido,'url'=>$url]);
 }
 
