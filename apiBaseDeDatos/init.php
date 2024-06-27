@@ -13,7 +13,7 @@ require __DIR__ . '/src/models/intercambioDb.php';
 require __DIR__ . '/src/models/notificacionDb.php';
 require __DIR__ . '/src/models/valoracionDb.php';
 
-$userDB;
+$userDB->insert(['username' => 'admin', 'clave' => 'admin', 'nombre' => 'admin', 'apellido' => 'admin', 'dni' => '0', 'mail' => 'admin@admin.com', 'telefono' => '0', 'rol' => 'admin']);
 $categoriaDB;
 $centroDB;
 $publiDB;
