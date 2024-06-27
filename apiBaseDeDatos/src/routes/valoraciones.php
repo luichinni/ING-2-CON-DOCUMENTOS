@@ -48,7 +48,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
         global $valoracionesDB, $userDB;
         $msgReturn = ['Mensaje' => 'El usuario no ha sido valorado nunca'];
         $msgReturn['Valoracion'] = 0;
-        $status = 500;
+        $status = 404;
 
         $queryParams = $req->getQueryParams();
 

@@ -25,6 +25,8 @@ import ListarIntercambios from './pages/Intercambios/listarIntercambios';
 import Configuracion from './components/configuracion'
 import ModificarInter from './pages/Intercambios/ModificarInter';
 import IntercambiosEstats from './pages/Estadisticas/IntercambiosEstats';
+import DeleteCentro from './pages/centros/DeleteCentro';
+import DeleteComentario from './pages/Comentarios/DeleteComentario';
 
 function App() {
   return (
@@ -50,6 +52,9 @@ function App() {
                 
                 <Route path={"/agregarCentro"} element={<AgregarCentro />} />
                 <Route path={"/Centros"} element={<ListarCentro />} />
+                <Route path={"/deleteCentro/:id"} element={<DeleteCentro />} />
+
+                <Route path={"/DeleteComentario/:id"} element={<DeleteComentario />} />
 
                 <Route path={"/AgregarCategoria"} element={<AgregarCategoria />} />
                 <Route path={"/Categorias"} element={<ListarCategoria/> }/>

@@ -76,7 +76,7 @@ const User = (props) => {
                 console.log(`entre a gurdar datos`)
             }
         } catch (error) {
-            setError('No hay valoraciones disponibles.');
+            /* setError('No hay valoraciones disponibles.'); */
             setValoraciones('Sin valoraciones');
             console.error(error);
             console.log(`entre por error`)
@@ -158,7 +158,10 @@ const User = (props) => {
                     <br />
                     Telefono: {Telefono()}
                     <br />
-                    Puntuación: {valoraciones}/5
+                    {(valoraciones === 'Sin valoraciones')?
+                        (<>Puntuación: {valoraciones}</>):
+                        (<>Puntuación: {valoraciones}/5</>)
+                    }
                     <br />
                     <form onSubmit={handleSubmit}>
                         <select id="rol" value={rol} onChange={setear}>

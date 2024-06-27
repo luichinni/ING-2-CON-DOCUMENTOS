@@ -39,8 +39,8 @@ function publiValidator(array $data){
     return $valid;
 }
 
-$app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
-    $group->POST('/newPublicacion', function ($request, $response, $args) use ($pdo){
+$app->group('/public', function (RouteCollectorProxy $group)  {
+    $group->POST('/newPublicacion', function ($request, $response, $args){
         global $publiDB, $camposPublicacion;
         $pudo = false;
         $status = 500;
@@ -92,7 +92,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
             $strCentro = "centro" . $i;
             if (array_key_exists($strCentro, $bodyParams)) {
                 $bodyParams['centro'] = $bodyParams[$strCentro];
-                $pudo = $pudo && agregarPubliCentros($bodyParams,$pdo);
+                $pudo = $pudo && agregarPubliCentros($bodyParams);
             }
         }
 
@@ -100,7 +100,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
             $strImg = "foto" . $j;
             if (array_key_exists($strImg, $bodyParams)) {
                 $bodyParams['archivo'] = $bodyParams[$strImg];
-                $pudo = $pudo && agregarImg($bodyParams, $pdo);
+                $pudo = $pudo && agregarImg($bodyParams);
             }
         }
 
@@ -116,13 +116,13 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         $publiDB->delete(array('id'=>$publiID));
         for ($i = 1; $i <= 3; $i++) {
             if (array_key_exists("centro$i", $bodyParams)) {
-                borrarPubliCentro(array('centro' => $bodyParams["centro$i"], 'publicacion' => $publiID), $pdo);
+                borrarPubliCentro(array('centro' => $bodyParams["centro$i"], 'publicacion' => $publiID));
             }
         }
 
         for ($j = 1; $j <= 6; $j++) {
             if (array_key_exists("imagen$i", $bodyParams)) {
-                eliminarImg(array('archivo' => $bodyParams["imagen$i"], 'publicacion' => $publiID), $pdo);
+                eliminarImg(array('archivo' => $bodyParams["imagen$i"], 'publicacion' => $publiID));
             }
         }
 
@@ -181,7 +181,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
         return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
     });
 
-    $group->GET('/listarPublicaciones', function ($request, Response $response, $args) use ($pdo) {
+    $group->GET('/listarPublicaciones', function ($request, Response $response, $args) {
         global $publiDB, $centroDB, $categoriaDB, $publiCentroDB, $centroVolunDB;
         $status = 404;
         $msgReturn = ['Mensaje'=>'No se encontraron coincidencias'];
@@ -209,7 +209,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
 
         $offset = (array_key_exists('pag', $queryParams)) ? $queryParams['pag'] : 0;
 
-        $publis = $publiDB->getAll($where, $queryParams['like']);
+        $publis = (array)$publiDB->getAll($where, $queryParams['like']);
 
         if(!array_key_exists('habilitado',$queryParams) || (array_key_exists('habilitado',$queryParams) && $queryParams['habilitado'] == '1')){
             $collector = Collector::of(Collector::TO_FLAT_ARRAY,fn($obj)=>$obj);

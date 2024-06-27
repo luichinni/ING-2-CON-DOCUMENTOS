@@ -79,8 +79,8 @@ $app->group('/public', function (RouteCollectorProxy $group) {
 
         $queryParams = (array) $req->getQueryParams();
 
-        /* error_log(json_encode($queryParams));
-        error_log('id: '. (int)(!array_key_exists('id', $queryParams)));
+        error_log(json_encode($queryParams));
+        /*error_log('id: '. (int)(!array_key_exists('id', $queryParams)));
         error_log('existe: '.(int)(!$comentariosDB->exists($queryParams)));
         error_log('no es vacio: '. (int)(array_key_exists('id', $queryParams) && empty(trim($queryParams['id'])))); */
         if (!array_key_exists('id',$queryParams) || !$comentariosDB->exists($queryParams) || (array_key_exists('id', $queryParams)&&empty(trim($queryParams['id'])))){
@@ -90,7 +90,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
 
         $comment =(array)($comentariosDB->getFirst($queryParams)[0]);
         /* error_log(json_encode($comment)); */
-        if (array_key_exists('userMod',$queryParams)&&$queryParams['userMod']!=$comment['user']){
+        if (!array_key_exists('userMod',$queryParams) || (array_key_exists('userMod',$queryParams)&&$queryParams['userMod']!=$comment['user'])){
             $msgReturn['Mensaje'] = "No puedes eliminar un comentario que no es tuyo";
             $res->getBody()->write(json_encode($msgReturn));
             return $res->withStatus($status)->withHeader('Content-Type', 'application/json');

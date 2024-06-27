@@ -1,25 +1,23 @@
-import React, { useEffect, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { useParams, navigate } from "react-router-dom";
 import axios from "axios";
 
-const DeleteComentario = () => {
-  const navigate = useNavigate();
-  const { id } = useParams();
+const DeleteComentario = ({id, userMod}) => {
+  //const { id } = useParams();
   const hasMounted = useRef(false);
 
   useEffect(() => {
-    const deleteCategoria = async () => {
+    const deleteComentario = async () => {
+      console.log(id + ' ' + userMod)
       try {
-        if (window.confirm('¿Seguro que querés eliminar el comentario?')) {
-          await axios.delete(`http://localhost:8000/public/deleteComentario?id=${id}`);
-          alert(`Categoría eliminada`);
-          window.location.reload;
-        } else {
-            window.location.reload;
+        if (window.confirm('¿Seguro que querés eliminar este comentario?')) {
+          await axios.delete(`http://localhost:8000/public/deleteComentario?id=${id}&&userMod=${userMod}`);
+          alert(`Comentario eliminado`);
+          window.location.reload();
         }
       } catch (error) {
-        alert('No se pudo eliminar la comentario');
-        window.location.reload;
+        alert('No se pudo eliminar el comentario');
+        
       }
     };
     if(!hasMounted.current){

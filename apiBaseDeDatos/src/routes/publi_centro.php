@@ -56,8 +56,8 @@ function obtenerPubliCentros(array $valuesWhere, ?int $limit=1){
     return ($ret == false) ? json_decode('{}') : $ret;
 }
 
-function agregarPubliCentros(array $datosIn, PDO $pdo){
-    global $publiCentroDB;
+function agregarPubliCentros(array $datosIn){
+    global $publiCentroDB, $pdo;
     $pudo = false;
 
     if ($publiCentroDB->exists($datosIn)) return $pudo;

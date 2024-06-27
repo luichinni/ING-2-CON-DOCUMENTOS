@@ -12,8 +12,9 @@ const DeleteCentro = () => {
       try {
         if (window.confirm('¿Seguro que querés eliminar el centro?')) {
           await axios.delete(`http://localhost:8000/public/deleteCentro?id=${id}`);
-          alert(`Centro eliminada`);
+          alert(`Centro eliminado`);
           navigate(`../Centros`);
+          window.location.reload()  
         } else {
           navigate(`../Centros`);
         }
@@ -23,7 +24,7 @@ const DeleteCentro = () => {
       }
     };
     if(!hasMounted.current){
-      deleteCentro();
+      DeleteCentro();
       hasMounted.current = true;
     }
   }, []); // Pasamos un array vacío como segundo argumento
