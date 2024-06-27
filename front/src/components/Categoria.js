@@ -7,7 +7,7 @@ const Categoria = (props) => {
         return  <fieldset className="centro-fila">
                     <div className="div">
                         <p className="nombre">
-                            categoria {props.Id}:  {props.Nombre}
+                            categoria {props.Id}:  {props.nombre}
                         </p>
                         <button className="boton_editar">
                             Editar

@@ -71,7 +71,7 @@ const ListarCategoria = () => {
           categorias.map(categoria => (
             <Categoria
                 Id = {categoria.id}
-                Nombre = {categoria.nombre}
+                nombre = {categoria.nombre}
             />
           ))
         )}

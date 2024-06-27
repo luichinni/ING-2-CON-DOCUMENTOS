@@ -118,7 +118,7 @@ const User = (props) => {
 
                 if (props.rol === "volunt") {
                     const centroActualRec = await axios.get(`http://localhost:8000/public/getCentroVolunt?voluntario=${props.username}`);
-                    setCentroActual("Actual: " + centroActualRec.data.Nombre);
+                    setCentroActual("Actual: " + centroActualRec.data.nombre);
                     setVisible(true);
                 }
                 setBotonAceptado("Guardar Cambios");
@@ -175,7 +175,7 @@ const User = (props) => {
                                 <option value="">{centroActual}</option>
                                 {centros.map((centro) => (
                                     <option key={centro.id} value={centro.id}>
-                                        {centro.Nombre}
+                                        {centro.nombre}
                                     </option>
                                 ))}
                             </select>
