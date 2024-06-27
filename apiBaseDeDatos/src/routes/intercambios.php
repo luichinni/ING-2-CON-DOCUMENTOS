@@ -221,7 +221,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
             $centro = (array) $centroDB->getFirst(['id'=>$intercambio['centro']]);
             $centro = (array) $centro[0];
             //error_log(json_encode($centro));
-            $intercambio['centro'] = $centro['Nombre'];
+            $intercambio['centro'] = $centro['nombre'];
             $listado[$id] = $intercambio;
         }
 

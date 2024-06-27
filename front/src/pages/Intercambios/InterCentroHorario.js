@@ -97,7 +97,6 @@ const InterCentroHorario = () => {
         formData.append(`ofertadaAcepta`, 1)
         formData.append(`horario`, horarioEnFormato)
         formData.append(`centro`, centroSeleccionado)
-
         try {
             const response = await axios.post(`http://localhost:8000/public/newIntercambio?token=${localStorage.getItem('token')}`, formData,
                 {

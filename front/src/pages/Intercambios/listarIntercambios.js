@@ -51,6 +51,7 @@ const ListarIntercambios = () => {
         } else {
           let intercambiosList = procesar(response.data);
           setIntercambios(intercambiosList);
+          console.log(`respuesta: ${response.data[0].publicacionOferta}`)
         }
       } catch (error) {
         setError(`¡No has realizado intercambios todavía! \n Ve a explorar para poder intercambiar`);

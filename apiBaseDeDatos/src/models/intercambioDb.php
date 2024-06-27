@@ -18,7 +18,7 @@ $camposIntercambio = [
         "tipo" => "int",
         "comparador" => "=",
         "fk" => [
-            "tabla" => "intercambio",
+            "tabla" => "publicacion",
             "campo" => "id"
         ]
     ], // quien publicó
@@ -26,7 +26,7 @@ $camposIntercambio = [
         "tipo" => "int",
         "comparador" => "=",
         "fk" => [
-            "tabla" => "intercambio",
+            "tabla" => "publicacion",
             "campo" => "id"
         ]
     ], // quien ofertó
