@@ -13,7 +13,11 @@ require __DIR__ . '/src/models/intercambioDb.php';
 require __DIR__ . '/src/models/notificacionDb.php';
 require __DIR__ . '/src/models/valoracionDb.php';
 
-$userDB->insert(['username' => 'admin', 'clave' => 'admin', 'nombre' => 'admin', 'apellido' => 'admin', 'dni' => '0', 'mail' => 'admin@admin.com', 'telefono' => '0', 'rol' => 'admin']);
+try{
+    $userDB->insert(['username' => 'admin', 'clave' => 'admin', 'nombre' => 'admin', 'apellido' => 'admin', 'dni' => '0', 'mail' => 'admin@admin.com', 'telefono' => '0', 'rol' => 'admin']);
+}catch(Exception $e){
+    error_log('Ya hay admin');
+}
 $categoriaDB;
 $centroDB;
 $publiDB;
