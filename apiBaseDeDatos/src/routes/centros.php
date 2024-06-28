@@ -18,7 +18,7 @@ CREATE TABLE Centros (
 
 require_once __DIR__ . '/../models/centroDb.php';
 
-function validaDatos($data, $response) {
+function validaDatos($data) {
     $columna = ['nombre', 'direccion', 'hora_abre', 'hora_cierra'];
 
     foreach ($columna as $colum) {
@@ -84,7 +84,7 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');
         }
 
-        if (!validaDatos($data, $response)) {
+        if (!validaDatos($data)) {
             $msgReturn['Mensaje'] = 'Los datos de centro son invalidos';
             $response->getBody()->write(json_encode($msgReturn));
             return $response->withStatus(400)->withHeader('Content-Type', 'application/json');

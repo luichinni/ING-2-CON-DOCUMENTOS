@@ -53,6 +53,8 @@ class bdController
         });
     }
 
+    public function getTableName(){return $this->tableName;}
+
     public function initTable($dropTable = false)
     {
         if ($dropTable) {

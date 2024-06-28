@@ -36,7 +36,7 @@ require_once __DIR__ . '/../src/routes/centros.php';
 require_once __DIR__ . '/../src/routes/publicacion.php';
 require_once __DIR__ . '/../src/routes/publi_centro.php';
 require_once __DIR__ . '/../src/routes/imagen.php';
-require_once __DIR__ . '/../src/routes/centroVolun.php';
+require_once __DIR__ . '/../src/modules/centroVolun.php';
 require_once __DIR__ . '/../src/routes/comentarios.php';
 require_once __DIR__ . '/../src/routes/intercambios.php';
 require_once __DIR__ . '/../src/routes/notificaciones.php';
