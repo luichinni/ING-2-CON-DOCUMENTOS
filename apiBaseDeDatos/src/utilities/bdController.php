@@ -3,8 +3,6 @@
 class bdController
 {
 
-    private Closure $validador;
-
     /**
      * @param string $tableName - Nombre de la tabla que corresponde al controlador instanciado
      * @param PDO $pdo - Conexion a la base de datos
@@ -47,10 +45,6 @@ class bdController
         ];
         //error_log($tableName);
         $this->initTable($dropTable);
-
-        $this->validador  = Closure::fromCallable(function (array $campos, bool $comprobarTodos = false) {
-            return true;
-        });
     }
 
     public function getTableName(){return $this->tableName;}
@@ -82,26 +76,6 @@ class bdController
         $dropQuery = "DROP TABLE `$this->tableName`";
         //error_log($dropQuery);
         return $this->pdo->prepare($dropQuery)->execute();
-    }
-
-    /**
-     * @param callable $validador - Es el validador de los campos, por norma general deberia contar con la posibilidad
-     * de evaluarse campos individuales asi como todos los campos obligatorios.
-     * ```php
-     * $validador = function (array $campos,bool $comprobarTodos=false){
-     *     // tu implementacion aqui
-     *     return $miBool;
-     * }
-     * ```
-     * Es opcional, si no se carga ninguno los datos no serán validados, en caso de ingresar una funcion que no sirva, lanza error.
-     */
-    public function setValidador($validador)
-    {
-        if ($validador != null && (((new ReflectionMethod($validador))->getNumberOfParameters() != 2) || ((new ReflectionMethod($validador))->getNumberOfRequiredParameters() != 1))) {
-            throw new Exception("El validador pasado por parametro no es correcto.");
-        } else {
-            $this->validador = Closure::fromCallable($validador);
-        }
     }
 
     private function getLineaDeclaracion(string $campo, array $opciones, array &$pk = [], array &$fk = [])
@@ -325,12 +299,8 @@ class bdController
     {
         $pudo = false;
 
-        $validos = ($this->validador)($this->getSetParams($queryParams));
-
-        if ($validos) {
-            $queryUpdate = $this->generarUpdate($queryParams);
-            $pudo = $this->pdo->query($queryUpdate)->execute();
-        }
+        $queryUpdate = $this->generarUpdate($queryParams);
+        $pudo = $this->pdo->query($queryUpdate)->execute();
 
         return $pudo;
     }
@@ -352,12 +322,8 @@ class bdController
     {
         $pudo = false;
 
-        $validos = ($this->validador)($datosIn, true);
-
-        if ($validos) {
-            $queryInsert = $this->generarInsert($datosIn);
-            $pudo = $this->pdo->prepare($queryInsert)->execute();
-        }
+        $queryInsert = $this->generarInsert($datosIn);
+        $pudo = $this->pdo->prepare($queryInsert)->execute();
 
         return $pudo;
     }
