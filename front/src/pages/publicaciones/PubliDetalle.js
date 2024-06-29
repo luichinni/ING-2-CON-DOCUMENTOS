@@ -51,7 +51,7 @@ const PubliDetalle = () => {
             <div className="detalle-info">
                 <br/><br/><br/><br/><br/><br/><br/><br/>
                 <h2>{publicacion.nombre}</h2>
-                <p><strong>Usuario:</strong> {publicacion.user}</p>
+                <p><strong>Usuario:</strong><Link className={'linkUsuario'} to={`/PubliUsuario/${publicacion.user}`}>{publicacion.user}</Link></p>
                 <p><strong>Centros:</strong> {publicacion.centros.join(' | ')}</p>
                 <p><strong>Descripción:</strong> {publicacion.descripcion}</p>
                 <p><strong>Categoría:</strong> {publicacion.categoria_id}</p>

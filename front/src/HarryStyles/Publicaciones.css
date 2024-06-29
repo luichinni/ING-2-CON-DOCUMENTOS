@@ -183,3 +183,50 @@
 .botonEditar:hover {
   background-color: #96a728;
 }
+
+.datosDeUser {
+  background-color: #ffffff; /* Fondo blanco */
+  border: 1px solid #ddd; /* Borde gris claro */
+  border-radius: 8px; /* Bordes redondeados */
+  padding: 20px; /* Espaciado interno */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  margin: 20px auto; /* Centra el contenedor horizontalmente y añade margen vertical */
+  max-width: 800px; /* Ancho máximo */
+  text-align: center; /* Centra el texto */
+  box-sizing: border-box; /* Incluye el padding en el tamaño total */
+  text-decoration: none;
+}
+
+.datosDeUser h2 {
+  font-size: 24px; /* Tamaño de fuente */
+  color: #333; /* Color de texto */
+  margin-bottom: 10px; /* Espacio debajo del título */
+}
+
+.datosDeUser p {
+  font-size: 16px; /* Tamaño de fuente */
+  color: #666; /* Color de texto */
+  margin: 5px 0; /* Espaciado */
+}
+
+.datosDeUser .valoracion {
+  display: flex;
+  align-items: center; /* Centra verticalmente */
+  justify-content: center; /* Centra horizontalmente */
+  margin-top: 15px; /* Espacio arriba */
+}
+
+.datosDeUser .valoracion span {
+  font-size: 18px; /* Tamaño de fuente */
+  color: #007bff; /* Color azul */
+  margin-left: 5px; /* Espaciado izquierdo */
+}
+
+.linkUsuario{
+  text-decoration: none;
+  color: rgb(255, 0, 0);
+}
+.linkUsuario:hover {
+  text-decoration: none;
+  color: black;
+}

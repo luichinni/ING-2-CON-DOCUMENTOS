@@ -41,4 +41,12 @@
 .detalle-info p strong {
   font-weight: bold;
 }
-  
+
+.linkUsuario{
+  text-decoration: none;
+  color: rgb(32, 80, 222);
+}
+.linkUsuario:hover {
+  text-decoration: none;
+  color: black;
+}

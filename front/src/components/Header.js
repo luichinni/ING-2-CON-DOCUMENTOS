@@ -6,7 +6,7 @@ const Header = () => {
             <div className='navbarItems'>
                 <img 
                     style={{ 
-                        position: "absolute", 
+                        position: "fixed", 
                         zIndex: 1001 ,
                         left: "0",
                         maxHeight: "15%",

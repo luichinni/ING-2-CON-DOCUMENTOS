@@ -4,6 +4,7 @@ import "../HarryStyles/Usuarios.css";
 import React, { useState, useEffect } from "react";
 import { ButtonSubmit } from "./ButtonSubmit";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const User = (props) => {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -162,6 +163,8 @@ const User = (props) => {
                         (<>Puntuación: {valoraciones}</>):
                         (<>Puntuación: {valoraciones}/5</>)
                     }
+                    <br/>
+                    <button className="botonEstado"><Link className={'linkUsuario'} to={`/PubliUsuario/${props.username}`}> Publicaciones </Link></button>
                     <br />
                     <form onSubmit={handleSubmit}>
                         <select id="rol" value={rol} onChange={setear}>

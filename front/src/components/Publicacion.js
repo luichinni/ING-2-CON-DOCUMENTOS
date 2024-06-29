@@ -46,7 +46,7 @@ const Publicacion = (props) => {
                     <></>
                 ):(
                     <>
-                    Por: {props.user}
+                    Por:<Link className={'linkUsuario'} to={`/PubliUsuario/${props.user}`}>{props.user}</Link>
                     </>
                 )}
                 </p>
