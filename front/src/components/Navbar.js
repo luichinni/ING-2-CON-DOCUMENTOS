@@ -92,7 +92,7 @@ export function NavBar() {
                         <div className={`dropdownmenu ${menuOpen ? 'show' : ''}`}>
                             <ul>
                                 <li className='saludoUsuario'>¡Hola {localStorage.getItem('username')}!</li>
-                                <li><button className='opButton' onClick={() => console.log("Ver mi Perfil")}>Ver mi Perfil</button></li>
+                                <li><Link to={`/PubliUsuario/${localStorage.getItem('username')}`}><button className='opButton' onClick={toggleMenu}>Ver mi Perfil</button></Link></li>
                                 <li><Link to="/config"><button className='opButton' onClick={toggleMenu}>Configuraciones</button></Link></li>
                                 {token === 'tokenUser' && (
                                 <>

@@ -5,6 +5,7 @@ import '../../HarryStyles/styles.css';
 import ListarPublisUsuario from './ListarPublisUsuario';
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom"
 
 const MisPublis = () => {
     const { username } = useParams();
@@ -79,7 +80,15 @@ const MisPublis = () => {
                 {usuarios.map(usuario => (
                     <p key={usuario.id}> {/* Usar un key único para cada elemento */}
                         Nombre: {usuario.nombre} <br />
-                        Apellido: {usuario.apellido}
+                        Apellido: {usuario.apellido} <br />
+                        {(username === localStorage.getItem('username'))&&(
+                            <>
+                            dni: {usuario.dni}<br />
+                            mail: {usuario.mail}<br />
+                            telefono: {usuario.telefono}<br />
+                            rol: {usuario.rol}<br />
+                            </>
+                        )}
                     </p>
                 ))}
                 <div className="valoracion">
@@ -88,6 +97,11 @@ const MisPublis = () => {
                         {valoraciones === 'Sin valoraciones' ? valoraciones : `${valoraciones}/5`}
                     </span>
                 </div>
+                {(username === localStorage.getItem('username'))&&(
+                    <Link to={`/ModificarUsuario/${localStorage.getItem('username')}`}>
+                        <button className="estiloEditar">Editar Datos del Perfil</button>
+                    </Link>
+                )}
             </div>
 
             <ListarPublisUsuario />

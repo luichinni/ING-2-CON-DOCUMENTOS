@@ -61,3 +61,53 @@ input:checked+.slider {
 input:checked+.slider:before {
     transform: translateX(26px);
 }
+
+.contenedor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f9f9f9;
+    min-height: 100vh;
+}
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.estiloRed {
+    background-color: #ff4b5c;
+    color: white;
+}
+
+.estiloRed:hover {
+    background-color: #ff3b4c;
+}
+
+.estiloBlue {
+    background-color: #4b9ff5;
+    color: white;
+}
+
+.estiloBlue:hover {
+    background-color: #3b8fd4;
+}
+
+.estiloEditar {
+    background-color: #4caf50;
+    color: white;
+}
+
+.estiloEditar:hover {
+    background-color: #45a049;
+}

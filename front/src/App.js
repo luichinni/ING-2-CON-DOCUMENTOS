@@ -29,6 +29,7 @@ import DeleteCentro from './pages/centros/DeleteCentro';
 import DeleteComentario from './pages/Comentarios/DeleteComentario';
 import ModificarPublicacion from './pages/publicaciones/ModificarPublicacion';
 import ListarPublisUsuario from './pages/publicaciones/PublisUsuario';
+import ModificarUsuario from './pages/sesion/ModificarUsuario';
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
                 <Route path={"/Registrarse"} element={<Registrarse />} />
                 <Route path={"/IniciarSesion"} element={<IniciarSesion />} />
                 <Route path={"/Usuarios"} element={<ListarUsuario/>} />
+                <Route path={"/ModificarUsuario/:username"} element={<ModificarUsuario />}/>
 
                 <Route path={"/agregarPublicacion"} element={<AgregarPublicacion />} />
                 
