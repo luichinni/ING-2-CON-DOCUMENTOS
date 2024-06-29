@@ -41,7 +41,14 @@ const Registrarse = () => {
             setError('No hay usuarios disponibles');
             setUsuarios([]); 
           } else {
-            setUsuarios(procesar(response.data));
+            const usuarioData = procesar(response.data)[0]; // Solo toma el primer usuario
+            setUsuarios([usuarioData]);
+            setNombre(usuarioData.nombre);
+            setApellido(usuarioData.apellido);
+            setNumeroDocumento(usuarioData.dni);
+            setEmail(usuarioData.mail);
+            setTelefono(usuarioData.telefono);
+            setNewUsername(username);
           }
         } catch (error) {
           setError('Ocurrió un error al obtener los usuarios.');
@@ -62,18 +69,23 @@ const Registrarse = () => {
 			console.log('entro');
 			const formData = new FormData();
 			formData.append('username', username);
-      formData.append('setusername', newusername);
-			formData.append('setnombre', nombre);
-			formData.append('setapellido', apellido);
-			formData.append('setdni', numeroDocumento);
-			formData.append('setmail', mail);
-			formData.append('settelefono', telefono);
-			formData.append('setclave', contraseña);
-			formData.append('setrol', "user");
+      (nombre)&&(formData.append('setnombre', nombre));
+			(apellido)&&formData.append('setapellido', apellido);
+			(numeroDocumento)&&formData.append('setdni', numeroDocumento);
+			(mail)&&formData.append('setmail', mail);
+			(telefono)&&formData.append('settelefono', telefono);
+			(contraseña)&&formData.append('setclave', contraseña);
 
 			try {
 				setMyError(false);
-				console.log('myErr  =false')
+        console.log(`username: ${formData.get('username')}`);
+      console.log(`newusername: ${formData.get('setusername')}`);
+      console.log(`nombre: ${formData.get('setnombre')}`);
+      console.log(`apellido: ${formData.get('setapellido')}`);
+      console.log(`dni: ${formData.get('setdni')}`);
+      console.log(`mail: ${formData.get('setmail')}`);
+      console.log(`telefono: ${formData.get('settelefono')}`);
+      console.log(`clave: ${formData.get('setclave')}`);
         if (huboCambio === true) {
           if (window.confirm('¿Seguro que deseas modificar los datos?')) {
           const response = await axios.put("http://localhost:8000/public/updateUsuario", formData,
@@ -90,6 +102,7 @@ const Registrarse = () => {
           navigate("/");
         }
 			} catch (error) {
+        console.log('entre por error')
 				console.error('Error:', error.response.data.Mensaje);
 				setMyError(true);
 				setMsgError(error.response.data.Mensaje);
@@ -115,17 +128,15 @@ const Registrarse = () => {
 			<h3> Modifica tus datos de usuario! </h3>  <br /> <br />
       {usuarios.map(usuario => (
       <>
-        <input placeholder= {username} type="text" value={newusername} onChange={handleUsernameChange} /> <br/><br/> 
+        <input placeholder={"nombre"} type="text" value={nombre} onChange={handleNombreChange} /> <br/><br/>  
 
-        <input placeholder={usuario.nombre} type="text" value={nombre} onChange={handleNombreChange} /> <br/><br/>  
+        <input placeholder={"apellido"} type="text" value={apellido} onChange={handleApellidoChange} />  <br/><br/>  
 
-        <input placeholder={usuario.apellido} type="text" value={apellido} onChange={handleApellidoChange} />  <br/><br/>  
+        <input placeholder={"documento"} type="text" value={numeroDocumento} onChange={handleNumeroDocumentoChange} />  <br/><br/>  
 
-        <input placeholder={usuario.dni} type="text" value={numeroDocumento} onChange={handleNumeroDocumentoChange} />  <br/><br/>  
-
-        <input placeholder={usuario.mail} type="text"  value={mail} onChange={handleMailChange} /> <br/> <br/> 
+        <input placeholder={"mail"} type="text"  value={mail} onChange={handleMailChange} /> <br/> <br/> 
         
-        <input placeholder={usuario.telefono} type="text" value={telefono} onChange={handleTelefonoChange} />  <br/><br/> 
+        <input placeholder={"telefono"} type="text" value={telefono} onChange={handleTelefonoChange} />  <br/><br/> 
         
         <Link to={`/modificarContraseña/${username}`}><button className="cambiarContraseña">Cambiar contraseña</button></Link> <br/><br/> 
       </>
