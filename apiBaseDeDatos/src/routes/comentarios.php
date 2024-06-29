@@ -113,7 +113,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
         return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
     });
 
-    $group->delete('/updateComentario', function (Request $req, Response $res){
+    $group->put('/updateComentario', function (Request $req, Response $res){
         global $comentariosDB;
         $status = 500;
         $msgReturn = ['Mensaje' => 'No existe el comentario'];

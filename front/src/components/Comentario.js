@@ -3,10 +3,12 @@ import '../HarryStyles/Comentario.css';
 import '../HarryStyles/Notificaciones.css';
 import DeleteComentario from '../pages/Comentarios/DeleteComentario';
 import { useEffect, useState } from 'react';
+import ModificarComentario from '../pages/Comentarios/ModificarComentario';
 
 const Comentario = ({ id, user, texto, respondeA, fecha_publicacion }) => {
 
   const [ELIMINAR,setEliminar] = useState(false);
+  const username = localStorage.getItem('username');
 
   function handleBorrar(){
     console.log(id + ' ' + localStorage.getItem('username'))
@@ -35,8 +37,13 @@ const Comentario = ({ id, user, texto, respondeA, fecha_publicacion }) => {
             id={id} 
             userMod={localStorage.getItem('username')}/>
         )
-
         }
+        {(user === username)&&(
+          <ModificarComentario
+            id={id}
+            userMod={localStorage.getItem('username')}
+          />
+        )}
       </div>
     </fieldset>
   );
