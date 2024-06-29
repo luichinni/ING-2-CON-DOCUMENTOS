@@ -38,7 +38,7 @@ const ModificarInter = (props) => {
         { value: 11, nombre: "Noviembre" },
         { value: 12, nombre: "Diciembre" }
     ];
-    const anios = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() + i);
+    const anios = Array.from({ length: 2 }, (_, i) => new Date().getFullYear() + i);
     const horarios = [
         "00:00","00:30","01:00","01:30","02:00","02:30","03:00","03:30","04:00","04:30","05:00","05:30","06:00","06:30",
         "07:00","07:30","08:00","08:30","09:00","09:30","10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", 
