@@ -78,7 +78,7 @@ const ListarPublisUsuario = () => {
         ) : error ? (
           <h1 className='sin-publi'>{error}</h1>
         ) : (
-          publicaciones.map(publicacion => (
+          publicaciones.filter(publicacion => (publicacion.estado === 'alta')).map(publicacion => (
             <Publicacion
               key={publicacion.id} // Agregar key prop para evitar advertencia
               id={publicacion.id}

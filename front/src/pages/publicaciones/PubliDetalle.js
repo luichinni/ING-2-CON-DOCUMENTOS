@@ -2,13 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../../HarryStyles/PubliDetalle.css"; 
 import { Link } from "react-router-dom";
+import axios from "axios";
 import ListarComentarios from "../Comentarios/ListarComentarios";
 
 const PubliDetalle = () => {
     const Token = localStorage.getItem('token');
     const username = localStorage.getItem('username')
     const { id } = useParams(); 
+    const [error, setError] = useState(false);
     const [publicacion, setPublicacion] = useState(null);
+    const [valoraciones, setValoraciones] = useState('');
+    const [dueño, setDueño] = useState('')
 
     useEffect(() => {
         console.log(`Obteniendo datos para id: ${id}`);
@@ -26,10 +30,45 @@ const PubliDetalle = () => {
 
         if (publicacionObj && publicacionObj.id === idNumero) {
             setPublicacion(publicacionObj);
+            setDueño(publicacionObj.user)
+            console.log(`seteamos dueño: ${dueño}`)
         } else {
             console.log("Publicación no encontrada");
         }
+
     }, [id]);
+
+    useEffect(() => {
+        if (dueño) {
+            fetchValoraciones();
+        }
+    }, [dueño]);
+
+    const fetchValoraciones = async () => {
+        setError('');
+        try {
+            const url = `http://localhost:8000/public/getValoracion?userValorado=${dueño}&token=${localStorage.getItem('token')}`;
+            console.log(`llegue, url: ${url}`)
+            console.log(localStorage.getItem('token'));
+            const response = await axios.get(url);
+            console.log(`llegue2, response:${response.data}`)
+
+            if (!response.data || response.data.Valoracion === undefined) {
+                setError('No hay valoraciones disponibles');
+                setValoraciones('Sin valoraciones');
+                console.log(`entre por error de undefined`)
+            } else {
+                setValoraciones(response.data.Valoracion);
+                console.log(`entre a gurdar datos`)
+            }
+        } catch (error) {
+            /* setError('No hay valoraciones disponibles.'); */
+            setValoraciones('Sin valoraciones');
+            console.error(error);
+            console.log(`entre por error`)
+        }
+    };
+
 
     if (!publicacion) {
         return <div>Cargando...</div>;
@@ -51,7 +90,18 @@ const PubliDetalle = () => {
             <div className="detalle-info">
                 <br/><br/><br/><br/><br/><br/><br/><br/>
                 <h2>{publicacion.nombre}</h2>
-                <p><strong>Usuario:</strong><Link className={'linkUsuario'} to={`/PubliUsuario/${publicacion.user}`}>{publicacion.user}</Link></p>
+                <p className="usuario-valoracion-container">
+                    <strong>Usuario:</strong>
+                        <Link className={'linkUsuario'} to={`/PubliUsuario/${publicacion.user}`}>
+                            {publicacion.user}
+                        </Link>
+                    <div className="valoracion">
+                    {(valoraciones === 'Sin valoraciones')?
+                        (<>Puntuación: {valoraciones}</>):
+                        (<>Puntuación: {valoraciones}/5</>)
+                    }
+                    </div>
+                </p>
                 <p><strong>Centros:</strong> {publicacion.centros.join(' | ')}</p>
                 <p><strong>Descripción:</strong> {publicacion.descripcion}</p>
                 <p><strong>Categoría:</strong> {publicacion.categoria_id}</p>

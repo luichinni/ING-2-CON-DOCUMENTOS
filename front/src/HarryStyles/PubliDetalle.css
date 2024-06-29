@@ -42,11 +42,25 @@
   font-weight: bold;
 }
 
-.linkUsuario{
+.linkUsuario {
   text-decoration: none;
   color: rgb(32, 80, 222);
 }
+
 .linkUsuario:hover {
   text-decoration: none;
   color: black;
+}
+
+.usuario-valoracion-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+}
+
+.valoracion {
+  font-size: 13px;
+  font-weight: bold;
+  color: #666;
 }
