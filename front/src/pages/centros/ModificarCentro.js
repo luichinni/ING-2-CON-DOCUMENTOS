@@ -26,7 +26,7 @@ const ModificarCentro = (props) => {
             (nombre)&&(formData.append('setnombre', nombre));
 			(direccion)&&formData.append('setDireccion', direccion);
 			(hora_abre)&&formData.append('serHora_abre', hora_abre);
-            (hora_cierre)&&formData.append('serHora_cierre', hora_cierre);
+            (hora_cierra)&&formData.append('serHora_cierre', hora_cierra);
 
 			try {
 				setMyError(false);
@@ -35,35 +35,31 @@ const ModificarCentro = (props) => {
                 console.log(`hora_abre: ${formData.get('sethora_abre')}`);
                 console.log(`hora_cierra: ${formData.get('sethora_cierra')}`);
                 if (huboCambio === true) {
-          if (window.confirm('¿Seguro que deseas modificar los datos?')) {
-          const response = await axios.put("http://localhost:8000/public/updateUsuario", formData,
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            });
-          console.log('Success:', response);
-          navigate("/");
-          }
-        } else {
-          alert('No se realizo ningun cambio')
-          navigate("/");
-        }
-			} catch (error) {
-        console.log('entre por error')
-				console.error('Error:', error.response.data.Mensaje);
-				setMyError(true);
-				setMsgError(error.response.data.Mensaje);
-			}
+                if (window.confirm('¿Seguro que deseas modificar los datos?')) {
+                    const response = await axios.put("http://localhost:8000/public/updateUsuario", formData,
+                    {headers: { "Content-Type": "application/json", }, });
+                    console.log('Success:', response);
+                    navigate("/");
+                    }
+                } else {
+                alert('No se realizo ningun cambio')
+                navigate("/");
+                }
+                } catch (error) {
+                    console.log('entre por error')
+                    console.error('Error:', error.response.data.Mensaje);
+                    setMyError(true);
+                    setMsgError(error.response.data.Mensaje);
+                }
         
     };
 
     useEffect(() => {
         const fetchData = async () => {
-          setLoading(true);
-          setError('');
+            setLoading(true);
+            setError('');
     
-          try {
+            try {
             const url = `http://localhost:8000/public/listarCentros${id}`;
             const response = await axios.get(url);
     
@@ -73,7 +69,7 @@ const ModificarCentro = (props) => {
             } else {
                 const centroData = procesar(response.data)[0];
                 setCentro([centroData]);
-                setNombre(usuarioData.nombre);
+                setNombre(centroData.nombre);
                 setDireccion(centroData.direccion);
                 setHora_abre(centroData.hora_abre);
                 setHora_cierra(centroData.hora_cierra);
@@ -87,7 +83,7 @@ const ModificarCentro = (props) => {
         };
     
         fetchData();
-      }, []);
+    }, []);
 
     return (
         <div>
