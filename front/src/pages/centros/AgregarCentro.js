@@ -12,10 +12,6 @@ const AgregarCentro = () => {
 	const [myError, setMyError] = useState(false);
 	const [msgError, setMsgError] = useState('No deberías estar viendo este mensaje');
 
-
-	const [intercambio,setIntercambio] = useState('');
-	const handleIntercambioChange = (e) => setIntercambio(e.target.value);
-
     const handleNombreChange = (e) => setNombre(e.target.value);
     const handleDireccionChange = (e) => setDireccion(e.target.value);
 	const handleHora_AbreChange = (e) => setHora_abre (e.target.value);

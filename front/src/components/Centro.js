@@ -2,6 +2,8 @@ import "../HarryStyles/centros.css"
 import "../HarryStyles/styles.css"
 import React, { useState } from "react";
 import {Link} from "react-router-dom";
+import { CiTrash } from 'react-icons/ci';
+import { MdEdit } from "react-icons/md";
 
 const Centro = (props) => {
         const [isExpanded, setIsExpanded]= useState(false);
@@ -30,10 +32,13 @@ const Centro = (props) => {
                             <br /><br />
                             {(localStorage.getItem('token') == 'tokenAdmin')?(
                             <>
-                                <button className="boton_editar">
-                                    Editar
-                                </button>
-                                <Link to={"/deleteCentro/" + props.Id} className="botonEliminar"> Eliminar </Link>
+                                <Link to={`/ModificarCentro/${props.id}`} > 
+                                    <button className="botonEstado botonEditar"> <MdEdit className="editar" size={20}/>  </button>
+                                </Link>
+
+                                <Link to={"/deleteCentro/" + props.Id} className="botonEliminar"> 
+                                    <CiTrash size={22} className='botonCampanita' />
+                                </Link>
                                 <br />
                             </>
                             ):(<></>)}
