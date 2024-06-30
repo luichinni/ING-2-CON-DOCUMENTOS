@@ -56,9 +56,10 @@ abstract class BaseHandler{
         $this->status = 500;
         $pudo = false;
 
-        if (!$this->existe($datos,true)) return $pudo;
+        if (empty($datos) || !$this->existe($datos,true)) return $pudo;
 
         if ($this->restriccionBorrado($datos)){ // true -> restringido, false -> puede seguir
+            $this->status = 500;
             return $pudo;
         }
 
@@ -69,7 +70,7 @@ abstract class BaseHandler{
             $this->status = 200;
             $this->mensaje = $this->db->getTableName() . ' eliminado con éxito';
         }catch (Exception $e){
-            $this->mensaje = 'Ocurrió un error al eliminar ' . $this->db->getTableName();
+            $this->mensaje = 'Ocurrió un error al eliminar ' . $this->db->getTableName() . ', comprueba que no tenga dependencias';
         }
     }
 
@@ -77,6 +78,7 @@ abstract class BaseHandler{
         $ret = [];
         try{
             $ret = $this->db->getAll($datos);
+            error_log(json_encode($ret));
             $this->status = (empty($ret)) ? 404 : 200;
             $this->mensaje = (empty($ret)) ? 'No se encontraron ' . $this->db->getTableName() : $this->db->getTableName() . ' listados con éxito';
         }catch (Exception $e){

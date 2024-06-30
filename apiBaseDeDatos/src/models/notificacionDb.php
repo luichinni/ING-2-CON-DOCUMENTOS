@@ -22,7 +22,8 @@ $camposNotificacion = [
     'visto' => [
         "tipo" => "boolean",
         "comparador" => "=",
-        "default" => "FALSE"
+        "default" => "FALSE",
+        "opcional" => true
     ],
     'url' => [
         "tipo" => "text",

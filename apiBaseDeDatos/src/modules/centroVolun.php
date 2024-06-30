@@ -35,6 +35,7 @@ function borrarCentroVolun(array $valuesWhere){
 
 function validarCentroVolun(array $valuesWhere){
     global $centroVolunDB;
+
     return $centroVolunDB->exists($valuesWhere);
 }
 

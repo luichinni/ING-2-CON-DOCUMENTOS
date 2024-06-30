@@ -8,12 +8,12 @@ require_once __DIR__ . '/../models/notificacionDb.php';
 
 function enviarNotificacion(string $user,string $titulo,string $contenido,string $url = ""){
     global $notificacionDB,$userDB,$mailer;
-
+    error_log($user);
     $user = (array)($userDB->getFirst(['username'=>$user]))[0];
 
     if ($user['notificacion']) $mailer->send($user['mail'], $titulo, $contenido, true);
 
-    return $notificacionDB->insert(['user'=>$user,'texto'=>$contenido,'url'=>$url]);
+    return $notificacionDB->insert(['user'=>$user['username'],'texto'=>$contenido,'url'=>$url]);
 }
 
 function verNotificacion(int $id){
@@ -23,27 +23,15 @@ function verNotificacion(int $id){
 
 $app->group('/public', function (RouteCollectorProxy $group) {
     $group->GET('/listarNotificaciones', function (Request $request, Response $response, $args) {
-        global $notificacionDB;
-        $status = 404;
-        $msgReturn = ['Mensaje' => 'No hay notificaciones disponibles'];
-
         $queryParams = $request->getQueryParams();
 
-        $listado = (array) $notificacionDB->getAll($queryParams);
+        global $notificacionHandler;
 
-        $listado['Mensaje'] = (!empty($listado)) ? 'Notificaciones listadas con exito' : $msgReturn['Mensaje'];
+        $listado = $notificacionHandler->listar($queryParams);
 
-        foreach ($listado as $key => $noti){
-            $noti = (array) $noti;
-            if (array_key_exists('id',$noti)){
-                //error_log("index 0 => " . $noti[0]);
-                verNotificacion($noti['id']);
-            }
-        }
-
-        $status = (!empty($listado)) ? 200 : 404;
+        $listado['Mensaje'] = $notificacionHandler->mensaje;
 
         $response->getBody()->write(json_encode($listado));
-        return $response->withStatus($status)->withHeader('Content-Type', 'application/json');
+        return $response->withStatus($notificacionHandler->status)->withHeader('Content-Type', 'application/json');
     });
 });

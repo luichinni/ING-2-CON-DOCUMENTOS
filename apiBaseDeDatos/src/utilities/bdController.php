@@ -184,6 +184,19 @@ class bdController
         return $existe;
     }
 
+    public function comprobarObligatorios(array $datos){
+        $campos = [];
+        $camposObligados = [];
+
+        foreach($this->camposTabla as $campo => $info){
+            if (array_key_exists($campo,$datos) && array_key_exists('opcional',$info) && !$info['opcional']) $campos[] = $campo;
+
+            if (array_key_exists('opcional', $info) && !$info['opcional']) $camposObligados[] = $campo;
+        }
+
+        return (count($campos) == count($camposObligados));
+    }
+
     /**
      * @param bool $like - Habilita la comparacion parcial cuando es true, si es false compara por coincidencia exacta
      * @param array $whereParams - Define los parametros que se usaran en el where, se compone de los campos tal que:
@@ -323,6 +336,7 @@ class bdController
         $pudo = false;
 
         $queryInsert = $this->generarInsert($datosIn);
+
         $pudo = $this->pdo->prepare($queryInsert)->execute();
 
         return $pudo;
@@ -398,7 +412,7 @@ class bdController
             }
         }
         $querySql = substr($querySql, 0, strlen($querySql) - 1) . ")";
-        error_log($querySql);
+        //error_log($querySql);
         return $querySql;
     }
 
