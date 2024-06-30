@@ -87,7 +87,7 @@ const ModificarComentario = (props) =>{
             <form onSubmit={handleSubmit}>
             <h2>modificar Comentario</h2>
             <input type="text" value={Coment} onChange={handleComentarioChange} placeholder="Ingrese Comentario" required />
-            <ButtonSubmit text="modificar"/>
+            <ButtonSubmit text="Subir modificación"/>
             </form>
             {myError &&
                 <p style={{ backgroundColor: "red", color: "white", textAlign: "center" }}>{msgError}</p>
