@@ -52,10 +52,12 @@ $app->group('/public', function (RouteCollectorProxy $group)  {
         if(array_key_exists('habilitado', $queryParams)){
             $habilitado = $queryParams['habilitado'];
         }
+
+        $like = (array_key_exists('like', $queryParams)) ? $queryParams['like'] : true;
         
         global $publicacionesHandler;
 
-        $publis = $publicacionesHandler->listar($queryParams,false,true,true,$habilitado);
+        $publis = $publicacionesHandler->listar($queryParams,$like,false,true,true,$habilitado);
 
         $publis['Mensaje'] = $publicacionesHandler->mensaje;
 

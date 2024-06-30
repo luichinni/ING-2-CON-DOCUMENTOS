@@ -81,8 +81,8 @@ class PublicacionesHandler extends BaseHandler{
         return $publi['categoria_id'];
     }
 
-    public function listar(array $datos, bool $categoria_id = false, bool $centros = false, bool $imagenes = false, bool $conHabilitacion = false){
-        $listado = parent::listar($datos);
+    public function listar(array $datos, bool $like = false,bool $categoria_id = false, bool $centros = false, bool $imagenes = false, bool $conHabilitacion = false){
+        $listado = parent::listar($datos,$like);
 
         if (!$categoria_id && !empty($listado)){
             $newList = [];

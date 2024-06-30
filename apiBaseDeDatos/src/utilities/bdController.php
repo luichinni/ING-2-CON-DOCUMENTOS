@@ -434,7 +434,7 @@ class bdController
                     $queryWhere .= "`$key` IS NULL ";
                 } else {
                     $queryWhere .= "`$key` " . $this->camposTabla[$key]['comparador'];
-                    if ($this->camposTabla[$key]['comparador'] == "like") $queryWhere .= " '$value' ";
+                    if ($this->camposTabla[$key]['comparador'] == "like") ($like) ? $queryWhere .= " '%$value%' " : $queryWhere .= " '$value' ";
                     else $queryWhere .= " $value ";
                 }
                 $queryWhere .= "AND ";

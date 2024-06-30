@@ -26,10 +26,12 @@ $app->group('/public', function (RouteCollectorProxy $group) {
 
     $group->GET('/listarIntercambios', function (Request $request,Response $response, $args) {
         $queryParams = $request->getQueryParams();
-        
+
+        $like = (array_key_exists('like', $queryParams)) ? $queryParams['like'] : true;
+
         global $intercambioHandler;
 
-        $listado = $intercambioHandler->listar($queryParams);
+        $listado = $intercambioHandler->listar($queryParams,$like);
 
         $listado['Mensaje'] = $intercambioHandler->mensaje;
 

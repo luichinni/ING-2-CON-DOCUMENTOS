@@ -54,7 +54,7 @@ class CentroHandler extends BaseHandler{
 
     protected function eliminarDependencias(array $datos){
         $this->publiHandler->baja(['centro' => $datos['id']]);
-        $this->intercambHandler->cancelar(['centro' => $datos['id']]);
+        $this->intercambHandler->cancelar(['centro' => $datos['id']], 'centro dado de baja');
     }
 
     public function habilitado(int|string $id){
@@ -69,8 +69,8 @@ class CentroHandler extends BaseHandler{
         return validarCentroVolun(['centro'=>$centro['id']]);
     }
 
-    public function listar(array $datos, bool $habilitados = false){
-        $listado = parent::listar($datos);
+    public function listar(array $datos, bool $like = false,bool $habilitados = false){
+        $listado = parent::listar($datos,$like);
 
         if (!empty($listado) && $habilitados){
             $newList = [];

@@ -48,9 +48,11 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
     $group->GET('/listarCentros', function (Request $request, Response $response, $args) use ($pdo) {
         $queryParams = $request->getQueryParams();
 
+        $like = (array_key_exists('like',$queryParams)) ? $queryParams['like'] : true;
+
         global $centrosHandler;
 
-        $centros = (array)$centrosHandler->listar($queryParams);
+        $centros = (array)$centrosHandler->listar($queryParams,$like);
 
         $centros['Mensaje'] = $centrosHandler->mensaje;
 

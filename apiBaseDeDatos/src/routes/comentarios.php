@@ -24,9 +24,11 @@ $app->group('/public', function (RouteCollectorProxy $group) {
     $group->get('/listarComentarios', function (Request $req, Response $res, $args){
         $queryParams = (array) $req->getQueryParams();
 
+        $like = (array_key_exists('like', $queryParams)) ? $queryParams['like'] : true;
+
         global $comentariosHandler;
 
-        $ret = $comentariosHandler->listar($queryParams);
+        $ret = $comentariosHandler->listar($queryParams,$like);
 
         $ret['Mensaje'] = $comentariosHandler->mensaje;
 

@@ -28,9 +28,11 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo,$camposUs
     $group->get('/listarUsuarios',function (Request $req, Response $res, $args){
         $queryParams = $req->getQueryParams();
 
+        $like = (array_key_exists('like', $queryParams)) ? $queryParams['like'] : true;
+
         global $usuariosHandler;
 
-        $listado = $usuariosHandler->listar($queryParams);
+        $listado = $usuariosHandler->listar($queryParams,$like);
 
         $listado['Mensaje'] = $usuariosHandler->mensaje;
 

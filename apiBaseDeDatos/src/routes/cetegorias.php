@@ -46,11 +46,13 @@ $app->group('/public', function (RouteCollectorProxy $group) use ($pdo) {
     });
     
     $group->GET('/listarCategorias', function($request, Response $response, $args) use ($pdo){
-        $data = $request->getQueryParams();  
-        
+        $data = $request->getQueryParams();
+
+        $like = (array_key_exists('like', $data)) ? $data['like'] : true;
+
         global $categoriasHandler;
         
-        $retCat = $categoriasHandler->listar($data);
+        $retCat = $categoriasHandler->listar($data,$like);
 
         $retCat['Mensaje'] = $categoriasHandler->mensaje;
 

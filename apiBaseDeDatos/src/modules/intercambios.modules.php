@@ -54,6 +54,7 @@ class IntercambiosHandler extends BaseHandler{
     // cancelar
     public function cancelar(array $datos, string $motivo){
         $datos['setestado'] = 'cancelado';
+        $datos['setmotivo'] = $motivo;
         
         if ($motivo != '' && $this->actualizar($datos)){
             $intercambio = (array)$this->listar($datos)[0];
@@ -69,6 +70,7 @@ class IntercambiosHandler extends BaseHandler{
     // rechazar
     public function rechazar(array $datos, string $motivo){
         $datos['setestado'] = 'rechazado';
+        $datos['setmotivo'] = $motivo;
 
         if ($motivo != '' && $this->actualizar($datos)) {
             $intercambio = (array)$this->listar($datos)[0];
@@ -92,9 +94,9 @@ class IntercambiosHandler extends BaseHandler{
         $this->actualizar($datos);
     }
 
-    public function listar(array $datos)
+    public function listar(array $datos, bool $like = false)
     {
-        $listado = parent::listar($datos);
+        $listado = parent::listar($datos,$like);
         $newList = [];
         foreach ($listado as $pos => $intercambio){
             if ($this->publiHandler->existe(['user' => $datos['username'], 'id' => $intercambio['publicacionOferta']])) $newList[] = $intercambio;

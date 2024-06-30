@@ -18,9 +18,9 @@ class NotificacionesHandler extends BaseHandler{
         $this->actualizar(['id' => $id, 'setvisto' => true]);
     }
 
-    public function listar(array $datos)
+    public function listar(array $datos, bool $like = false)
     {
-        $notificaciones = parent::listar($datos);
+        $notificaciones = parent::listar($datos,$like);
 
         foreach($notificaciones as $pos=>$info){
             verNotificacion($info['id']);
