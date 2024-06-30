@@ -2,12 +2,12 @@ import '../HarryStyles/Comentario.css';
 import '../HarryStyles/Notificaciones.css';
 import DeleteComentario from '../pages/Comentarios/DeleteComentario';
 import { useEffect, useState } from 'react';
-<<<<<<< Updated upstream
+//<<<<<<< Updated upstream
 import ModificarComentario from '../pages/Comentarios/ModificarComentario';
-=======
+//=======
 import { CiTrash } from 'react-icons/ci'; 
 import { MdEdit } from "react-icons/md";
->>>>>>> Stashed changes
+//>>>>>>> Stashed changes
 
 const Comentario = ({ id, user, texto, respondeA, fecha_publicacion }) => {
 
@@ -43,15 +43,16 @@ const Comentario = ({ id, user, texto, respondeA, fecha_publicacion }) => {
             />
         )
         }
-        {(user === username)&&(
+        { /*(user === username)&&(
           <ModificarComentario
             id={id}
             userMod={localStorage.getItem('username')}
           />
-        )}
+        )
+         */ }
       </div>
     </fieldset>
-  );
+  ); 
 }
 
 export default Comentario;
