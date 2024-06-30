@@ -9,6 +9,7 @@ $camposIntercambio = [
     'voluntario' => [
         "tipo" => "varchar(50)",
         "comparador" => "like",
+        "opcional"=>true,
         "fk" => [
             "tabla" => "usuarios",
             "campo" => "username"
@@ -45,8 +46,13 @@ $camposIntercambio = [
         "comparador" => "="
     ],
     'estado' => [
-        "tipo" => "ENUM('pendiente','cancelado','rechazado','aceptado','concretado')",
+        "tipo" => "ENUM('pendiente','rechazado','aceptado','concretado','cancelado')",
         "comparador" => "like"
+    ],
+    'motivo' => [
+        "tipo" => "ENUM('ausencia ambas partes','ausencia anunciante','ausencia ofertante','producto anunciado no es lo esperado','producto ofertado no es lo esperado','se eligió una oferta superadora','el producto no es de interes', 'fecha y hora no convenientes')",
+        "comparador" => "like",
+        "opcional" => true
     ],
     'descripcion' => [
         "tipo" => "text",

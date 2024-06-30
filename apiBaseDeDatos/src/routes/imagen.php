@@ -1,16 +1,6 @@
 <?php
-// Imagen = (archivo,publicacion(FK))
-// obtener
-// eliminar
+
 require_once __DIR__ . '/../utilities/bdController.php';
-/*
-CREATE TABLE imagen (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    archivo mediumtext,
-    publicacion int,
-    FOREIGN KEY (publicacion) REFERENCES publicacion (id)
-);
-*/
 
 require_once __DIR__ . '/../models/imgDb.php';
 

@@ -5,11 +5,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 require_once __DIR__ . '/../utilities/bdController.php';
-// son obligatorios:
-// userValorado 
-// userValorador
-// puntos que es un float ej: 3.3
-// es opcional el "respondeA" que es id del comentario al que responde
 
 require_once __DIR__ . '/../models/valoracionDb.php';
 
@@ -45,35 +40,16 @@ $app->group('/public', function (RouteCollectorProxy $group) {
     });
 
     $group->get('/getValoracion', function (Request $req, Response $res, $args) {
-        global $valoracionesDB, $userDB;
-        $msgReturn = ['Mensaje' => 'El usuario no ha sido valorado nunca'];
-        $msgReturn['Valoracion'] = 0;
-        $status = 404;
-
         $queryParams = $req->getQueryParams();
 
-        if (!array_key_exists('userValorado', $queryParams) || !$userDB->exists(['username'=>$queryParams['userValorado']]) || !$valoracionesDB->exists($queryParams)) {
-            $res->getBody()->write(json_encode($msgReturn));
-            return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
-        }
+        global $valoracionesHandler;
 
-        $valoraciones = (array)$valoracionesDB->getAll($queryParams);
+        $msgReturn['Valoracion'] = $valoracionesHandler->valoracion($queryParams['userValorado']);
 
-        $total = 0;
-
-        foreach($valoraciones as $key => $valoracion){
-            $valoracion = (array) $valoracion;
-            $total += $valoracion['puntos'];
-        }
-
-        $total = $total / count($valoraciones);
-        $status = 200;
-
-        $msgReturn['Mensaje'] = 'Valoraciones contadas con éxito';
-        $msgReturn['Valoracion'] = $total;
+        $msgReturn['Mensaje'] = $valoracionesHandler->mensaje;
 
         $res->getBody()->write(json_encode($msgReturn));
-        return $res->withStatus($status)->withHeader('Content-Type', 'application/json');
+        return $res->withStatus($valoracionesHandler->status)->withHeader('Content-Type', 'application/json');
     });
 
 });
