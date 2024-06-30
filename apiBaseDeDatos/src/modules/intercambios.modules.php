@@ -94,7 +94,7 @@ class IntercambiosHandler extends BaseHandler{
         $this->actualizar($datos);
     }
 
-    public function listar(array $datos, bool $like = false)
+    public function listar(array $datos, bool $like = false, bool $centro_id = false)
     {
         $listado = parent::listar($datos,$like);
         $newList = [];
@@ -102,6 +102,16 @@ class IntercambiosHandler extends BaseHandler{
             if ($this->publiHandler->existe(['user' => $datos['username'], 'id' => $intercambio['publicacionOferta']])) $newList[] = $intercambio;
             if ($this->publiHandler->existe(['user' => $datos['username'], 'id' => $intercambio['publicacionOfertada']])) $newList[] = $intercambio;
         }
+        
+        if (!$centro_id){
+            $listado = $newList;
+            $newList = [];
+            foreach($listado as $pos => $intercambio){
+                $intercambio['centro'] = $this->centroHandler->nombre($intercambio['centro']);
+                $newList[] = $intercambio;
+            }
+        }
+
         return $newList;
     }
 

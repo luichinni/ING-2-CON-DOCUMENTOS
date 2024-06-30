@@ -54,8 +54,10 @@ $app->group('/public', function (RouteCollectorProxy $group)  {
         }
 
         $like = (array_key_exists('like', $queryParams)) ? $queryParams['like'] : true;
-        
-        global $publicacionesHandler;
+
+        global $publicacionesHandler, $categoriasHandler;
+
+        if (array_key_exists('categoria_id',$queryParams) && !ctype_digit($queryParams['categoria_id']) && $categoriasHandler->idPorNombre($queryParams['categoria_id']) !== false) $queryParams['categoria_id'] = $categoriasHandler->idPorNombre($queryParams['categoria_id']);
 
         $publis = $publicacionesHandler->listar($queryParams,$like,false,true,true,$habilitado);
 

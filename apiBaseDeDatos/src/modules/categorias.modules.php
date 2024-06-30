@@ -49,4 +49,12 @@ class CategoriaHandler extends BaseHandler{
         return $categoria['nombre'];
     }
 
+    public function idPorNombre(string $nombre){
+        if (!$this->existe(['nombre' => $nombre])) return false;
+
+        $categoria = (array)$this->listar(['nombre' => $nombre]);
+
+        $categoria = $categoria[0];
+        return $categoria['id'];
+    }
 }

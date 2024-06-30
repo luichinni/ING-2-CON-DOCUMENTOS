@@ -118,5 +118,14 @@ class CentroHandler extends BaseHandler{
 
         return true;
     }
+
+    public function nombre(int|string $id){
+        if (!$this->existe(['id' => $id])) return false;
+
+        $centro = (array)$this->listar(['id' => $id]);
+
+        $centro = $centro[0];
+        return $centro['nombre'];
+    }
 }
 

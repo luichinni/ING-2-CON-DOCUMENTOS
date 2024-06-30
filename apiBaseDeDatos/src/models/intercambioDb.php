@@ -46,7 +46,7 @@ $camposIntercambio = [
         "comparador" => "="
     ],
     'estado' => [
-        "tipo" => "ENUM('pendiente','rechazado','aceptado','concretado','cancelado')",
+        "tipo" => "ENUM('pendiente','rechazado','aceptado','concretado','cancelado') DEFAULT 'pendiente'",
         "comparador" => "like"
     ],
     'motivo' => [
