@@ -1,9 +1,13 @@
-import { CiTrash } from 'react-icons/ci'; 
 import '../HarryStyles/Comentario.css';
 import '../HarryStyles/Notificaciones.css';
 import DeleteComentario from '../pages/Comentarios/DeleteComentario';
 import { useEffect, useState } from 'react';
+<<<<<<< Updated upstream
 import ModificarComentario from '../pages/Comentarios/ModificarComentario';
+=======
+import { CiTrash } from 'react-icons/ci'; 
+import { MdEdit } from "react-icons/md";
+>>>>>>> Stashed changes
 
 const Comentario = ({ id, user, texto, respondeA, fecha_publicacion }) => {
 
@@ -35,7 +39,8 @@ const Comentario = ({ id, user, texto, respondeA, fecha_publicacion }) => {
         {ELIMINAR && (
           <DeleteComentario 
             id={id} 
-            userMod={localStorage.getItem('username')}/>
+            userMod={localStorage.getItem('username')} 
+            />
         )
         }
         {(user === username)&&(

@@ -1,11 +1,9 @@
 import { ButtonSubmit } from "../../components/ButtonSubmit";
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import axios from 'axios';
 import "../../HarryStyles/Intercambios.css"
 import "../../HarryStyles/estilos.css";
-
-// idpubli1(publico), idpubli2(oferto), horario, centro
 
 const ModificarCentro = (props) => {
     const navigate = useNavigate();
@@ -16,72 +14,80 @@ const ModificarCentro = (props) => {
 	const [myError, setMyError] = useState(false);
 	const [msgError, setMsgError] = useState('No deberías estar viendo este mensaje');
 
-    const handleNombreChange = (e) => setNombre(e.target.value);
-    const handleDireccionChange = (e) => setDireccion(e.target.value);
-	const handleHora_AbreChange = (e) => setHora_abre (e.target.value);
-	const handleHora_CierraChange = (e) => setHora_cierra (e.target.value);   
+    const handleNombreChange = (e) => {setNombre(e.target.value); setHuboCambio(true);}
+    const handleDireccionChange = (e) => {setDireccion(e.target.value); setHuboCambio(true);}
+	const handleHora_AbreChange = (e) => {setHora_abre (e.target.value); setHuboCambio(true);}
+	const handleHora_CierraChange = (e) => {setHora_cierra (e.target.value); setHuboCambio(true);}
     
     const handleSubmit = async (e) => {
         e.preventDefault();
-        let cambiaFecha = false;
-
         const formData = new FormData();
-        formData.append(`id`,interId);
-        formData.append(`userMod`,localStorage.getItem('username'));
-        if (cambiaFecha || centroSeleccionado!=""){
-            if(cambiaFecha) formData.append(`sethorario`, horarioEnFormato)
-            if(centroSeleccionado!="" && centroSeleccionado.id != centroActual.id) formData.append(`setcentro`, centroSeleccionado)
+			formData.append('id', id);
+            (nombre)&&(formData.append('setnombre', nombre));
+			(direccion)&&formData.append('setDireccion', direccion);
+			(hora_abre)&&formData.append('serHora_abre', hora_abre);
+            (hora_cierre)&&formData.append('serHora_cierre', hora_cierre);
 
-            try {
-                console.log(`formData: ${formData}`)
-                const response = await axios.put(`http://localhost:8000/public/updateCentro`, formData,
-                    {
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                    })
-                console.log('Success:', response);
-                navigate("../Centros");
-                window.location.reload();
-            } catch (error) {
-                setMyError(true);
-                setMsgError(error.response.data.Mensaje);
-            }
-        }else{
-            navigate("../Centros");
+			try {
+				setMyError(false);
+                console.log(`nombre: ${formData.get('setnombre')}`);
+                console.log(`direccion: ${formData.get('setdireccion')}`);
+                console.log(`hora_abre: ${formData.get('sethora_abre')}`);
+                console.log(`hora_cierra: ${formData.get('sethora_cierra')}`);
+                if (huboCambio === true) {
+          if (window.confirm('¿Seguro que deseas modificar los datos?')) {
+          const response = await axios.put("http://localhost:8000/public/updateUsuario", formData,
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            });
+          console.log('Success:', response);
+          navigate("/");
+          }
+        } else {
+          alert('No se realizo ningun cambio')
+          navigate("/");
         }
+			} catch (error) {
+        console.log('entre por error')
+				console.error('Error:', error.response.data.Mensaje);
+				setMyError(true);
+				setMsgError(error.response.data.Mensaje);
+			}
         
     };
 
     useEffect(() => {
         const fetchData = async () => {
-            try { 
-                console.log("PUBLI " + publiId);
-                console.log("ID " + interId);
-                let nuevoArr = [];
-                response.data[0].centros.forEach((centro)=> nuevoArr.push(centro));
-                
-
-                url = `http://localhost:8000/public/listarIntercambios?id=${interId}&token=${localStorage.getItem('token')}`;
-                response = await axios.get(url);
-
-                console.log(response.data[0]);
-                let fecha = response.data[0].horario.split(' ')[0];
-                setFechaConst(fecha);
-                let hora = response.data[0].horario.split(' ')[1];
-                console.log('hora -> '+hora);
-                setFechaActual(fecha);
-                setHorarioActual(hora);
-                setCentroActual(response.data[0].centro);
-                setHorario(hora.split(':')[0]+':'+hora.split(':')[1]);
-                setCentros(nuevoArr);
-                
-            } catch (error) {
-                console.error(error);
+          setLoading(true);
+          setError('');
+    
+          try {
+            const url = `http://localhost:8000/public/listarCentros${id}`;
+            const response = await axios.get(url);
+    
+            if (response.data.length === 0) {
+              setError('No hay centros disponibles');
+              setUsuarios([]); 
+            } else {
+                const centroData = procesar(response.data)[0];
+                setCentro([centroData]);
+                setNombre(usuarioData.nombre);
+                setDireccion(centroData.direccion);
+                setHora_abre(centroData.hora_abre);
+                setHora_cierra(centroData.hora_cierra);
             }
+          } catch (error) {
+            setError('Ocurrió un error al obtener el centro.');
+            console.error(error);
+          } finally {
+            setLoading(false);
+          }
         };
+    
         fetchData();
-    }, []);
+      }, []);
 
     return (
         <div>

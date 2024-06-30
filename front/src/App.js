@@ -30,6 +30,7 @@ import DeleteComentario from './pages/Comentarios/DeleteComentario';
 import ModificarPublicacion from './pages/publicaciones/ModificarPublicacion';
 import ListarPublisUsuario from './pages/publicaciones/PublisUsuario';
 import ModificarUsuario from './pages/sesion/ModificarUsuario';
+import ModificarCentro from './pages/centros/ModificarCentro';
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
                 <Route path={"/agregarCentro"} element={<AgregarCentro />} />
                 <Route path={"/Centros"} element={<ListarCentro />} />
                 <Route path={"/deleteCentro/:id"} element={<DeleteCentro />} />
+                <Rotute path={"/ModificarCentro/:id"} element={ModificarCentro} />
 
                 <Route path={"/DeleteComentario/:id"} element={<DeleteComentario />} />
 
@@ -84,34 +86,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
-
-/*import logo from './logo.svg';
-import './App.css';
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
-
-export default App;
-*/
