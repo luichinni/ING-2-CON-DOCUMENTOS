@@ -52,4 +52,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
         return $res->withStatus($valoracionesHandler->status)->withHeader('Content-Type', 'application/json');
     });
 
+    $group->get('/estadisticas',function (Request $req,Response $res) {
+
+    });
 });

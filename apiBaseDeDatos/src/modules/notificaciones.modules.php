@@ -9,7 +9,7 @@ class NotificacionesHandler extends BaseHandler{
     }
 
     public function enviarNotificacion(string $user,string $titulo,string $contenido,string $url = ""){
-        if ($this->userHandler->notificacion($user) == true) $this->mailer->send($user['mail'], $titulo, $contenido, true);
+        if ($this->userHandler->notificacion($user) == true) $this->mailer->send($this->userHandler->mail($user), $titulo, $contenido, true);
 
         return $this->crear(['user'=>$user,'texto'=>$contenido,'url'=>$url]);
     }

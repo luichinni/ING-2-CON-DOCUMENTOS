@@ -60,6 +60,17 @@ class UsuariosHandler extends BaseHandler{
         return $usuario['notificacion'];
     }
 
+    public function mail(string $user){
+        if ($user == "" || !$this->existe(['username'=>$user])) return false;
+
+        $usuario = (array)$this->listar(['username'=>$user]);
+
+        if (empty($usuario)) return false;
+
+        $usuario = $usuario[0];
+        return $usuario['mail'];
+    }
+
     public function rol(string $user){
         if ($user == "" || !$this->existe(['username'=>$user])) return false;
 

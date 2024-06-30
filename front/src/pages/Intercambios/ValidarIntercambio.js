@@ -1,12 +1,12 @@
 import { ButtonSubmit } from "../../components/ButtonSubmit";
 import { Button } from "../../components/Button";
 import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from 'axios';
 import '../../HarryStyles/Intercambios.css';
 
 const ValidarIntercambio = () => {
-	const navigate = useNavigate(); 
+	const navigate = useNavigate();
 	const [comentario, setComentario] =useState('');
 	const [donacion, setDonacion] =useState('');
 	const [montoDonacion, setMontoDonacion] = useState('');
@@ -14,9 +14,29 @@ const ValidarIntercambio = () => {
 	const [myError, setMyError] = useState(false);
 	const [estado, setEstado] = useState('')
 
+	const [enableCancelado,setEnableCancelado] = useState(false);
+	const [enableRechazado,setEnableRechazado] = useState(false);
+	const [motivo,setMotivo] = useState('');
+
+	const handleMotivo = (e) => setMotivo(e.target.value);
 
 	const handleComentarioChange = (e) => setComentario(e.target.value);
-	const handleEstadoChange = (e) => setEstado(e.target.value);
+	const handleEstadoChange = (e) =>{
+		setEstado(e.target.value);
+		if (e.target.value == 'cancelado'){
+			setEnableCancelado(true);
+			setEnableRechazado(false);
+			setMotivo('');
+		}else if (e.target.value == 'rechazado'){
+			setEnableCancelado(false);
+			setEnableRechazado(true);
+			setMotivo('');
+		}else{
+			setEnableCancelado(false);
+			setEnableRechazado(false);
+			setMotivo('');
+		}
+	} 
 	const handleDonacionChange = (e) => setDonacion(e.target.value);
 	const handleObjetoDonadoChange = (e) => setObjetoDonado(e.target.value);
 	const handleMontoDonacionChange = (e) => setMontoDonacion(e.target.value);
@@ -38,9 +58,10 @@ const ValidarIntercambio = () => {
 				console.log('donacion');
 				formData.append('setdescripcion', comentario);
 				console.log(comentario);
+				formData.append('setmotivo', motivo);
 				console.log(`formData:${formData}`)
 				setMyError(false);
-				const response = await axios.put(`http://localhost:8000/public/updateIntercambio`, formData,
+				const response = await axios.put(`http://localhost:8000/public/validarIntercambio`, formData,
 					{
 					  headers: {
 						  "Content-Type": "application/json",
@@ -68,6 +89,27 @@ const ValidarIntercambio = () => {
 					<option value="cancelado">Cancelado</option>
 					<option value="rechazado">Rechazado</option>
 				</ select>
+				{(enableCancelado)&&//'ausencia ambas partes','ausencia anunciante','ausencia ofertante','producto anunciado no es lo esperado','producto ofertado no es lo esperado'
+					<>
+					<br/><br/>
+					<select id="motivo" onChange={handleMotivo} required> 
+                    <option value="">Seleccione el motivo de cancelacion</option>
+					<option value="ausencia ambas partes">Ausencia de ambas partes</option>
+					<option value="ausencia anunciante">Ausencia del anunciante</option>
+					<option value="ausencia ofertante">Ausencia del ofertante</option>
+					</ select>
+					</>
+				}
+				{(enableRechazado)&&
+					<>
+					<br/><br/>
+					<select id="motivo" onChange={handleMotivo} required> 
+                    <option value="">Seleccione el motivo de rechazo</option>
+					<option value="producto anunciado no es lo esperado">El producto anunciado no es lo esperado o publicado</option>
+					<option value="producto ofertado no es lo esperado">El producto ofertado no es lo esperado o publicado</option>
+					</ select>
+					</>
+				}
 				<br/><br/>
 				<select id="donacion" onChange={handleDonacionChange} required >
                     <option value="">¿Se obtuvo alguna donación?</option>

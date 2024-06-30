@@ -57,7 +57,8 @@ $app->group('/public', function (RouteCollectorProxy $group) {
 
         if (array_key_exists('setestado',$bodyParams)){
             if ($bodyParams['setestado']=='concretado') $intercambioHandler->validar($bodyParams);
-            else if ($bodyParams['setestado']=='cancelado' && array_key_exists('motivo',$bodyParams)) $intercambioHandler->cancelar($bodyParams,$bodyParams['motivo']);
+            else if ($bodyParams['setestado']=='cancelado' && array_key_exists('setmotivo',$bodyParams)) $intercambioHandler->cancelar($bodyParams,$bodyParams['setmotivo']);
+            else if ($bodyParams['setestado']=='rechazado' && array_key_exists('setmotivo',$bodyParams)) $intercambioHandler->rechazar($bodyParams,$bodyParams['setmotivo']);
         }
 
         $res->getBody()->write(json_encode(['Mensaje' => $intercambioHandler->mensaje]));

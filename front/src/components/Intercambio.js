@@ -84,7 +84,7 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
 
   const handleValidarClick = () => {
     localStorage.setItem('idValidar', id);
-    navigate("../ValidarIntercambio");
+    navigate(`../ValidarIntercambio`);
   };
 
   const handleRechazadoClick = async () => {
