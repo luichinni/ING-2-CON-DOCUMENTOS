@@ -60,7 +60,7 @@ function App() {
                 <Route path={"/agregarCentro"} element={<AgregarCentro />} />
                 <Route path={"/Centros"} element={<ListarCentro />} />
                 <Route path={"/deleteCentro/:id"} element={<DeleteCentro />} />
-                <Rotute path={"/ModificarCentro/:id"} element={ModificarCentro} />
+                <Route path={"/ModificarCentro/:id"} element={ModificarCentro} />
 
                 <Route path={"/DeleteComentario/:id"} element={<DeleteComentario />} />
 
