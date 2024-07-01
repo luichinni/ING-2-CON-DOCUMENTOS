@@ -78,7 +78,7 @@ abstract class BaseHandler{
         $ret = [];
         try{
             $ret = $this->db->getAll($datos, $like);
-            error_log(json_encode($ret));
+            //error_log(json_encode($ret));
             $this->status = (empty($ret)) ? 404 : 200;
             $this->mensaje = (empty($ret)) ? 'No se encontraron ' . $this->db->getTableName() : $this->db->getTableName() . ' listados con éxito';
         }catch (Exception $e){

@@ -212,7 +212,7 @@ class bdController
     public function exists(array $whereParams, bool $like = false)
     {
         $querySelect = $this->generarSelect($whereParams, null, $like);
-        error_log($querySelect);
+        //error_log($querySelect);
         $opSql = $this->pdo->query($querySelect);
         $existe = false;
         if ($opSql->rowCount() > 0) {

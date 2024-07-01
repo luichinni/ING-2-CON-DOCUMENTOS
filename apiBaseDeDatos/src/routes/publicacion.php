@@ -1,8 +1,5 @@
 <?php
 
-use Collections\CollectionsStream;
-use Collections\Collector;
-use Collections\Examples\CollectionsSampleObject;
 use Slim\Routing\RouteCollectorProxy;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;

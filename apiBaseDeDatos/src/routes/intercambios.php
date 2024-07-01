@@ -14,7 +14,7 @@ $app->group('/public', function (RouteCollectorProxy $group) {
 
         global $intercambioHandler;
 
-        error_log(json_encode($bodyParams));
+        //error_log(json_encode($bodyParams));
 
         $intercambioHandler->crear($bodyParams);
 
@@ -52,11 +52,14 @@ $app->group('/public', function (RouteCollectorProxy $group) {
 
     $group->put('/validarIntercambio', function (Request $req, Response $res) {
         $bodyParams = (array) $req->getParsedBody();
-
+        error_log(json_encode($bodyParams));
         global $intercambioHandler;
 
         if (array_key_exists('setestado',$bodyParams)){
-            if ($bodyParams['setestado']=='concretado') $intercambioHandler->validar($bodyParams);
+            if ($bodyParams['setestado']=='concretado'){
+                unset($bodyParams['setmotivo']);
+                $intercambioHandler->validar($bodyParams);
+            }
             else if ($bodyParams['setestado']=='cancelado' && array_key_exists('setmotivo',$bodyParams)) $intercambioHandler->cancelar($bodyParams,$bodyParams['setmotivo']);
             else if ($bodyParams['setestado']=='rechazado' && array_key_exists('setmotivo',$bodyParams)) $intercambioHandler->rechazar($bodyParams,$bodyParams['setmotivo']);
         }

@@ -68,6 +68,15 @@ class IntercambiosHandler extends BaseHandler{
             $this->status = 500;
         }
     }
+    public function crear(array $datos)
+    {
+        parent::crear($datos);
+        $publiOferta = (array)$this->publiHandler->listar(['id' => $datos['publicacionOferta']])[0];
+        $publiOfertada = (array)$this->publiHandler->listar(['id' => $datos['publicacionOfertada']])[0];
+        $this->notificacionesHandler->enviarNotificacion($publiOferta['user'], 'Nuevo Intercambio!', 'El intercambio de ' . $publiOferta['nombre'] . ' por ' . $publiOfertada['nombre'] . ' está pendiente de respuesta.', '');
+        $this->notificacionesHandler->enviarNotificacion($publiOfertada['user'], 'Nuevo Intercambio!', 'El intercambio de ' . $publiOferta['nombre'] . ' por ' . $publiOfertada['nombre'] . ' está pendiente de respuesta.', '');
+        $this->mensaje = "Ofrecido con éxito";
+    }
     // rechazar
     public function rechazar(array $datos, string $motivo){
         $datos['setestado'] = 'rechazado';
@@ -89,32 +98,48 @@ class IntercambiosHandler extends BaseHandler{
     public function aceptar(array $datos){
         $datos['setestado'] = 'aceptado';
         $this->actualizar($datos);
+        $intercambio = (array)$this->listar($datos)[0];
+        $publiOferta = (array)$this->publiHandler->listar(['id' => $intercambio['publicacionOferta']])[0];
+        $publiOfertada = (array)$this->publiHandler->listar(['id' => $intercambio['publicacionOfertada']])[0];
+        $this->notificacionesHandler->enviarNotificacion($publiOferta['user'], 'Intercambio aceptado!', 'Se aceptó el intercambio de ' . $publiOferta['nombre'] . ' por ' . $publiOfertada['nombre'], '');
+        $this->notificacionesHandler->enviarNotificacion($publiOfertada['user'], 'Intercambio aceptado!', 'Se aceptó el intercambio de ' . $publiOferta['nombre'] . ' por ' . $publiOfertada['nombre'], '');
+        $this->mensaje = "Aceptado con éxito";
     }
     // validar
     public function validar(array $datos){
         $datos['setestado'] = 'concretado';
         $this->actualizar($datos);
+        $intercambio = (array)$this->listar($datos)[0];
+        $publiOferta = (array)$this->publiHandler->listar(['id' => $intercambio['publicacionOferta']])[0];
+        $publiOfertada = (array)$this->publiHandler->listar(['id' => $intercambio['publicacionOfertada']])[0];
+        $this->notificacionesHandler->enviarNotificacion($publiOferta['user'], 'Intercambio aceptado!', 'Se aceptó el intercambio de ' . $publiOferta['nombre'] . ' por ' . $publiOfertada['nombre'], '');
+        $this->notificacionesHandler->enviarNotificacion($publiOfertada['user'], 'Intercambio aceptado!', 'Se aceptó el intercambio de ' . $publiOferta['nombre'] . ' por ' . $publiOfertada['nombre'], '');
+        $this->mensaje = "Aceptado con éxito";
     }
 
     public function listar(array $datos, bool $like = false, bool $centro_id = false)
     {
         $listado = parent::listar($datos,$like);
-        $newList = [];
-        foreach ($listado as $pos => $intercambio){
-            if ($this->publiHandler->existe(['user' => $datos['username'], 'id' => $intercambio['publicacionOferta']])) $newList[] = $intercambio;
-            if ($this->publiHandler->existe(['user' => $datos['username'], 'id' => $intercambio['publicacionOfertada']])) $newList[] = $intercambio;
+
+        if (array_key_exists('username',$datos)){
+            $newList = [];
+            foreach ($listado as $pos => $intercambio) {
+                if ($this->publiHandler->existe(['user' => $datos['username'], 'id' => $intercambio['publicacionOferta']])) $newList[] = $intercambio;
+                if ($this->publiHandler->existe(['user' => $datos['username'], 'id' => $intercambio['publicacionOfertada']])) $newList[] = $intercambio;
+            }
+            $listado = $newList;
         }
         
         if (!$centro_id){
-            $listado = $newList;
             $newList = [];
             foreach($listado as $pos => $intercambio){
                 $intercambio['centro'] = $this->centroHandler->nombre($intercambio['centro']);
                 $newList[] = $intercambio;
             }
+            $listado = $newList;
         }
 
-        return $newList;
+        return $listado;
     }
 
 }

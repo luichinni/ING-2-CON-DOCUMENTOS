@@ -8,7 +8,7 @@ require_once __DIR__ . '/../models/notificacionDb.php';
 
 function enviarNotificacion(string $user,string $titulo,string $contenido,string $url = ""){
     global $notificacionDB,$userDB,$mailer;
-    error_log($user);
+    //error_log($user);
     $user = (array)($userDB->getFirst(['username'=>$user]))[0];
 
     if ($user['notificacion']) $mailer->send($user['mail'], $titulo, $contenido, true);

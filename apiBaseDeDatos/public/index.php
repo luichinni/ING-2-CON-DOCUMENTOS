@@ -52,6 +52,7 @@ require_once __DIR__ . '/../src/modules/comentarios.modules.php';
 require_once __DIR__ . '/../src/modules/intercambios.modules.php';
 require_once __DIR__ . '/../src/modules/publicaciones.modules.php';
 require_once __DIR__ . '/../src/modules/valoraciones.modules.php';
+require_once __DIR__ . '/../src/modules/estadisticas.modules.php';
 
 $usuariosHandler = new UsuariosHandler($userDB);
 $categoriasHandler = new CategoriaHandler($categoriaDB);
@@ -65,6 +66,7 @@ $categoriasHandler->setPublicacionesHandler($publicacionesHandler);
 $intercambioHandler->setPublicacionesHandler($publicacionesHandler);
 $comentariosHandler = new ComentariosHandler($comentariosDB,$publicacionesHandler,$usuariosHandler);
 $valoracionesHandler = new ValoracionesHandler($valoracionesDB,$usuariosHandler);
+$estadisticador = new Estadisticas($intercambioHandler);
 
 require_once __DIR__ . '/../src/routes/usuarios.php';
 require_once __DIR__ . '/../src/routes/cetegorias.php';
