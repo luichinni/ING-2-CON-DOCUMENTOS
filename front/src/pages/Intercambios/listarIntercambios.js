@@ -11,6 +11,7 @@ const ListarIntercambios = () => {
   const [loading, setLoading] = useState(false);
   const username = localStorage.getItem('username');
   const token = localStorage.getItem('token');
+  const [centro, setCentro] = useState('')
   const [parametros, setParametros] = useState({
     publicacionOferta: "",
     publicacionOfertada: "",
@@ -25,16 +26,16 @@ const ListarIntercambios = () => {
       setError('');
 
       try {
-        let centro = "";
         if (token === 'tokenVolunt') {
-          centro = await obtenerCentroUsuario(username);
+          obtenerCentroUsuario(username)
         }
 
+        console.log(centro)
         const queryParams = new URLSearchParams({
           publicacionOferta: parametros.publicacionOferta,
           publicacionOfertada: parametros.publicacionOfertada,
           estado: ((token === 'tokenVolunt') && (parametros.estado === "")) ? 'aceptado' : parametros.estado,
-          centro: token === 'tokenVolunt' ? centro : parametros.centro,
+          centro: (token === 'tokenVolunt')? centro : (parametros.centro),
           username: token === 'tokenUser' ? username : parametros.username,
         }).toString();
 
@@ -42,7 +43,6 @@ const ListarIntercambios = () => {
 
 
         const url = `http://localhost:8000/public/listarIntercambios?${queryParams}&token=${localStorage.getItem('token')}`;
-        console.log(`mandar: ${url}`)
         const response = await axios.get(url);
 
         if (response.data.Mensaje === 'No hay intercambios disponibles') {
@@ -51,7 +51,6 @@ const ListarIntercambios = () => {
         } else {
           let intercambiosList = procesar(response.data);
           setIntercambios(intercambiosList);
-          console.log(`respuesta: ${response.data[0].publicacionOferta}`)
         }
       } catch (error) {
         setError(`¡No has realizado intercambios todavía! \n Ve a explorar para poder intercambiar`);
@@ -62,25 +61,25 @@ const ListarIntercambios = () => {
     };
 
     fetchData();
-  }, [parametros, username, token]);
+  }, [parametros, username, token, centro]);
 
   const obtenerCentroUsuario = async (volun) => {
     try {
       const url = `http://localhost:8000/public/obtenerCentroVolun?voluntario=${volun}`;
       const response = await axios.get(url);
-      const centroId = response.data[0]?.centro ?? "";
-      console.log(centroId)
-      return centroId;
+      console.log(`centro Respuesta: ${response.data[0]}`)
+      const centroId = response.data[0];
+      console.log(`centroID: ${centroId}`)
+      setCentro(centroId)
     } catch (error) {
       setError(`No puedes ver los intercambios disponibles \n porque no estás asociado a ningún centro`);
       console.error(error);
-      return "";
     }
   };
 
   const handleParametrosChange = async (newParametros) => {
     if (token === 'tokenVolunt') {
-      const centro = await obtenerCentroUsuario(username);
+      setCentro (await obtenerCentroUsuario(username));
       setParametros({ ...newParametros, centro });
     } else {
       setParametros(newParametros);

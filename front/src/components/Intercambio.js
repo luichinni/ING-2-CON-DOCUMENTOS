@@ -23,9 +23,6 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
       setError('');
 
       try {
-        console.log(`oferta acepta ${ofertaAcepta}`);
-        console.log(`ofertada acepta ${ofertadaAcepta}`);
-        console.log(`username: ${username}`);
         
         const url1 = `http://localhost:8000/public/listarPublicaciones?id=${publicacionOferta}&token=${Token}`;
         const response1 = await axios.get(url1);
@@ -35,7 +32,7 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
           setPubli1(publicaciones);
           const userPub = publicaciones[0]?.user || 'nop';
           setUserPubli(userPub);
-          console.log(`userPubli: ${userPub}`);
+    
         } else {
           setError('No hay publicaciones disponibles.');
           setPubli1([]);
@@ -140,7 +137,7 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
       <br/><br/><br/><br/>
       <div className="intercambio-content">
         <div className="publicaciones-container">
-          <div className="publicacion">
+          <div className="publicacioninter">
             Publicación
             {publi1.map(publicacion => (
               <Publicacion
@@ -156,7 +153,7 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
               />
             ))}
           </div>
-          <div className="publicacion">
+          <div className="publicacioninter">
             Oferta Recibida
             {publi2.map(publicacion => (
               <Publicacion
