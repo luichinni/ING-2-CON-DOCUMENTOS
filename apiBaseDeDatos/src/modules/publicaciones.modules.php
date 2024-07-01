@@ -97,7 +97,7 @@ class PublicacionesHandler extends BaseHandler{
             $newList = [];
             foreach ($listado as $pos => $publi) {
                 $where = ['publicacion'=>$publi['id']];
-                $publiCent = listarPubliCentros($where);
+                $publiCent = (array)listarPubliCentros($where);
                 $habilitados = true;
                 for ($i = 0; $i < count($publiCent); $i++) {
                     $tempArr = (array) $publiCent[$i];
@@ -105,7 +105,6 @@ class PublicacionesHandler extends BaseHandler{
                     $publi['centros'][$i] = ((array)$this->centroHandler->listar($wherCentro))[0];
                     if ($this->centroHandler->existe($wherCentro,true)) $habilitados = $habilitados && $this->centroHandler->habilitado($tempArr['centro']);
                 }
-                //error_log('Con habilitacion: '.json_encode($conHabilitacion).' ; habilitado: '.json_encode($habilitados));
                 if($conHabilitacion && $habilitados) $newList[$pos] = $publi;
                 else if (!$conHabilitacion) $newList[$pos] = $publi;
             }
@@ -121,7 +120,7 @@ class PublicacionesHandler extends BaseHandler{
             }
             $listado = $newList;
         }
-        
+
         return $listado;
     }
 

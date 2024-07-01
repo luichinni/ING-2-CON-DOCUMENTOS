@@ -129,7 +129,7 @@ class IntercambiosHandler extends BaseHandler{
             }
             $listado = $newList;
         }
-        
+
         if (!$centro_id){
             $newList = [];
             foreach($listado as $pos => $intercambio){
@@ -138,7 +138,7 @@ class IntercambiosHandler extends BaseHandler{
             }
             $listado = $newList;
         }
-
+        
         return $listado;
     }
 

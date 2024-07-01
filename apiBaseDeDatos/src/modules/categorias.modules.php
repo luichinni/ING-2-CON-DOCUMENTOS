@@ -50,7 +50,7 @@ class CategoriaHandler extends BaseHandler{
     }
 
     public function idPorNombre(string $nombre){
-        if (!$this->existe(['nombre' => $nombre])) return false;
+        if ($nombre == '' || !$this->existe(['nombre' => $nombre])) return false;
 
         $categoria = (array)$this->listar(['nombre' => $nombre]);
 
