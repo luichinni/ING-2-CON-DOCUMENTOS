@@ -1,6 +1,6 @@
 import { ButtonSubmit } from "../../components/ButtonSubmit";
 import React, { useState, useEffect } from 'react';
-import { useNavigate} from "react-router-dom";
+import { useNavigate, useParams} from "react-router-dom";
 import axios from 'axios';
 import "../../HarryStyles/Intercambios.css"
 import "../../HarryStyles/estilos.css";
@@ -11,8 +11,13 @@ const ModificarCentro = (props) => {
 	const [direccion, setDireccion] = useState('');
 	const [hora_abre,setHora_abre] = useState('');
 	const [hora_cierra,setHora_cierra] = useState('');
+    const [centros, setCentros] =useState([])
+    const id = useParams();
 	const [myError, setMyError] = useState(false);
 	const [msgError, setMsgError] = useState('No deberías estar viendo este mensaje');
+    const [huboCambio, setHuboCambio] = useState(false)
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleNombreChange = (e) => {setNombre(e.target.value); setHuboCambio(true);}
     const handleDireccionChange = (e) => {setDireccion(e.target.value); setHuboCambio(true);}
@@ -65,10 +70,10 @@ const ModificarCentro = (props) => {
     
             if (response.data.length === 0) {
               setError('No hay centros disponibles');
-              setUsuarios([]); 
+              setCentros([]); 
             } else {
                 const centroData = procesar(response.data)[0];
-                setCentro([centroData]);
+                setCentros([centroData]);
                 setNombre(centroData.nombre);
                 setDireccion(centroData.direccion);
                 setHora_abre(centroData.hora_abre);
@@ -84,6 +89,16 @@ const ModificarCentro = (props) => {
     
         fetchData();
     }, []);
+
+    function procesar(centros) {
+        let centroCopy = [];
+        Object.keys(centros).forEach(function (clave) {
+          if (!isNaN(clave)) {
+            centroCopy[clave] = centros[clave]
+          }
+        })
+        return centroCopy
+      }
 
     return (
         <div>
