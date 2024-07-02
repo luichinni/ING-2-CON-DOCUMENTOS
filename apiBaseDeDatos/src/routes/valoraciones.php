@@ -93,10 +93,13 @@ $app->group('/public', function (RouteCollectorProxy $group) {
 
         $retorno['concretado'] = $estadisticador->totalDe('', $queryParams, 'concretado', $desde, $hasta);
 
+        $retorno['total'] = 0;
+        foreach ($retorno as $dato) $retorno['total'] += $dato;
+
         $queryParams['donacion'] = 1;
         $retorno['concretado con donacion'] = $estadisticador->totalDe('', $queryParams, 'concretado', $desde, $hasta);
 
-        error_log('Estadisticas: '.json_encode($retorno));
+        $retorno['Mensaje'] = 'Estadisticas calculadas con éxito';
 
         $res->getBody()->write(json_encode($retorno));
         return $res->withStatus(200)->withHeader('Content-Type', 'application/json');

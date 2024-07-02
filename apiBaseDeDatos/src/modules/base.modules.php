@@ -12,7 +12,7 @@ abstract class BaseHandler{
     }
 
     public function existe(array $datos, bool $porId = false){
-        if (($porId) && ((array_key_exists('id', $datos) && !$this->db->exists(['id' => $datos['id']])) || !array_key_exists('id', $datos))) {
+        if (($porId) && ((array_key_exists('id', $datos) && $datos['id']=='' && !$this->db->exists(['id' => $datos['id']])) || !array_key_exists('id', $datos))) {
             $this->mensaje = 'La id no es válida';
             return false;
         }
@@ -78,13 +78,13 @@ abstract class BaseHandler{
         $ret = [];
         try{
             $ret = $this->db->getAll($datos, $like);
-            //error_log(json_encode($ret));
             $this->status = (empty($ret)) ? 404 : 200;
             $this->mensaje = (empty($ret)) ? 'No se encontraron ' . $this->db->getTableName() : $this->db->getTableName() . ' listados con éxito';
         }catch (Exception $e){
             $this->status = 500;
             $this->mensaje = 'Ocurrió un error al listar ' . $this->db->getTableName();
         }
+        //error_log('RETORNO: ' . json_encode($ret));
         return (array) $ret;
     }
 
