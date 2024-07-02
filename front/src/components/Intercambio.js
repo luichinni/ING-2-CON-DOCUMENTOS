@@ -2,8 +2,9 @@ import "../HarryStyles/Intercambios.css";
 import "../HarryStyles/Publicaciones.css"
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
+import {Link, useNavigate } from "react-router-dom";
 import Publicacion from "./Publicacion";
+import PuntuarUsuario from "../pages/sesion/PuntuarUsuario";
 
 const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horario, estado, ofertaAcepta, ofertadaAcepta }) => {
   const [publi1, setPubli1] = useState([]);
@@ -132,6 +133,13 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
     navigate(`../ModificarInter/${id}/${publi1[0]?.id}`);
   };
 
+  const PuntuarUsuario = () =>{
+    let pOferta=publi1[0].id 
+    let pOfertada=publi2[0].id
+    
+    navigate(`../PuntuarUsuario/${pOferta}/${pOfertada}`);
+  }
+
   return (
     <li className="intercambio-item">
       <br/><br/><br/><br/>
@@ -175,31 +183,34 @@ const Intercambio = ({ id, publicacionOferta, publicacionOfertada, centro, horar
           <p><strong>Horario:</strong> {horario}</p>
           <p><strong>Estado:</strong> {estado}</p>
   
-          {estado === 'aceptado' || estado === 'pendiente' ? (
-            Token === 'tokenAdmin' || Token === 'tokenVolunt' ? (
-              <button className="detalle-button" onClick={handleValidarClick}>
-                Validar Intercambio
-              </button>
-            ) : (
+          { (estado === 'aceptado' || estado === 'pendiente') ? (
+              (Token === 'tokenAdmin' || Token === 'tokenVolunt') ? (
+                <button className="detalle-button" onClick={handleValidarClick}>
+                  Validar Intercambio
+                </button>
+              ):(
               <>
-                <button className="detalle-button" onClick={handleModificarClick}>
-                  Modificar
-                </button>
-                <button className="detalle-button" onClick={handleRechazadoClick}>
-                  Rechazar
-                </button>
-                {console.log(`Entro a condición de confirmar: ${userPubli} y ${userOferto}`)}
-                {((userPubli == username && ofertaAcepta == false) || (userOferto == username && ofertadaAcepta == false)) ? (
-                  <>
-                    {console.log("Entro a condición de confirmar")}
-                    <button className="detalle-button" onClick={handleAceptadoClick}>
+              <button className="detalle-button" onClick={handleModificarClick}>
+                Modificar
+              </button>
+              <button className="detalle-button" onClick={handleRechazadoClick}>
+                Rechazar
+              </button>
+              {console.log(`Entro a condición de confirmar: ${userPubli} y ${userOferto}`)}
+              {((userPubli == username && ofertaAcepta == false) || (userOferto == username && ofertadaAcepta == false)) ? (
+                <>
+                  {console.log("Entro a condición de confirmar")}
+                  <button className="detalle-button" onClick={handleAceptadoClick}>
                     Confirmar
-                    </button>
-                  </>
-                ):(<></>)}
-              </>
-            )
-          ):null}
+                  </button>
+                </>):(<></>)}
+              </>)):(
+              (estado === 'concretado')?(
+                <>
+                  <button onClick={PuntuarUsuario}>Puntuar al Otro usuario</button>
+                </>
+                ):(<></>)
+              )}
         </div>
       </div>
     </li>

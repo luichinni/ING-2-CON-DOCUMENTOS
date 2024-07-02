@@ -35,14 +35,14 @@ const ListarPublisUsuario = () => {
         const response = await axios.get(url);
 
         if (response.data.length === 3) {
-          setError('No hay publicaciones disponibles');
+          setError('No hay publicaciones que listar');
           setPublicaciones([]); 
           console.log('disponibles')
         } else {
           setPublicaciones(procesar(response.data));
         }
       } catch (error) {
-        setError('No hay publicaciones disponibles.');
+        setError('No hay publicaciones que listar.');
         console.log('encontradas')
         console.error(error);
       } finally {

@@ -31,6 +31,7 @@ import ModificarPublicacion from './pages/publicaciones/ModificarPublicacion';
 import ListarPublisUsuario from './pages/publicaciones/PublisUsuario';
 import ModificarUsuario from './pages/sesion/ModificarUsuario';
 import ModificarCentro from './pages/centros/ModificarCentro';
+import PuntuarUsuario from './pages/sesion/PuntuarUsuario';
 
 function App() {
   return (
@@ -60,7 +61,7 @@ function App() {
                 <Route path={"/agregarCentro"} element={<AgregarCentro />} />
                 <Route path={"/Centros"} element={<ListarCentro />} />
                 <Route path={"/deleteCentro/:id"} element={<DeleteCentro />} />
-                <Route path={"/ModificarCentro/:id"} element={ModificarCentro} />
+                <Route path={"/ModificarCentro/:id"} element={<ModificarCentro />} />
 
                 <Route path={"/DeleteComentario/:id"} element={<DeleteComentario />} />
 
@@ -75,6 +76,7 @@ function App() {
                 <Route path={"/ModificarInter/:interId/:publiId"} element={<ModificarInter />} />
 
                 <Route path={"/config"} element={<Configuracion />} />
+                <Route path={'/PuntuarUsuario/:publicacionOferta/:publicacionOfertada'} element={<PuntuarUsuario />} />
                 <Route path={"/Estadisticas"} element={<IntercambiosEstats />} />
 
               </Routes>

@@ -32,7 +32,7 @@ const Centro = (props) => {
                             <br /><br />
                             {(localStorage.getItem('token') == 'tokenAdmin')?(
                             <>
-                                <Link to={`/ModificarCentro/${props.id}`} > 
+                                <Link to={`/ModificarCentro/${props.Id}`} > 
                                     <button className="botonEstado botonEditar"> <MdEdit className="editar" size={20}/>  </button>
                                 </Link>
 

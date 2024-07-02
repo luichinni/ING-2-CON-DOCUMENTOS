@@ -10,6 +10,7 @@ const Registrarse = () => {
     const [apellido, setApellido] = useState('');
     const [numeroDocumento, setNumeroDocumento] = useState('');
     const [mail, setEmail] = useState('');
+    const [mailViejo, setEmailViejo] = useState('');
     const [telefono, setTelefono] = useState('');
     const [contraseña, setContraseña] =useState('');
     const [newusername, setNewUsername] =useState('');
@@ -46,7 +47,8 @@ const Registrarse = () => {
             setNombre(usuarioData.nombre);
             setApellido(usuarioData.apellido);
             setNumeroDocumento(usuarioData.dni);
-            setEmail(usuarioData.mail);
+            setEmailViejo(usuarioData.mail);
+            setEmail(usuarioData.mail)
             setTelefono(usuarioData.telefono);
             setNewUsername(username);
           }
@@ -72,20 +74,18 @@ const Registrarse = () => {
       (nombre)&&(formData.append('setnombre', nombre));
 			(apellido)&&formData.append('setapellido', apellido);
 			(numeroDocumento)&&formData.append('setdni', numeroDocumento);
-			(mail)&&formData.append('setmail', mail);
+			(mail)&&(mail!==mailViejo)&&formData.append('setmail', mail);
 			(telefono)&&formData.append('settelefono', telefono);
-			(contraseña)&&formData.append('setclave', contraseña);
 
 			try {
 				setMyError(false);
         console.log(`username: ${formData.get('username')}`);
-      console.log(`newusername: ${formData.get('setusername')}`);
-      console.log(`nombre: ${formData.get('setnombre')}`);
-      console.log(`apellido: ${formData.get('setapellido')}`);
-      console.log(`dni: ${formData.get('setdni')}`);
-      console.log(`mail: ${formData.get('setmail')}`);
-      console.log(`telefono: ${formData.get('settelefono')}`);
-      console.log(`clave: ${formData.get('setclave')}`);
+        console.log(`newusername: ${formData.get('setusername')}`);
+        console.log(`nombre: ${formData.get('setnombre')}`);
+        console.log(`apellido: ${formData.get('setapellido')}`);
+        console.log(`dni: ${formData.get('setdni')}`);
+        console.log(`mail: ${formData.get('setmail')}`);
+        console.log(`telefono: ${formData.get('settelefono')}`);
         if (huboCambio === true) {
           if (window.confirm('¿Seguro que deseas modificar los datos?')) {
           const response = await axios.put("http://localhost:8000/public/updateUsuario", formData,

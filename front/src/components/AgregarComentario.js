@@ -42,9 +42,9 @@ const AgregarComentario = (props) =>{
     return(
         <fieldset>
             <form onSubmit={handleSubmit}>
-            <h2>Agregar Comentario</h2>
-            <input type="text" value={Coment} onChange={handleComentarioChange} placeholder="Ingrese Comentario" required />
-            <ButtonSubmit text="comentar"/>
+            <h2>Agregar Pregunta</h2>
+            <input type="text" value={Coment} onChange={handleComentarioChange} placeholder="Ingrese pregunta" required />
+            <ButtonSubmit text="Preguntar"/>
             </form>
             {myError &&
                 <p style={{ backgroundColor: "red", color: "white", textAlign: "center" }}>{msgError}</p>

@@ -35,7 +35,7 @@ const ListarComentarios = (props) => {
         console.log(`respuesta: ${response.data}`)
 
         if (response.data.length === 0) {
-          setError('No hay comentarios');
+          setError('No hay Preguntas');
           setComentarios([]);
           console.log(`falle por 0 resultados`)
         } else {
@@ -43,7 +43,7 @@ const ListarComentarios = (props) => {
           console.log(`comentarios: ${comentarios}`)
         }
       } catch (error) {
-        setError('No hay comentarios.');
+        setError('No hay Preguntas.');
         console.log(`falle por error`)
         console.error(error);
       } finally {
@@ -79,7 +79,7 @@ const ListarComentarios = (props) => {
       <div>
         {(localStorage.getItem('token') === 'tokenUser')?(
           <button className='agregarBoton' onClick={toggleFormulario}>
-            {mostrarFormulario ? 'Cancelar' : 'Comentar'}
+            {mostrarFormulario ? 'Cancelar' : 'Preguntar'}
           </button>
         ):(<></>)}
         </div>
